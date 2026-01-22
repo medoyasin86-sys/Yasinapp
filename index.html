@@ -3,46 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مملكة ياسين والكنز</title>
+    <title>سوبر ياسين - البطل الصغير</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #2c3e50; display: flex; justify-content: center; min-height: 100vh; margin: 0; color: #fff; }
-        .app-card { background: white; padding: 20px; border-radius: 35px; width: 95%; max-width: 450px; text-align: center; color: #333; margin: 20px; border: 5px solid #ffcc00; }
+        :root { --primary: #e67e22; --secondary: #f1c40f; --dark: #2c3e50; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--dark); display: flex; justify-content: center; min-height: 100vh; margin: 0; color: #fff; padding: 10px; }
+        .app-card { background: white; padding: 20px; border-radius: 35px; width: 100%; max-width: 450px; text-align: center; color: #333; border: 6px solid var(--secondary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero-title { font-size: 35px; font-weight: 900; color: var(--primary); margin: 10px 0; text-shadow: 1px 1px 2px #ccc; }
+        .motivation-box { background: #fff9c4; border-right: 5px solid var(--secondary); padding: 15px; border-radius: 15px; margin: 15px 0; font-style: italic; color: #5d4037; font-weight: bold; }
         .money-box { background: #e8f5e9; border: 2px solid #2e7d32; padding: 15px; border-radius: 20px; margin: 15px 0; color: #1b5e20; }
-        .money-val { font-size: 32px; font-weight: 900; display: block; }
+        .money-val { font-size: 35px; font-weight: 900; display: block; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-item { background: #f0f4f8; padding: 10px; border-radius: 15px; }
-        .date-input { width: 80%; padding: 10px; border-radius: 10px; border: 2px solid #ddd; margin: 10px 0; font-family: inherit; font-size: 18px; }
-        .btn { border: none; padding: 15px; border-radius: 20px; font-size: 20px; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; color: white; }
-        .btn-success { background: #2ecc71; border-bottom: 5px solid #27ae60; }
-        .btn-fail { background: #bdc3c7; border-bottom: 5px solid #7f8c8d; }
-        .history { background: #eee; border-radius: 15px; padding: 10px; max-height: 120px; overflow-y: auto; text-align: right; margin-top: 15px; }
-        .reward-msg { font-size: 14px; color: #d35400; font-weight: bold; margin-top: 5px; }
+        .stat-item { background: #f0f4f8; padding: 10px; border-radius: 15px; border: 1px solid #ddd; }
+        .btn { border: none; padding: 15px; border-radius: 20px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; transition: 0.3s; }
+        .btn-success { background: #2ecc71; color: white; border-bottom: 5px solid #27ae60; }
+        .btn-fail { background: #95a5a6; color: white; border-bottom: 5px solid #7f8c8d; }
+        /* Chat Styles */
+        .chat-section { background: #fdfdfd; border: 2px solid #eee; border-radius: 20px; padding: 15px; margin-top: 20px; text-align: right; }
+        .chat-messages { height: 150px; overflow-y: auto; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .chat-input-area { display: flex; gap: 5px; }
+        .chat-input { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid #ddd; }
+        .chat-btn { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 10px; }
+        .history { background: #f9f9f9; border-radius: 15px; padding: 10px; max-height: 100px; overflow-y: auto; font-size: 14px; margin-top: 15px; }
     </style>
 </head>
 <body>
+
 <div class="app-card">
-    <div style="font-size: 60px;">💰</div>
-    <h2 style="margin: 5px 0;">مهمة الكنز لياسين</h2>
+    <div style="font-size: 50px;">🦸‍♂️</div>
+    <h1 class="hero-title">سوبر ياسين</h1>
     
+    <div class="motivation-box" id="daily-quote">ياسين بطل اليوم وكل يوم! 🚀</div>
+
     <div class="money-box">
-        <span>رصيد المكافأة المتوقع:</span>
+        <span>رصيد الكنز الحالي:</span>
         <span class="money-val" id="money-display">0 جنيه</span>
-        <p id="reward-note" class="reward-msg">حافظ على نظافة الشهر!</p>
+        <small id="reward-note" style="color: #d35400;"></small>
     </div>
 
     <div class="stats-grid">
-        <div class="stat-item">⭐ النجوم: <span id="stars-count" style="font-weight: 900;">0</span></div>
-        <div class="stat-item">📅 الأيام: <span id="days-count" style="font-weight: 900;">0</span></div>
+        <div class="stat-item">⭐ النجوم: <span id="stars-count">0</span></div>
+        <div class="stat-item">📅 المحاولات: <span id="days-count">0</span></div>
     </div>
 
-    <input type="date" id="mission-date" class="date-input">
-    <button class="btn btn-success" onclick="save(true)">☀️ ليلة جافة ومشرقة</button>
-    <button class="btn btn-fail" onclick="save(false)">☁️ سحابة عابرة (محاولة)</button>
+    <input type="date" id="mission-date" style="width: 80%; padding: 10px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd;">
+    <button class="btn btn-success" onclick="save(true)">⚡ ليلة البطل الجافة</button>
+    <button class="btn btn-fail" onclick="save(false)">☁️ محاولة أخرى قوية</button>
 
     <div class="history" id="history-list"></div>
+
+    <div class="chat-section">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary);">💬 غرفة عمليات الأبطال</h4>
+        <div class="chat-messages" id="chat-box"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-msg" class="chat-input" placeholder="اكتب رسالة لياسين...">
+            <button class="chat-btn" onclick="sendMsg()">إرسال</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -56,76 +75,78 @@
         appId: "1:940031861888:web:9b7600cbf80b6343"
     };
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database().ref('yassin_money_quest');
+    const db = firebase.database();
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // عبارات تحفيزية لياسين
+    const quotes = [
+        "ياسين هو بطل العائلة القوي! 💪",
+        "كل ليلة جافة هي خطوة نحو الكنز الكبير! 💰",
+        "السوبر هيرو ياسين لا يعرف المستحيل! 🦸‍♂️",
+        "أنت فخرنا يا ياسين، استمر في التألق!🌟",
+        "النجاح يبدأ بإرادة قوية مثل إرادتك! 🔥",
+        "ياسين الذكي سيحصل على الجائزة قريباً! 🎯"
+    ];
+    document.getElementById('daily-quote').innerText = quotes[new Date().getDate() % quotes.length];
+
     document.getElementById('mission-date').valueAsDate = new Date();
 
-    db.on('value', (snapshot) => {
-        const data = snapshot.val() || { history: {} };
-        calculateRewards(data.history);
+    // استماع لبيانات المهمة
+    db.ref('yassin_money_quest').on('value', (s) => {
+        const data = s.val() || { history: {} };
+        renderData(data.history);
     });
 
-    function calculateRewards(history) {
-        if (!history) return;
-        const entries = Object.entries(history).sort();
-        if (entries.length === 0) return;
-
-        const firstEntryDate = new Date(entries[0][0]);
-        const currentMonth = firstEntryDate.getMonth();
-        const currentYear = firstEntryDate.getFullYear();
-
-        let stars = 0;
-        let totalDays = entries.length;
-        let hasWetInCurrentMonth = false;
-        let isFirstMonth = true; // نفترض أنه الشهر الأول
-
-        // فحص هل نحن لا نزال في الشهر الأول من بدء التطبيق
-        const today = new Date();
-        const diffTime = Math.abs(today - firstEntryDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays > 30) isFirstMonth = false;
-
-        let dryDaysCount = 0;
-        for (const [date, status] of entries) {
-            if (status === 'dry') {
-                stars++;
-                dryDaysCount++;
-            } else {
-                hasWetInCurrentMonth = true;
+    // استماع للدردشة (مع مسح يومي)
+    db.ref('yassin_chat').on('value', (s) => {
+        const chatData = s.val() || {};
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+        
+        Object.values(chatData).forEach(m => {
+            if(m.date === todayStr) { // عرض رسائل اليوم فقط
+                chatBox.innerHTML += `<div><strong>${m.user}:</strong> ${m.text}</div>`;
             }
-        }
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
 
-        let reward = 0;
-        let note = "";
+    function renderData(history) {
+        const entries = Object.entries(history).sort().reverse();
+        let stars = 0, dryDays = 0;
+        let hasWetThisMonth = false;
 
-        if (isFirstMonth) {
-            reward = 1000;
-            note = "🎁 مكافأة الشهر الأول مضمونة يا بطل!";
-        } else {
-            if (!hasWetInCurrentMonth) {
-                reward = 1000;
-                note = "🌟 رائع! أنت في طريقك للـ 1000 جنيه!";
-            } else {
-                reward = dryDaysCount * 10;
-                note = "💰 نظام النقاط: 10 جنيهات لكل ليلة جافة";
-            }
-        }
+        entries.forEach(([d, s]) => {
+            if(s === 'dry') { stars++; dryDays++; }
+            else { hasWetThisMonth = true; }
+        });
+
+        let reward = hasWetThisMonth ? (dryDays * 10) : 1000;
+        if (entries.length === 0) reward = 0;
 
         document.getElementById('money-display').innerText = reward + " جنيه";
         document.getElementById('stars-count').innerText = stars;
-        document.getElementById('days-count').innerText = totalDays;
-        document.getElementById('reward-note').innerText = note;
+        document.getElementById('days-count').innerText = entries.length;
+        document.getElementById('reward-note').innerText = hasWetThisMonth ? "نظام النقاط: 10 ج لكل ليلة" : "بطل! مكافأة الـ 1000 ج مستمرة!";
         
-        document.getElementById('history-list').innerHTML = entries.reverse().map(([d, s]) => 
+        document.getElementById('history-list').innerHTML = entries.map(([d, s]) => 
             `<div>${d}: ${s=='dry'?'✅':'☁️'}</div>`).join('');
     }
 
     function save(isDry) {
         const date = document.getElementById('mission-date').value;
-        db.once('value').then((s) => {
-            const cur = s.val() || { history: {} };
-            const newHistory = { ...cur.history, [date]: isDry ? 'dry' : 'wet' };
-            db.update({ history: newHistory });
+        db.ref('yassin_money_quest/history').update({ [date]: isDry ? 'dry' : 'wet' });
+    }
+
+    function sendMsg() {
+        const txt = document.getElementById('chat-msg').value;
+        if(!txt) return;
+        db.ref('yassin_chat').push({
+            user: "العائلة",
+            text: txt,
+            date: todayStr
         });
+        document.getElementById('chat-msg').value = '';
     }
 </script>
 </body>
