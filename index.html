@@ -39,7 +39,6 @@
             position: relative;
         }
 
-        /* تصميم شعار البطل برمجياً */
         .hero-logo-area {
             background: #000;
             padding: 40px 0;
@@ -75,7 +74,6 @@
             text-shadow: 2px 2px 5px #000;
         }
 
-        /* مربع التقرير الشهري */
         .monthly-report {
             background: #f1f2f6;
             margin: 15px;
@@ -110,7 +108,6 @@
             color: #000;
         }
 
-        /* صندوق الكنز */
         .treasure-zone {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             margin: 15px;
@@ -120,50 +117,42 @@
             box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
         }
 
-        .money-val {
-            font-size: 50px;
-            font-weight: 900;
-            display: block;
-        }
+        .money-val { font-size: 50px; font-weight: 900; display: block; }
 
-        /* أزرار المهمة */
-        .mission-btns {
-            padding: 0 20px;
-        }
+        .mission-btns { padding: 0 20px; }
 
         .btn {
-            width: 100%;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 25px;
-            font-size: 22px;
-            font-weight: 900;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            color: #fff;
+            width: 100%; padding: 20px; margin: 10px 0; border-radius: 25px;
+            font-size: 22px; font-weight: 900; border: none; cursor: pointer; transition: 0.3s; color: #fff;
         }
 
         .btn-success { background: #0097e6; border-bottom: 6px solid #007bc1; }
         .btn-fail { background: #718093; border-bottom: 6px solid #2f3640; }
 
-        .btn:active { transform: translateY(4px); border-bottom-width: 2px; }
-
-        .chat-section {
-            background: #f8f9fa;
-            padding: 20px;
-            margin-top: 20px;
+        /* ستايل سجل الأيام الجديد */
+        .history-table-zone {
+            margin: 15px;
+            background: #fff;
+            border-radius: 20px;
+            border: 2px solid #eee;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        .chat-display {
-            height: 100px;
-            background: #fff;
-            border-radius: 15px;
-            padding: 10px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 14px;
         }
+
+        .history-table th { background: #f8f9fa; padding: 10px; position: sticky; top: 0; color: var(--hero-blue); }
+        .history-table td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; font-weight: bold; }
+        
+        .status-dry { color: #2ecc71; }
+        .status-wet { color: #e84118; }
+
+        .chat-section { background: #f8f9fa; padding: 20px; margin-top: 20px; }
+        .chat-display { height: 100px; background: #fff; border-radius: 15px; padding: 10px; overflow-y: auto; border: 1px solid #ddd; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -183,7 +172,7 @@
             <div>نجاح: <b id="success-rate" style="color:#2ecc71">0%</b></div>
             <div>التزام: <b id="stars-total" style="color:#f39c12">0 نجوم</b></div>
         </div>
-        <div id="hero-advice" style="font-size: 13px; margin-top: 8px; font-weight: bold; color: #7f8c8d;">ياسين.. ابدأ مهمتك الآن لتصبح أسطورة!</div>
+        <div id="hero-advice" style="font-size: 13px; margin-top: 8px; font-weight: bold; color: #7f8c8d;">ياسين.. ابدأ مهمتك الآن!</div>
     </div>
 
     <div class="treasure-zone">
@@ -198,6 +187,20 @@
         <button class="btn btn-fail" onclick="save(false)">☁️ محاولة بطل قادمة</button>
     </div>
 
+    <div class="history-table-zone">
+        <div style="padding: 10px; font-weight: bold; color: var(--hero-blue); border-bottom: 1px solid #eee;">🗓️ سجل معارك البطل</div>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>النتيجة</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                </tbody>
+        </table>
+    </div>
+
     <div class="chat-section">
         <div style="font-weight: 900; color: var(--hero-blue); margin-bottom: 8px;">💬 مركز تشجيع سوبر ياسين</div>
         <div class="chat-display" id="chat"></div>
@@ -209,7 +212,6 @@
 </div>
 
 <script>
-    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAPhrEzYnHoL3ln8_5BFFyWCjx2Y-G80E0",
         authDomain: "yassinapp-20262.firebaseapp.com",
@@ -224,11 +226,13 @@
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('mission-date').valueAsDate = new Date();
 
-    // استرجاع وتحديث البيانات والتقرير
     db.ref('yassin_money_quest').on('value', (snapshot) => {
         const data = snapshot.val() || { history: {} };
-        const history = data.history;
-        const entries = Object.entries(history);
+        const history = data.history || {};
+        const entries = Object.entries(history).sort((a, b) => b[0].localeCompare(a[0])); // ترتيب تنازلي
+        
+        const historyBody = document.getElementById('history-body');
+        historyBody.innerHTML = '';
         
         let dryCount = 0;
         let wetCount = 0;
@@ -236,45 +240,49 @@
         entries.forEach(([date, status]) => {
             if(status === 'dry') dryCount++;
             else wetCount++;
+
+            // إضافة الصف للجدول
+            const row = `<tr>
+                <td>${date}</td>
+                <td class="${status === 'dry' ? 'status-dry' : 'status-wet'}">
+                    ${status === 'dry' ? '⚡ جافة' : '☁️ بلل'}
+                </td>
+            </tr>`;
+            historyBody.innerHTML += row;
         });
 
-        // حساب التقرير الشهري
         const total = entries.length;
         const rate = total > 0 ? Math.round((dryCount / total) * 100) : 0;
-        
         document.getElementById('success-rate').innerText = rate + "%";
         document.getElementById('stars-total').innerText = dryCount + " نجوم";
         
-        // الألقاب والنصائح
         let rank = "بطل جديد 🌱";
         let advice = "ياسين.. الطريق للبطولة يبدأ بخطوة!";
-        if(rate >= 90) { rank = "بطل أسطوري 👑"; advice = "مذهل! أنت بطل حقيقي لا يقهر."; }
-        else if(rate >= 70) { rank = "بطل خارق ⚡"; advice = "أداء رائع.. اقتربت من القمة!"; }
-        else if(total > 0) { rank = "بطل مكافح 💪"; advice = "لا تستسلم، غداً ليلة مشرقة!"; }
+        if(rate >= 90) { rank = "بطل أسطوري 👑"; advice = "مذهل! أنت بطل حقيقي."; }
+        else if(rate >= 70) { rank = "بطل خارق ⚡"; advice = "أداء رائع.. اقتربت!"; }
+        else if(total > 0) { rank = "بطل مكافح 💪"; advice = "لا تستسلم، غداً أجمل!"; }
         
         document.getElementById('rank-name').innerText = rank;
         document.getElementById('hero-advice').innerText = advice;
 
-        // المكافآت
         let money = (wetCount > 0 ? (dryCount * 10) : (total > 0 ? 1000 : 0));
         document.getElementById('money').innerText = money + " جنيه";
         document.getElementById('status-note').innerText = wetCount > 0 ? "نظام النقاط: 10ج لكل نجاح" : "مكافأة الالتزام الكامل: 1000ج";
     });
 
-    // نظام الدردشة
     db.ref('yassin_chat').on('value', (snapshot) => {
         const chatBox = document.getElementById('chat');
         chatBox.innerHTML = '';
         Object.values(snapshot.val() || {}).forEach(m => {
-            if(m.date === todayStr) {
-                chatBox.innerHTML += `<div><b>العائلة:</b> ${m.text}</div>`;
-            }
+            if(m.date === todayStr) chatBox.innerHTML += `<div><b>العائلة:</b> ${m.text}</div>`;
         });
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 
     function save(isDry) {
         const date = document.getElementById('mission-date').value;
+        if(!date) return alert("من فضلك اختر التاريخ");
+        // Firebase update تضمن عدم التكرار لنفس المفتاح (التاريخ)
         db.ref('yassin_money_quest/history').update({ [date]: isDry ? 'dry' : 'wet' });
     }
 
