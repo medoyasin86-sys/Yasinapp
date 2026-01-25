@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مغامرات Y.Karizma - Battle Royale</title>
+    <title>Y.Karizma Battle Log</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --ff-gold: #ffbe0b;
-            --ff-dark: #05070a;
-            --ff-card: #11141b;
+            --ff-dark: #09090b;
+            --ff-panel: #18181b;
             --heroic-red: #ff003c;
+            --booyah-yellow: #f1c40f;
+            --rare-blue: #00d2d3;
         }
 
         body {
@@ -23,165 +26,289 @@
             justify-content: center;
             color: #fff;
             overflow-x: hidden;
+            user-select: none;
         }
 
         .battle-container {
             width: 100%;
-            max-width: 430px;
+            max-width: 450px;
             background: var(--ff-dark);
             min-height: 100vh;
-            border: 2px solid #222;
+            border: 1px solid #333;
             position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
         }
 
-        /* واجهة المقاتل المسلح بالكامل - القسم العلوي */
+        /* --- الهيدر: المحارب المدجج --- */
         .warrior-header {
             width: 100%;
-            height: 320px;
+            height: 350px;
             position: relative;
-            background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat;
-            border-bottom: 4px solid var(--ff-gold);
+            /* صورة محارب فري فاير يحمل سلاحاً */
+            background: url('https://w0.peakpx.com/wallpaper/122/357/HD-wallpaper-free-fire-cobra-skin-android-game-mobile-thumbnail.jpg') center top/cover no-repeat;
             display: flex;
             align-items: flex-end;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+            margin-bottom: -40px;
+            z-index: 10;
         }
 
-        /* تأثير التوهج خلف المقاتل */
-        .warrior-header::after {
+        .warrior-header::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(transparent, var(--ff-dark));
+            inset: 0;
+            background: linear-gradient(to top, var(--ff-dark), transparent 80%);
         }
 
-        .rank-overlay {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--heroic-red);
-            padding: 5px 15px;
-            font-weight: 900;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 2;
-            box-shadow: 0 0 15px var(--heroic-red);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-
-        .app-branding {
+        .profile-info {
             position: relative;
             z-index: 2;
             padding: 20px;
             width: 100%;
+            text-shadow: 2px 2px 4px #000;
+            padding-bottom: 50px;
         }
 
-        .app-title { font-size: 32px; font-weight: 900; color: var(--ff-gold); margin: 0; text-shadow: 3px 3px 0px #000; }
-        .hero-sub { font-size: 16px; color: #fff; font-weight: bold; }
-
-        .main-mission-area { padding: 15px; }
-
-        /* صندوق الجوائز */
-        .loot-box {
-            background: var(--ff-card);
-            border: 2px solid #2d3436;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .diamond-val { font-size: 55px; font-weight: 900; color: var(--ff-gold); display: block; line-height: 1; }
-        
-        .alert-commander {
-            background: rgba(255, 0, 60, 0.1);
-            border-right: 4px solid var(--heroic-red);
-            padding: 12px;
-            font-size: 11px;
+        .rank-badge {
+            background: linear-gradient(45deg, #d35400, #e67e22);
+            display: inline-block;
+            padding: 4px 12px;
             border-radius: 4px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            border: 1px solid #fff;
+            box-shadow: 0 0 10px #e67e22;
+        }
+
+        .player-name {
+            font-size: 36px;
+            font-weight: 900;
+            margin: 5px 0 0 0;
+            color: #fff;
+            font-style: italic;
+            letter-spacing: -1px;
+        }
+        .player-name span { color: var(--ff-gold); }
+
+        /* --- منطقة المهام --- */
+        .mission-control {
+            padding: 60px 15px 20px 15px; /* Padding top لتعويض التداخل */
+            background: var(--ff-dark);
+        }
+
+        /* بطاقة الرصيد */
+        .stats-card {
+            background: linear-gradient(135deg, #2c3e50, #000);
+            border: 1px solid #444;
+            border-left: 5px solid var(--ff-gold);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .money-display small { color: #aaa; font-size: 11px; display: block;}
+        .money-display strong { font-size: 32px; color: var(--ff-gold); line-height: 1; }
+        
+        .streak-badge {
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .streak-num { font-size: 24px; font-weight: bold; color: var(--heroic-red); display: block; }
+        .streak-lbl { font-size: 9px; color: #fff; opacity: 0.7; }
+
+        /* أزرار التحكم */
+        .action-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .date-picker {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            font-family: 'Cairo';
+            font-weight: bold;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        .btn-main {
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: transform 0.1s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-main:active { transform: scale(0.96); }
+
+        .btn-win { 
+            background: linear-gradient(90deg, #f1c40f, #f39c12); 
+            color: #000; 
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+        }
+        
+        .btn-loss { 
+            background: linear-gradient(90deg, #c0392b, #e74c3c); 
+            color: #fff; 
+            opacity: 0.8;
+        }
+
+        /* --- سجل المعارك (الجديد) --- */
+        .battle-log-container {
+            background: var(--ff-panel);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #333;
             margin-bottom: 20px;
         }
 
-        /* أزرار الهجوم */
-        .attack-btns { display: flex; flex-direction: column; gap: 10px; }
-        .btn-ff {
-            padding: 20px; border: none; font-size: 22px; font-weight: 900;
-            cursor: pointer; clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
-            transition: 0.2s;
+        .log-title {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
         }
-        .btn-booyah { background: var(--ff-gold); color: #000; }
-        .btn-defeat { background: #34495e; color: #bdc3c7; }
 
-        /* شات الكتيبة */
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        /* تصميم السكرول بار */
+        .history-list::-webkit-scrollbar { width: 4px; }
+        .history-list::-webkit-scrollbar-thumb { background: var(--ff-gold); border-radius: 2px; }
+
+        .log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            margin-bottom: 6px;
+            padding: 10px;
+            border-radius: 4px;
+            border-right: 3px solid transparent;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .log-item.dry { border-right-color: var(--ff-gold); background: linear-gradient(90deg, rgba(0,0,0,0.3), rgba(241, 196, 15, 0.1)); }
+        .log-item.wet { border-right-color: var(--heroic-red); opacity: 0.7; }
+
+        .log-date { font-size: 13px; font-weight: bold; color: #ddd; }
+        .log-status { font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 2px; }
+        .status-booyah { color: var(--booyah-yellow); text-shadow: 0 0 5px var(--booyah-yellow); }
+        .status-defeat { color: #e74c3c; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* رسائل النظام */
+        .sys-msg {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 999;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 5px 15px #000;
+        }
+
+        /* الشات */
         .squad-chat {
-            background: #090b10;
+            background: #111;
             padding: 15px;
-            margin-top: 25px;
-            border-top: 2px solid var(--ff-gold);
+            border-top: 1px solid #333;
         }
-
-        .chat-stream { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 8px; margin-bottom: 5px; border-left: 3px solid var(--ff-gold); }
-
-        .selector { display: flex; gap: 5px; margin-bottom: 10px; }
-        .p-btn { flex: 1; padding: 10px; border: none; background: #1c212a; color: #fff; font-size: 10px; font-weight: 900; cursor: pointer; }
-        .p-btn.active { background: var(--ff-gold); color: #000; }
-
-        .fire-input { display: flex; gap: 5px; }
-        .fire-input input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; }
-        .btn-fire { background: var(--heroic-red); border: none; padding: 0 20px; color: #fff; font-weight: bold; }
+        .chat-box { height: 100px; overflow-y: auto; font-size: 12px; margin-bottom: 10px; }
+        .msg { padding: 5px; margin-bottom: 5px; border-radius: 3px; background: rgba(255,255,255,0.05); }
+        .input-group { display: flex; gap: 5px; }
+        .chat-input { flex: 1; background: #222; border: none; color: white; padding: 10px; border-radius: 4px; }
+        .btn-send { background: var(--ff-gold); border: none; padding: 0 15px; font-weight: bold; border-radius: 4px; }
     </style>
 </head>
 <body>
 
+<div class="sys-msg" id="alert-box">⚠️ المهمة مسجلة مسبقاً لهذا التاريخ!</div>
+
 <div class="battle-container">
     <div class="warrior-header">
-        <div class="rank-overlay">GRANDMASTER 🎖️</div>
-        <div class="app-branding">
-            <h1 class="app-title">مغامرات Y.Karizma</h1>
-            <div class="hero-sub">( البطل ياسين المسلح )</div>
+        <div class="profile-info">
+            <div class="rank-badge">HEROIC 💎</div>
+            <h1 class="player-name">Y.<span>KARIZMA</span></h1>
+            <div style="font-size: 12px; color: #ccc;">القائد ياسين - المستوى 2</div>
         </div>
     </div>
 
-    <div class="main-mission-area">
-        <div class="alert-commander">
-            ⚠️ <b>أوامر القائد:</b> الشهر الأول هو "تدريب بالذخيرة الحية" والـ 1000ج مضمونة. <br>
-            من الشهر القادم.. "لا تهاون مع البلل، القواعد صارمة!"
+    <div class="mission-control">
+        
+        <div class="stats-card">
+            <div class="money-display">
+                <small>CURRENT BOUNTY (الرصيد)</small>
+                <strong><span id="money">1000</span> <span style="font-size:14px">EGP</span></strong>
+            </div>
+            <div class="streak-badge">
+                <span class="streak-num" id="streak-val">0</span>
+                <span class="streak-lbl">KILLSTREAK 🔥</span>
+            </div>
         </div>
 
-        <div class="loot-box">
-            <span style="font-size: 14px; opacity: 0.7;">رصيد الجوائز الاستراتيجي 💎</span>
-            <span class="diamond-val" id="money">1000</span>
-            <span style="font-weight: bold; letter-spacing: 2px;">جنيه مصري</span>
+        <div class="action-grid">
+            <input type="date" id="mission-date" class="date-picker">
+            <button class="btn-main btn-win" onclick="attemptSave(true)">
+                BOOYAH! 🏆 (جاف)
+            </button>
+            <button class="btn-main btn-loss" onclick="attemptSave(false)">
+                ELIMINATED 💀 (مبلل)
+            </button>
         </div>
 
-        <div class="attack-btns">
-            <input type="date" id="mission-date" style="background:#11141b; border:1px solid #333; color:#fff; padding:12px; text-align:center; font-family:'Cairo'; margin-bottom:10px;">
-            <button class="btn-ff btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
-            <button class="btn-ff btn-defeat" onclick="save(false)">DEFEAT (سأنتقم غداً)</button>
+        <div class="battle-log-container">
+            <div class="log-title">
+                <span>BATTLE HISTORY</span>
+                <span>سجل المعارك</span>
+            </div>
+            <div class="history-list" id="history-log">
+                <div style="text-align: center; color: #555; padding: 20px;">جاري تحميل البيانات...</div>
+            </div>
         </div>
 
         <div class="squad-chat">
-            <div style="font-size: 11px; color: var(--ff-gold); margin-bottom: 8px;">SQUAD MESSAGES:</div>
-            <div class="selector">
-                <button class="p-btn active" onclick="setSender('BABA', this)">BABA 🧔</button>
-                <button class="p-btn" onclick="setSender('MAMA', this)">MAMA 👩</button>
-                <button class="p-btn" onclick="setSender('SMSM', this)">Y.KARIZMA 🔫</button>
-            </div>
-            <div class="chat-stream" id="chat"></div>
-            <div class="fire-input">
-                <input type="text" id="msg" placeholder="أرسل إشارة لاسلكية..">
-                <button class="btn-fire" onclick="send()">FIRE</button>
+            <div style="color: var(--ff-gold); font-size: 10px; margin-bottom: 5px; font-weight: bold;">SQUAD RADIO:</div>
+            <div class="chat-box" id="chat"></div>
+            <div class="input-group">
+                <input type="text" id="msg-input" class="chat-input" placeholder="اكتب للكتيبة...">
+                <button class="btn-send" onclick="sendMessage()">إرسال</button>
             </div>
         </div>
+
     </div>
 </div>
 
 <script>
+    // إعدادات فايربيس
     const firebaseConfig = {
         apiKey: "AIzaSyAPhrEzYnHoL3ln8_5BFFyWCjx2Y-G80E0",
         authDomain: "yassinapp-20262.firebaseapp.com",
@@ -191,56 +318,118 @@
         messagingSenderId: "940031861888",
         appId: "1:940031861888:web:9b7600cbf80b6343"
     };
-    firebase.initializeApp(firebaseConfig);
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    let currentSender = 'BABA';
-    const today = () => new Date().toISOString().split('T')[0];
-    document.getElementById('mission-date').valueAsDate = new Date();
+    // متغيرات عامة
+    let historyData = {};
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('mission-date').value = todayStr;
 
-    function setSender(sender, btn) {
-        currentSender = sender;
-        document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    db.ref('yassin_money_quest').on('value', (snapshot) => {
-        const data = snapshot.val() || { history: {} };
-        const history = data.history || {};
-        const datesCount = Object.keys(history).length;
-        
-        if (datesCount <= 30) {
-            document.getElementById('money').innerText = "1000";
-        } else {
-            let dry = 0; let wet = 0;
-            Object.values(history).forEach(s => s === 'dry' ? dry++ : wet++);
-            document.getElementById('money').innerText = (wet > 0 ? (dry * 10) : 1000);
-        }
+    // --- 1. جلب ومراقبة البيانات ---
+    db.ref('yassin_money_quest/history').on('value', (snapshot) => {
+        historyData = snapshot.val() || {};
+        updateUI(historyData);
     });
 
-    db.ref('yassin_chat').on('value', (snapshot) => {
-        const chatBox = document.getElementById('chat');
-        chatBox.innerHTML = '';
-        const curDate = today();
-        Object.values(snapshot.val() || {}).forEach(m => {
-            if(m.date === curDate) {
-                chatBox.innerHTML += `<div class="msg"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
-            }
+    db.ref('yassin_chat').limitToLast(10).on('value', (snapshot) => {
+        const chatDiv = document.getElementById('chat');
+        chatDiv.innerHTML = '';
+        snapshot.forEach(child => {
+            const m = child.val();
+            chatDiv.innerHTML += `<div class="msg"><b style="color:${m.sender==='Y.KARIZMA'?'var(--ff-gold)':'#fff'}">${m.sender}:</b> ${m.text}</div>`;
         });
-        chatBox.scrollTop = chatBox.scrollHeight;
+        chatDiv.scrollTop = chatDiv.scrollHeight;
     });
 
-    function save(isDry) {
-        const date = document.getElementById('mission-date').value;
-        db.ref('yassin_money_quest/history').update({ [date]: isDry ? 'dry' : 'wet' });
+    // --- 2. تحديث الواجهة والمنطق ---
+    function updateUI(history) {
+        const entries = Object.entries(history).sort((a, b) => b[0].localeCompare(a[0])); // الأحدث أولاً
+        
+        // أ) حساب الرصيد والستريك
+        let streak = 0;
+        let wetCount = 0;
+        let isStreakBroken = false;
+
+        // حساب الستريك من أحدث يوم مسجل
+        for (let i = 0; i < entries.length; i++) {
+            if (entries[i][1] === 'dry' && !isStreakBroken) {
+                streak++;
+            } else {
+                isStreakBroken = true; // توقف الستريك عند أول خطأ أو فجوة
+            }
+            if (entries[i][1] === 'wet') wetCount++;
+        }
+
+        // المعادلة: بعد الشهر الأول (30 يوم)، كل خطأ يخصم 50
+        let money = 1000;
+        if (entries.length > 30) {
+            money = Math.max(0, 1000 - (wetCount * 50));
+        }
+
+        document.getElementById('money').innerText = money;
+        document.getElementById('streak-val').innerText = streak;
+
+        // ب) تحديث سجل المعارك (القائمة)
+        const logContainer = document.getElementById('history-log');
+        logContainer.innerHTML = '';
+
+        if (entries.length === 0) {
+            logContainer.innerHTML = '<div style="text-align:center; padding:10px; color:#555">لا توجد مهمات مسجلة بعد</div>';
+        }
+
+        entries.forEach(([date, status]) => {
+            const isWin = status === 'dry';
+            const html = `
+                <div class="log-item ${status}">
+                    <span class="log-date">${date}</span>
+                    <span class="log-status ${isWin ? 'status-booyah' : 'status-defeat'}">
+                        ${isWin ? 'BOOYAH! 🎖️' : 'DEFEAT ❌'}
+                    </span>
+                </div>
+            `;
+            logContainer.innerHTML += html;
+        });
     }
 
-    function send() {
-        const inp = document.getElementById('msg');
+    // --- 3. وظيفة الحفظ مع التحقق من التكرار ---
+    function attemptSave(isDry) {
+        const selectedDate = document.getElementById('mission-date').value;
+
+        // التحقق: هل التاريخ موجود مسبقاً في البيانات؟
+        if (historyData.hasOwnProperty(selectedDate)) {
+            showAlert("⚠️ قائد الكتيبة: تم رصد نتيجة لهذا اليوم مسبقاً! لا يمكن التكرار.");
+            return; // إيقاف التنفيذ
+        }
+
+        // إذا كان جديداً، احفظ
+        if(isDry) {
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ffbe0b', '#00d2d3'] });
+        }
+        
+        db.ref('yassin_money_quest/history').update({ [selectedDate]: isDry ? 'dry' : 'wet' })
+          .then(() => {
+              showAlert(isDry ? "تم تأكيد النصر! 🛡️" : "تم تسجيل الخسارة.. عوضها غداً!", isDry ? "#2ecc71" : "#e74c3c");
+          });
+    }
+
+    // --- 4. أدوات مساعدة ---
+    function sendMessage() {
+        const inp = document.getElementById('msg-input');
         if(!inp.value) return;
-        db.ref('yassin_chat').push({ text: inp.value, sender: currentSender, date: today() });
+        db.ref('yassin_chat').push({ text: inp.value, sender: 'BABA', date: todayStr });
         inp.value = '';
     }
+
+    function showAlert(msg, color = "#ff003c") {
+        const alertBox = document.getElementById('alert-box');
+        alertBox.innerText = msg;
+        alertBox.style.background = color;
+        alertBox.style.display = 'block';
+        setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+    }
 </script>
+
 </body>
 </html>
