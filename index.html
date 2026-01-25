@@ -3,204 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق سوبر ياسين 3D</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>سوبر سمسم - البطل الخارق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
-            --primary: #5f27cd;
-            --accent: #ff9f43;
-            --bg-main: #f0f3f8;
-            --shadow-light: #ffffff;
-            --shadow-dark: #d1d9e6;
-            --baba: #2e86de;
-            --mama: #ee5253;
-            --smsm: #10ac84;
+            --primary: #FF3F8E;
+            --secondary: #00D2FF;
+            --gold: #FFD700;
+            --bg-gradient: linear-gradient(180deg, #6A11CB 0%, #2575FC 100%);
+            --baba: #1e3799;
+            --mama: #eb2f06;
+            --smsm: #38ada9;
         }
 
-        * { box-sizing: border-box; outline: none; }
-
+        * { box-sizing: border-box; }
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-main);
             margin: 0;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            color: #444;
+            color: #fff;
+            overflow-x: hidden;
         }
 
-        .phone-container {
-            background: var(--bg-main);
+        /* حاوية التطبيق - ستايل الموبايل المبهج */
+        .app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            box-shadow: 20px 20px 60px var(--shadow-dark), -20px -20px 60px var(--shadow-light);
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
         }
 
-        /* رأس التطبيق - تصميم بارز */
-        .app-header {
+        /* البالونات والنجوم في الخلفية */
+        .decor { position: absolute; pointer-events: none; z-index: 0; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
+        .b1 { top: 5%; left: 5%; font-size: 40px; animation: float 6s infinite; }
+        .b2 { top: 15%; right: 5%; font-size: 30px; animation: float 8s infinite; }
+        .b3 { bottom: 20%; left: 10%; font-size: 35px; animation: float 7s infinite; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-20px) rotate(10deg); } }
+
+        /* رأس التطبيق */
+        .header {
             padding: 40px 20px;
             text-align: center;
-            background: var(--bg-main);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
+            z-index: 1;
         }
 
-        .avatar-3d {
-            width: 90px;
-            height: 90px;
-            background: var(--bg-main);
+        .hero-badge {
+            width: 120px;
+            height: 120px;
+            background: #fff;
             border-radius: 50%;
             margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
-            box-shadow: 8px 8px 15px var(--shadow-dark), -8px -8px 15px var(--shadow-light);
-            border: 3px solid rgba(255,255,255,0.8);
+            font-size: 70px;
+            border: 5px solid var(--gold);
+            box-shadow: 0 0 30px var(--gold);
+            animation: pulse 2s infinite;
         }
 
-        .hero-title { font-size: 28px; font-weight: 900; color: var(--primary); margin: 0; text-shadow: 2px 2px 4px var(--shadow-dark); }
-        .rank-label { font-size: 14px; color: var(--accent); font-weight: bold; margin-top: 5px; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        .content-scroll { padding: 25px; flex: 1; overflow-y: auto; padding-bottom: 50px; }
+        .app-name { font-size: 35px; font-weight: 900; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .motivate-txt { font-size: 16px; color: var(--gold); font-weight: bold; }
 
-        /* البطاقات بنمط Neumorphism */
-        .neu-card {
-            background: var(--bg-main);
-            border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
-        }
+        .content { padding: 20px; z-index: 1; flex: 1; }
 
-        .stat-grid { display: flex; justify-content: space-around; text-align: center; }
-        .stat-val { font-size: 26px; font-weight: 900; color: var(--primary); display: block; }
-        .stat-label { font-size: 12px; color: #888; font-weight: bold; }
-
-        /* بطاقة الحصالة المتوهجة */
-        .money-card-3d {
-            background: linear-gradient(145deg, #6c5ce7, #a29bfe);
-            border-radius: 25px;
-            padding: 30px;
-            color: white;
+        /* بطاقة الجائزة - العملة */
+        .prize-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 10px 10px 20px rgba(108, 92, 231, 0.3);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.3);
             position: relative;
+            overflow: hidden;
         }
 
-        .money-amount { font-size: 42px; font-weight: 900; display: block; margin: 10px 0; }
+        .coin-icon { font-size: 50px; display: block; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--gold)); }
+        .money-val { font-size: 45px; font-weight: 900; color: var(--gold); }
+        .currency-symbol { font-size: 24px; color: #fff; margin-right: 5px; }
 
-        /* الأزرار ثلاثية الأبعاد */
-        .btn-3d {
-            width: 100%; border: none; padding: 20px; border-radius: 20px;
-            font-weight: 900; font-size: 18px; cursor: pointer; transition: 0.2s;
-            margin-bottom: 15px; color: white;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-            position: relative;
+        /* النجوم */
+        .stars-row { display: flex; justify-content: center; gap: 10px; margin-top: 10px; font-size: 20px; }
+
+        /* الأزرار */
+        .btn-zone { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+        .btn-hero {
+            padding: 22px; border: none; border-radius: 25px; font-size: 20px; font-weight: 900;
+            cursor: pointer; transition: 0.3s; color: white; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 10px 0px rgba(0,0,0,0.2);
         }
-        .btn-3d:active { transform: translateY(4px); box-shadow: 0px 0px 0px rgba(0,0,0,0.2); }
+        .btn-hero:active { transform: translateY(5px); box-shadow: 0 5px 0px rgba(0,0,0,0.2); }
+        .btn-yes { background: linear-gradient(90deg, #00b894, #55efc4); }
+        .btn-no { background: linear-gradient(90deg, #fab1a0, #ff7675); }
 
-        .btn-yes { background: #26de81; border-bottom: 6px solid #21b96c; }
-        .btn-no { background: #fd9644; border-bottom: 6px solid #e67e22; }
-
-        /* الشات المتطور */
-        .chat-area { margin-top: 10px; }
-        .sender-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-        .s-pill {
-            flex: 1; padding: 10px; border-radius: 15px; border: none; font-weight: bold;
-            font-family: 'Tajawal'; cursor: pointer; background: var(--bg-main);
-            box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-            font-size: 11px; transition: 0.3s;
-        }
-        .s-pill.active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); color: var(--primary); }
-
+        /* الشات بنمط كرتوني */
         .chat-box {
-            height: 220px; overflow-y: auto; background: var(--bg-main);
-            border-radius: 20px; padding: 15px;
-            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+            background: rgba(255,255,255,0.9);
+            border-radius: 30px;
+            padding: 20px;
+            color: #333;
         }
 
-        .bubble {
-            margin-bottom: 15px; padding: 12px 18px; border-radius: 20px;
-            font-size: 14px; position: relative; max-width: 85%;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.05);
+        .sender-btns { display: flex; gap: 5px; margin-bottom: 15px; }
+        .s-btn {
+            flex: 1; padding: 10px; border: none; border-radius: 15px; font-family: 'Tajawal';
+            font-weight: 900; cursor: pointer; font-size: 11px; transition: 0.3s;
         }
-        .b-name { font-weight: 900; font-size: 10px; display: block; margin-bottom: 3px; opacity: 0.7; }
+        .s-btn.active { transform: scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        .bubble-baba { background: #dff9fb; color: #130f40; border-right: 5px solid var(--baba); }
-        .bubble-mama { background: #ffebf0; color: #c0392b; border-right: 5px solid var(--mama); }
-        .bubble-smsm { background: #e3fcef; color: #006266; border-right: 5px solid var(--smsm); }
+        .wall { height: 180px; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
+        .msg {
+            margin-bottom: 10px; padding: 12px; border-radius: 20px; font-size: 14px;
+            font-weight: 500; border-right: 5px solid #ccc;
+        }
+        .m-baba { background: #e3f2fd; border-color: var(--baba); }
+        .m-mama { background: #fff1f2; border-color: var(--mama); }
+        .m-smsm { background: #e0f2f1; border-color: var(--smsm); }
 
-        .input-neu {
-            display: flex; gap: 10px; margin-top: 20px;
-        }
-        .input-neu input {
-            flex: 1; border: none; padding: 15px; border-radius: 15px;
-            background: var(--bg-main); font-family: 'Tajawal';
-            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-        }
-        .btn-send {
-            width: 50px; height: 50px; border-radius: 15px; border: none;
-            background: var(--primary); color: white; cursor: pointer;
-            box-shadow: 4px 4px 10px rgba(95, 39, 205, 0.4);
+        .input-row { display: flex; gap: 8px; }
+        .input-row input { flex: 1; border: 2px solid #eee; padding: 15px; border-radius: 20px; font-family: 'Tajawal'; }
+        .send-btn { background: var(--primary); border: none; width: 50px; border-radius: 20px; color: white; cursor: pointer; font-size: 20px; }
+
+        /* السجل */
+        .history { margin-top: 30px; }
+        .h-card {
+            background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px;
+            display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center;
         }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <header class="app-header">
-        <div class="avatar-3d">👑</div>
-        <h1 class="hero-title">سوبر ياسين</h1>
-        <div class="rank-label" id="rank-name">جاري تحميل القوى...</div>
+<div class="decor b1">🎈</div>
+<div class="decor b2">⭐</div>
+<div class="decor b3">🚀</div>
+
+<div class="app-container">
+    <header class="header">
+        <div class="hero-badge">🤴</div>
+        <h1 class="app-name">سوبر سمسم</h1>
+        <div class="motivate-txt" id="motivation">أنت بطل اليوم وكل يوم! ⚡</div>
     </header>
 
-    <div class="content-scroll">
-        <div class="neu-card stat-grid">
-            <div class="stat-item">
-                <span class="stat-val" id="stars-total">0</span>
-                <span class="stat-label">نجمة ⭐</span>
+    <div class="content">
+        <div class="prize-card">
+            <span class="coin-icon">💰</span>
+            <div>
+                <span class="money-val" id="money">0</span>
+                <span class="currency-symbol">جنيه مصري</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-val" id="success-rate">0%</span>
-                <span class="stat-label">القوة التراكمية</span>
-            </div>
+            <div class="stars-row" id="stars-container"></div>
+            <p id="status-note" style="font-size: 12px; margin-top: 15px; color: #fff;"></p>
         </div>
 
-        <div class="money-card-3d">
-            <div style="font-size: 14px; opacity: 0.9;">رصيد البطل الحالي</div>
-            <div class="money-amount" id="money">0 ج.م</div>
-            <div id="status-note" style="font-size: 12px; background: rgba(0,0,0,0.1); padding: 5px; border-radius: 10px;"></div>
+        <div class="btn-zone">
+            <input type="date" id="mission-date" style="background: white; border: none; padding: 15px; border-radius: 20px; text-align: center; font-weight: bold; font-family: 'Tajawal'; margin-bottom: 10px;">
+            <button class="btn-hero btn-yes" onclick="save(true)">لقد انتصرت الليلة! ⚡</button>
+            <button class="btn-hero btn-no" onclick="save(false)">سأهزم الوحش غداً ☁️</button>
         </div>
 
-        <div class="action-zone">
-            <input type="date" id="mission-date" style="width:100%; border:none; background:var(--bg-main); padding:15px; border-radius:15px; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); margin-bottom:20px; font-family:'Tajawal'; text-align:center;">
-            <button class="btn-3d btn-yes" onclick="save(true)">لقد كنت بطلاً جافاً اليوم ⚡</button>
-            <button class="btn-3d btn-no" onclick="save(false)">سأحاول بقوة غداً ☁️</button>
-        </div>
-
-        <div class="neu-card chat-area">
-            <div class="sender-selector">
-                <button class="s-pill active" onclick="setSender('بابا', this)">بابا 🧔</button>
-                <button class="s-pill" onclick="setSender('ماما', this)">ماما 👩</button>
-                <button class="s-pill" onclick="setSender('سوبر سمسم', this)">سوبر سمسم 🦸‍♂️</button>
+        <div class="chat-box">
+            <div class="sender-btns">
+                <button class="s-btn active" style="background:var(--baba); color:white" onclick="setSender('بابا', this)">بابا 🧔</button>
+                <button class="s-btn" style="background:var(--mama); color:white" onclick="setSender('ماما', this)">ماما 👩</button>
+                <button class="s-btn" style="background:var(--smsm); color:white" onclick="setSender('سوبر سمسم', this)">سوبر سمسم 🦸‍♂️</button>
             </div>
-            <div class="chat-box" id="chat"></div>
-            <div class="input-neu">
-                <input type="text" id="msg" placeholder="شجع البطل ياسين...">
-                <button class="btn-send" onclick="send()">🚀</button>
+            <div class="wall" id="chat"></div>
+            <div class="input-row">
+                <input type="text" id="msg" placeholder="اكتب رسالة بطل...">
+                <button class="send-btn" onclick="send()">🔥</button>
             </div>
         </div>
 
-        <div style="margin-top: 30px;">
-            <h3 style="font-size: 16px; padding-right: 10px;">📅 الأرشيف البطولي</h3>
-            <div id="history-body"></div>
+        <div class="history">
+            <h3 style="text-align: center; margin-bottom: 20px;">📜 كتاب البطولات</h3>
+            <div id="history-list"></div>
         </div>
     </div>
 </div>
@@ -218,73 +211,66 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    const getTodayDate = () => new Date().toISOString().split('T')[0];
+    const getToday = () => new Date().toISOString().split('T')[0];
     let currentSender = 'بابا';
 
     document.getElementById('mission-date').valueAsDate = new Date();
 
     function setSender(sender, btn) {
         currentSender = sender;
-        document.querySelectorAll('.s-pill').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
+    // تحديث البيانات والجائزة
     db.ref('yassin_money_quest').on('value', (snapshot) => {
         const data = snapshot.val() || { history: {} };
         const history = data.history || {};
         const entries = Object.entries(history).sort((a, b) => b[0].localeCompare(a[0]));
         
-        const historyBody = document.getElementById('history-body');
-        historyBody.innerHTML = '';
+        const list = document.getElementById('history-list');
+        list.innerHTML = '';
         let dryCount = 0; let wetCount = 0;
         
         entries.forEach(([date, status]) => {
             const isDry = status === 'dry';
             if(isDry) dryCount++; else wetCount++;
-            historyBody.innerHTML += `
-                <div class="neu-card" style="display:flex; justify-content:space-between; padding:15px; margin-bottom:10px; border-radius:15px;">
-                    <span style="font-weight:bold">${date}</span>
-                    <span style="color:${isDry?'#26de81':'#fd9644'}">${isDry?'⚡ جاف كلياً':'☁️ محاولة بطل'}</span>
+            list.innerHTML += `
+                <div class="h-card">
+                    <span>${date}</span>
+                    <span>${isDry?'✅ بطل':'💪 محاولة'}</span>
                 </div>`;
         });
 
-        const total = entries.length;
-        const rate = total > 0 ? Math.round((dryCount / total) * 100) : 0;
-        document.getElementById('success-rate').innerText = rate + "%";
-        document.getElementById('stars-total').innerText = dryCount;
-        
-        let rank = "بطل صاعد 💪";
-        if(rate >= 90) rank = "ملك الالتزام 👑";
-        else if(rate >= 70) rank = "بطل حديدي ⚡";
-        document.getElementById('rank-name').innerText = rank;
+        // تحديث النجوم
+        const starsContainer = document.getElementById('stars-container');
+        starsContainer.innerHTML = '⭐'.repeat(Math.min(dryCount, 10)) + (dryCount > 10 ? ' +' : '');
 
-        let money = (wetCount > 0 ? (dryCount * 10) : (total > 0 ? 1000 : 0));
-        document.getElementById('money').innerText = money + " ج.م";
-        document.getElementById('status-note').innerText = wetCount > 0 ? "مكافأة يومية: 10 جنيه" : "مكافأة الانضباط: 1000 جنيه";
+        // الحساب المالي
+        let money = (wetCount > 0 ? (dryCount * 10) : (entries.length > 0 ? 1000 : 0));
+        document.getElementById('money').innerText = money;
+        document.getElementById('status-note').innerText = wetCount > 0 ? "أحسنت! كل نجاح بـ 10 جنيهات ذهبية" : "رائع! أنت تقترب من جائزة الـ 1000 الكبرى";
+
+        // عبارات تحفيزية
+        const quotes = ["أنت أقوى من أي وقت مضى!", "سوبر سمسم هو بطل العالم!", "فخورون جداً بالتزامك يا بطل", "استمر.. الجائزة بانتظارك!"];
+        document.getElementById('motivation').innerText = quotes[Math.floor(Math.random() * quotes.length)];
     });
 
+    // الشات اليومي
     db.ref('yassin_chat').on('value', (snapshot) => {
         const chatBox = document.getElementById('chat');
         chatBox.innerHTML = '';
-        const today = getTodayDate();
-        let hasMsgs = false;
-
+        const today = getToday();
+        
         Object.values(snapshot.val() || {}).forEach(m => {
             if (m.date === today) {
-                hasMsgs = true;
-                let bubbleClass = 'bubble-baba';
-                if(m.sender === 'ماما') bubbleClass = 'bubble-mama';
-                if(m.sender === 'سوبر سمسم') bubbleClass = 'bubble-smsm';
+                let cls = 'm-baba';
+                if(m.sender === 'ماما') cls = 'm-mama';
+                if(m.sender === 'سوبر سمسم') cls = 'm-smsm';
 
-                chatBox.innerHTML += `
-                    <div class="bubble ${bubbleClass}">
-                        <span class="b-name">${m.sender}</span>
-                        ${m.text}
-                    </div>`;
+                chatBox.innerHTML += `<div class="msg ${cls}"><b>${m.sender}:</b> ${m.text}</div>`;
             }
         });
-
-        if(!hasMsgs) chatBox.innerHTML = '<center style="color:#aaa; margin-top:80px">اليوم هادئ.. اكتب تشجيعاً لياسين!</center>';
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 
@@ -294,16 +280,11 @@
     }
 
     function send() {
-        const msgInput = document.getElementById('msg');
-        if(!msgInput.value) return;
-        db.ref('yassin_chat').push({ 
-            text: msgInput.value, 
-            sender: currentSender, 
-            date: getTodayDate() 
-        });
-        msgInput.value = '';
+        const input = document.getElementById('msg');
+        if(!input.value) return;
+        db.ref('yassin_chat').push({ text: input.value, sender: currentSender, date: getToday() });
+        input.value = '';
     }
 </script>
-
 </body>
 </html>
