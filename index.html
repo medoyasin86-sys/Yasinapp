@@ -3,210 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محراب سوبر ياسين</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>تطبيق سوبر ياسين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
-            --hero-sky: #70a1ff;
-            --hero-sun: #eccc68;
-            --hero-grass: #7bed9f;
-            --hero-red: #ff4757;
-            --white: #ffffff;
+            --primary: #4834d4;
+            --accent: #f0932b;
+            --bg-light: #f6f9fc;
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --baba: #30336b;
+            --mama: #eb4d4b;
+            --smsm: #6ab04c;
         }
+
+        * { box-sizing: border-box; outline: none; }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(180deg, #70a1ff 0%, #ffffff 100%);
+            background: #e0e6ed;
+            background: linear-gradient(135deg, #70a1ff 0%, #4834d4 100%);
+            margin: 0;
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 15px;
-            color: #2f3542;
+            color: #2d3436;
         }
 
-        .app-card {
-            background: var(--white);
-            border-radius: 40px;
+        /* حاوية الموبايل */
+        .phone-container {
+            background: var(--bg-light);
             width: 100%;
-            max-width: 440px;
-            text-align: center;
-            border: 8px solid var(--hero-sun);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            overflow: hidden;
+            max-width: 420px;
+            min-height: 100vh;
             position: relative;
-        }
-
-        .hero-logo-area {
-            background: #f1f2f6;
-            padding: 30px 0;
-            border-bottom: 5px dashed var(--hero-sun);
-        }
-
-        .shield-logo {
-            font-size: 80px;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-            animation: hero-flex 2s infinite ease-in-out;
-            display: inline-block;
-        }
-
-        @keyframes hero-flex {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .hero-title {
-            font-size: 38px;
-            font-weight: 900;
-            color: var(--hero-sky);
-            margin-top: 10px;
-            text-shadow: 2px 2px 0px #fff;
-        }
-
-        .monthly-report {
-            background: #fff9e6;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 25px;
-            border: 2px solid var(--hero-sun);
-            text-align: right;
-        }
-
-        .report-header {
-            font-weight: 900;
-            color: #2f3542;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        .rank-badge {
-            background: var(--hero-sun);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 14px;
+        /* الهيدر العصري */
+        .app-header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: var(--shadow);
+            z-index: 10;
         }
 
-        .treasure-zone {
-            background: linear-gradient(45deg, #7bed9f, #2ed573);
-            margin: 15px;
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border: 4px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .hero-title { font-size: 24px; font-weight: 900; color: var(--primary); margin: 0; }
+        .rank-label { font-size: 14px; color: var(--accent); font-weight: bold; }
+
+        /* البطاقات الرئيسية */
+        .content-scroll {
             padding: 20px;
-            border-radius: 30px;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .money-val { font-size: 45px; font-weight: 900; display: block; }
-
-        .mission-btns { padding: 0 20px; }
-
-        .btn {
-            width: 100%; padding: 18px; margin: 8px 0; border-radius: 20px;
-            font-size: 20px; font-weight: 900; border: none; cursor: pointer; transition: 0.2s; color: #fff;
-        }
-
-        .btn-success { background: #1e90ff; border-bottom: 5px solid #0066cc; }
-        .btn-fail { background: #ffa502; border-bottom: 5px solid #e67e22; }
-        .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
-
-        .history-table-zone {
-            margin: 15px;
-            background: #f8f9fa;
-            border-radius: 20px;
-            max-height: 180px;
+            flex: 1;
             overflow-y: auto;
-            border: 1px solid #eee;
+            padding-bottom: 100px;
         }
 
-        .history-table { width: 100%; border-collapse: collapse; }
-        .history-table th { padding: 10px; background: #eee; color: #57606f; font-size: 14px; }
-        .history-table td { padding: 10px; border-bottom: 1px solid #f1f2f6; font-weight: bold; }
-
-        .chat-section { background: #f1f2f6; padding: 20px; margin-top: 15px; }
-        
-        /* ترويسة الشات توضح التاريخ */
-        .chat-header { font-size: 12px; color: #777; margin-bottom: 5px; font-weight: bold; }
-
-        .chat-display { height: 120px; background: #fff; border-radius: 15px; padding: 10px; overflow-y: auto; font-size: 14px; text-align: right; margin-bottom: 10px;}
-        .msg-bubble { margin-bottom: 8px; padding: 8px 12px; border-radius: 15px; display: block; width: fit-content; max-width: 90%; position: relative;}
-        .sender-tag { font-weight: 900; font-size: 11px; display: block; margin-bottom: 2px; }
-        
-        .msg-baba { background: #dff9fb; border-right: 4px solid #30336b; }
-        .msg-mama { background: #fce4ec; border-right: 4px solid #d81b60; }
-        .msg-smsm { background: #f0f4c3; border-right: 4px solid #827717; }
-
-        .sender-selector { display: flex; gap: 5px; margin-bottom: 10px; justify-content: center; }
-        .sender-btn { 
-            flex: 1; border: none; padding: 8px; border-radius: 10px; 
-            font-family: 'Tajawal'; font-weight: bold; cursor: pointer; opacity: 0.6; 
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
         }
-        .sender-btn.active { opacity: 1; transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .btn-baba { background: #30336b; color: white; }
-        .btn-mama { background: #d81b60; color: white; }
-        .btn-smsm { background: #827717; color: white; }
+
+        .stat-item span { display: block; }
+        .stat-val { font-size: 22px; font-weight: 900; color: var(--primary); }
+        .stat-label { font-size: 12px; color: #95a5a6; }
+
+        .money-card {
+            background: linear-gradient(135deg, #1e90ff, #70a1ff);
+            border-radius: 25px;
+            padding: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(30, 144, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .money-card::after {
+            content: '💰'; position: absolute; left: -10px; bottom: -10px; font-size: 80px; opacity: 0.2;
+        }
+
+        .money-title { font-size: 14px; opacity: 0.9; }
+        .money-amount { font-size: 38px; font-weight: 900; margin: 5px 0; }
+
+        /* الأزرار */
+        .action-zone { margin-bottom: 25px; }
+        .date-picker {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;
+            margin-bottom: 15px; font-family: 'Tajawal'; text-align: center;
+        }
+
+        .btn-main {
+            width: 100%; border: none; padding: 18px; border-radius: 15px;
+            font-weight: 900; font-size: 18px; cursor: pointer; transition: 0.3s;
+            margin-bottom: 10px; color: white;
+        }
+        .btn-success { background: #2ecc71; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3); }
+        .btn-fail { background: #ffa502; box-shadow: 0 5px 15px rgba(255, 165, 2, 0.3); }
+
+        /* الشات بنمط واتساب عصري */
+        .chat-container {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .sender-tabs {
+            display: flex; gap: 8px; margin-bottom: 15px;
+        }
+
+        .s-tab {
+            flex: 1; padding: 8px; border-radius: 10px; border: none;
+            font-size: 12px; font-weight: bold; cursor: pointer; opacity: 0.4; transition: 0.3s;
+        }
+        .s-tab.active { opacity: 1; transform: translateY(-2px); }
+
+        .chat-wall {
+            height: 180px; overflow-y: auto; padding: 10px;
+            background: #fcfdff; border-radius: 15px; border: 1px solid #f0f0f0;
+        }
+
+        .bubble {
+            margin-bottom: 12px; padding: 10px 15px; border-radius: 18px;
+            font-size: 14px; line-height: 1.5; position: relative; width: fit-content;
+            max-width: 85%;
+        }
+        .b-name { font-weight: 900; font-size: 10px; display: block; margin-bottom: 2px; }
+
+        .bubble-baba { background: #dff9fb; color: var(--baba); border-right: 4px solid var(--baba); }
+        .bubble-mama { background: #fce4ec; color: var(--mama); border-right: 4px solid var(--mama); }
+        .bubble-smsm { background: #f0f4c3; color: var(--smsm); border-right: 4px solid var(--smsm); }
+
+        .input-group {
+            display: flex; gap: 8px; margin-top: 15px;
+        }
+        .input-group input {
+            flex: 1; border: 1px solid #eee; padding: 12px; border-radius: 12px; background: #f9f9f9;
+        }
+        .btn-send {
+            background: var(--primary); color: white; border: none; width: 45px; height: 45px;
+            border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* الجدول */
+        .history-section { margin-top: 25px; }
+        .history-table {
+            width: 100%; border-collapse: separate; border-spacing: 0 8px;
+        }
+        .history-table tr { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .history-table td { padding: 15px; border-radius: 10px; font-size: 14px; }
+        .history-table td:first-child { font-weight: bold; color: #7f8c8d; }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <div class="hero-logo-area">
-        <div class="shield-logo">💪🦸‍♂️</div>
-        <div class="hero-title">سوبر ياسين</div>
-    </div>
+<div class="phone-container">
+    <header class="app-header">
+        <div class="avatar-circle">👦</div>
+        <h1 class="hero-title">سوبر ياسين</h1>
+        <div class="rank-label" id="rank-name">جاري التحميل...</div>
+    </header>
 
-    <div class="monthly-report">
-        <div class="report-header">
-            <span>📊 سجل الأبطال</span>
-            <span class="rank-badge" id="rank-name">بطل صاعد</span>
-        </div>
-        <div style="display: flex; justify-content: space-around; font-weight: bold;">
-            <div>النجاح: <span id="success-rate" style="color:#2ed573">0%</span></div>
-            <div>النجوم: <span id="stars-total" style="color:#ffa502">0 ⭐</span></div>
-        </div>
-        <div id="hero-advice" style="font-size: 13px; margin-top: 10px; color: #57606f;">ياسين.. قوتك في التزامك!</div>
-    </div>
-
-    <div class="treasure-zone">
-        <span style="font-weight: bold;">💰 حصالة البطل:</span>
-        <span class="money-val" id="money">0 جنيه</span>
-        <small id="status-note"></small>
-    </div>
-
-    <div class="mission-btns">
-        <input type="date" id="mission-date" style="padding:12px; border-radius:12px; border:2px solid var(--hero-sun); width: 80%; margin-bottom: 10px; text-align: center; font-family: 'Tajawal';">
-        <button class="btn btn-success" onclick="save(true)">⚡ ليلة البطل الجافة</button>
-        <button class="btn btn-fail" onclick="save(false)">☁️ محاولة بطل قادمة</button>
-    </div>
-
-    <div class="history-table-zone">
-        <table class="history-table">
-            <thead>
-                <tr>
-                    <th>التاريخ</th>
-                    <th>النتيجة</th>
-                </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-        </table>
-    </div>
-
-    <div class="chat-section">
-        <div class="chat-header">💬 رسائل تشجيع اليوم: <span id="today-date-display"></span></div>
-        <div class="sender-selector">
-            <button class="sender-btn btn-baba active" onclick="setSender('بابا', this)">بابا 🧔</button>
-            <button class="sender-btn btn-mama" onclick="setSender('ماما', this)">ماما 👩</button>
-            <button class="sender-btn btn-smsm" onclick="setSender('سمسم', this)">سمسم 👦</button>
+    <div class="content-scroll">
+        <div class="stat-card">
+            <div class="stat-item">
+                <span class="stat-val" id="stars-total">0</span>
+                <span class="stat-label">نجوم ⭐</span>
+            </div>
+            <div style="width: 1px; background: #eee;"></div>
+            <div class="stat-item">
+                <span class="stat-val" id="success-rate">0%</span>
+                <span class="stat-label">نسبة النجاح</span>
+            </div>
         </div>
 
-        <div class="chat-display" id="chat"></div>
-        
-        <div style="display: flex; gap: 5px; margin-top: 10px;">
-            <input type="text" id="msg" placeholder="اكتب رسالة لياسين..." style="flex:1; padding:10px; border-radius:10px; border:1px solid #ddd; font-family: 'Tajawal';">
-            <button onclick="send()" style="background:var(--hero-sky); color:#fff; border:none; padding:10px 15px; border-radius:10px; font-weight: bold; cursor:pointer;">إرسال</button>
+        <div class="money-card">
+            <div class="money-title">إجمالي الحصالة الآن</div>
+            <div class="money-amount" id="money">0 ج.م</div>
+            <div id="status-note" style="font-size: 12px; opacity: 0.8;"></div>
+        </div>
+
+        <div class="action-zone">
+            <input type="date" id="mission-date" class="date-picker">
+            <button class="btn-main btn-success" onclick="save(true)">تحدي الليلة الجافة ⚡</button>
+            <button class="btn-main btn-fail" onclick="save(false)">محاولة جديدة غداً ☁️</button>
+        </div>
+
+        <div class="chat-container">
+            <div class="sender-tabs">
+                <button class="s-tab active" style="background:var(--baba); color:white" onclick="setSender('بابا', this)">بابا 🧔</button>
+                <button class="s-tab" style="background:var(--mama); color:white" onclick="setSender('ماما', this)">ماما 👩</button>
+                <button class="s-tab" style="background:var(--smsm); color:white" onclick="setSender('سمسم', this)">سمسم 👦</button>
+            </div>
+            
+            <div class="chat-wall" id="chat"></div>
+
+            <div class="input-group">
+                <input type="text" id="msg" placeholder="اكتب رسالة لياسين...">
+                <button class="btn-send" onclick="send()">✈️</button>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3 style="font-size: 16px; margin-bottom: 10px;">📅 سجل الأيام السابقة</h3>
+            <table class="history-table" id="history-body"></table>
         </div>
     </div>
 </div>
@@ -224,16 +254,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // الحصول على تاريخ اليوم بتنسيق YYYY-MM-DD
     const getTodayDate = () => new Date().toISOString().split('T')[0];
     let currentSender = 'بابا';
 
     document.getElementById('mission-date').valueAsDate = new Date();
-    document.getElementById('today-date-display').innerText = getTodayDate();
 
     function setSender(sender, btn) {
         currentSender = sender;
-        document.querySelectorAll('.sender-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.s-tab').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
@@ -247,52 +275,54 @@
         let dryCount = 0; let wetCount = 0;
         
         entries.forEach(([date, status]) => {
-            if(status === 'dry') dryCount++; else wetCount++;
-            historyBody.innerHTML += `<tr><td>${date}</td><td style="color:${status === 'dry'?'#2ed573':'#ff4757'}">${status === 'dry'?'⚡ جافة':'☁️ بلل'}</td></tr>`;
+            const isDry = status === 'dry';
+            if(isDry) dryCount++; else wetCount++;
+            historyBody.innerHTML += `
+                <tr>
+                    <td>${date}</td>
+                    <td style="text-align:left; color:${isDry?'#2ecc71':'#e67e22'}">
+                        ${isDry?'⚡ ليلة جافة':'☁️ محاولة'}
+                    </td>
+                </tr>`;
         });
 
         const total = entries.length;
         const rate = total > 0 ? Math.round((dryCount / total) * 100) : 0;
         document.getElementById('success-rate').innerText = rate + "%";
-        document.getElementById('stars-total').innerText = dryCount + " ⭐";
+        document.getElementById('stars-total').innerText = dryCount;
         
         let rank = "بطل مكافح 💪";
         if(rate >= 90) rank = "بطل أسطوري 👑";
         else if(rate >= 70) rank = "بطل خارق ⚡";
-        
         document.getElementById('rank-name').innerText = rank;
+
         let money = (wetCount > 0 ? (dryCount * 10) : (total > 0 ? 1000 : 0));
-        document.getElementById('money').innerText = money + " جنيه";
-        document.getElementById('status-note').innerText = wetCount > 0 ? "نظام الـ 10 جنيه" : "مكافأة الالتزام (1000ج)";
+        document.getElementById('money').innerText = money + " ج.م";
+        document.getElementById('status-note').innerText = wetCount > 0 ? "نظام المكافأة اليومية (10ج)" : "مكافأة الالتزام الكامل (1000ج)";
     });
 
-    // تحديث الشات ليعرض رسائل اليوم فقط
     db.ref('yassin_chat').on('value', (snapshot) => {
         const chatBox = document.getElementById('chat');
         chatBox.innerHTML = '';
         const today = getTodayDate();
-        let hasMessages = false;
+        let hasMsgs = false;
 
         Object.values(snapshot.val() || {}).forEach(m => {
-            // الشرط الأساسي: يعرض الرسالة فقط إذا كانت من تاريخ اليوم
             if (m.date === today) {
-                hasMessages = true;
-                let typeClass = 'msg-baba';
-                if(m.sender === 'ماما') typeClass = 'msg-mama';
-                if(m.sender === 'سمسم') typeClass = 'msg-smsm';
+                hasMsgs = true;
+                let bubbleClass = 'bubble-baba';
+                if(m.sender === 'ماما') bubbleClass = 'bubble-mama';
+                if(m.sender === 'سمسم') bubbleClass = 'bubble-smsm';
 
                 chatBox.innerHTML += `
-                    <div class="msg-bubble ${typeClass}">
-                        <span class="sender-tag">${m.sender || 'مجهول'}</span>
+                    <div class="bubble ${bubbleClass}">
+                        <span class="b-name">${m.sender}</span>
                         ${m.text}
                     </div>`;
             }
         });
 
-        if (!hasMessages) {
-            chatBox.innerHTML = '<div style="color:#aaa; font-style:italic; padding-top:20px;">لا توجد رسائل اليوم.. كن أول من يشجع ياسين!</div>';
-        }
-
+        if(!hasMsgs) chatBox.innerHTML = '<center style="color:#ccc; margin-top:50px">لا رسائل اليوم</center>';
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 
@@ -302,15 +332,16 @@
     }
 
     function send() {
-        const text = document.getElementById('msg').value;
-        if(!text) return;
+        const msgInput = document.getElementById('msg');
+        if(!msgInput.value) return;
         db.ref('yassin_chat').push({ 
-            text: text, 
+            text: msgInput.value, 
             sender: currentSender, 
-            date: getTodayDate() // حفظ تاريخ اليوم مع الرسالة
+            date: getTodayDate() 
         });
-        document.getElementById('msg').value = '';
+        msgInput.value = '';
     }
 </script>
+
 </body>
 </html>
