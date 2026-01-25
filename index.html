@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y.Karizma - Squad Radio</title>
+    <title>Y.Karizma - Final Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -29,8 +29,10 @@
         .rank-tag { background: var(--heroic-red); padding: 2px 10px; font-size: 11px; font-weight: 900; border-radius: 3px; box-shadow: 0 0 15px var(--heroic-red); display: inline-flex; align-items: center; gap: 5px; }
         .player-name { font-size: 38px; font-weight: 900; color: #fff; margin: 5px 0; display: flex; align-items: center; gap: 10px; }
 
-        /* Loot Card & Orders */
-        .commander-orders { background: rgba(255, 190, 11, 0.05); border: 1px dashed var(--ff-gold); margin: 15px; padding: 12px; font-size: 11px; border-radius: 8px; color: #ccc; }
+        /* Tactical Orders (Updated) */
+        .commander-orders { background: rgba(255, 190, 11, 0.08); border: 2px solid var(--ff-gold); margin: 15px; padding: 15px; font-size: 12px; border-radius: 8px; color: #fff; line-height: 1.6; position: relative; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { border-color: var(--ff-gold); } 50% { border-color: #fff; } 100% { border-color: var(--ff-gold); } }
+
         .loot-card { background: var(--ff-card); margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333; }
         .bounty-amount { font-size: 40px; font-weight: 900; color: var(--ff-gold); display: block; }
 
@@ -45,13 +47,12 @@
         .btn-booyah { background: var(--ff-gold); color: #000; }
         .btn-defeat { background: #222; color: #555; }
 
-        /* --- 📟 SQUAD RADIO (CHAT) --- */
+        /* Squad Radio (Chat) */
         .squad-radio-container { background: rgba(0,0,0,0.5); margin: 0 15px 20px 15px; border: 1px solid #333; border-radius: 10px; overflow: hidden; }
         .radio-header { background: #1a1a1a; padding: 8px 12px; font-size: 10px; font-weight: 900; color: var(--squad-blue); border-bottom: 1px solid #333; display: flex; align-items: center; gap: 5px; }
         .chat-box { height: 180px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; }
         .msg { font-size: 12px; line-height: 1.4; padding: 5px 8px; border-radius: 4px; background: rgba(255,255,255,0.03); border-right: 2px solid transparent; }
         
-        /* Roles Colors */
         .msg-papa { border-right-color: var(--ff-gold); }
         .msg-mama { border-right-color: var(--ammo-pink); }
         .msg-yassin { border-right-color: var(--squad-blue); }
@@ -86,7 +87,10 @@
     </div>
 
     <div class="commander-orders">
-        💬 <b>أوامر القائد:</b> شهر يناير تدريب (1000ج). خطأ واحد مستقبلاً ينهي الجائزة الكبرى!
+        ⚠️ <b>أوامر القيادة العليا:</b> <br>
+        1️⃣ الجائزة الكبرى <b>(1000ج)</b> مضمونة في "شهر التدريب" فقط.<br>
+        2️⃣ مستقبلاً: أي هزيمة واحدة ❌ تُفقدك الـ 1000ج فوراً، ويصبح حسابك <b>10ج</b> عن كل يوم جاف فقط!<br>
+        3️⃣ الـ <b>1000ج</b> تعود فقط إذا أتممت <b>الشهر كاملاً</b> دون هزيمة واحدة! 🔥
     </div>
 
     <div class="loot-card">
@@ -145,17 +149,11 @@
     let historyData = {};
     let activeDate = new Date();
 
-    // --- نظام الشات ---
     function sendMsg() {
         const sender = document.getElementById('sender-name').value;
         const text = document.getElementById('msg-input').value;
         if(!text) return;
-        
-        db.ref('squad_chat').push({
-            sender: sender,
-            text: text,
-            timestamp: Date.now()
-        });
+        db.ref('squad_chat').push({ sender: sender, text: text, timestamp: Date.now() });
         document.getElementById('msg-input').value = '';
     }
 
@@ -167,26 +165,16 @@
             let roleClass = m.sender === 'بابا' ? 'msg-papa' : (m.sender === 'ماما' ? 'msg-mama' : 'msg-yassin');
             let tagClass = m.sender === 'بابا' ? 'tag-papa' : (m.sender === 'ماما' ? 'tag-mama' : 'tag-yassin');
             let roleTitle = m.sender === 'بابا' ? '[COMMANDER]' : (m.sender === 'ماما' ? '[SUPPLY]' : '[VETERAN]');
-            
-            box.innerHTML += `
-                <div class="msg ${roleClass}">
-                    <span class="role-tag ${tagClass}">${roleTitle}</span>
-                    <b style="color:#fff">${m.sender}:</b> ${m.text}
-                </div>`;
+            box.innerHTML += `<div class="msg ${roleClass}"><span class="role-tag ${tagClass}">${roleTitle}</span> <b>${m.sender}:</b> ${m.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
 
-    // --- نظام المهام ---
     function updateDisplay() {
         const key = activeDate.toISOString().split('T')[0];
         const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
         document.getElementById('date-text').innerText = "📅 " + activeDate.toLocaleDateString('ar-EG', dateOptions);
-        
-        const winBtn = document.getElementById('win-btn');
-        const lossBtn = document.getElementById('loss-btn');
-        const statusText = document.getElementById('status-text');
-
+        const winBtn = document.getElementById('win-btn'), lossBtn = document.getElementById('loss-btn'), statusText = document.getElementById('status-text');
         if (historyData[key]) {
             winBtn.disabled = lossBtn.disabled = true;
             winBtn.style.opacity = lossBtn.style.opacity = "0.3";
@@ -203,9 +191,7 @@
 
     db.ref('yassin_money_quest/history').on('value', (snap) => {
         historyData = snap.val() || {};
-        calculateBounty();
-        renderLog();
-        updateDisplay();
+        calculateBounty(); renderLog(); updateDisplay();
     });
 
     function calculateBounty() {
@@ -216,14 +202,14 @@
                 if(stat === 'dry') dry++; else { wet++; hasWet = true; }
             }
         });
+        // قاعدة التدريب (يناير 2026) وقاعدة الصرامة لباقي الشهور
         const isJan26 = (activeDate.getFullYear() === 2026 && activeDate.getMonth() === 0);
         document.getElementById('money').innerText = isJan26 ? "1000" : (hasWet ? dry * 10 : 1000);
         document.getElementById('month-stat').innerText = `✅ ${dry} | ❌ ${wet}`;
     }
 
     function renderLog() {
-        const list = document.getElementById('history-log');
-        list.innerHTML = '';
+        const list = document.getElementById('history-log'); list.innerHTML = '';
         Object.entries(historyData).sort((a,b)=>b[0].localeCompare(a[0])).forEach(([date, stat]) => {
             const d = new Date(date);
             if(d.getMonth() === activeDate.getMonth()) {
