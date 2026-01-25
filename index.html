@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y.Karizma Tactical Ops</title>
+    <title>Y.Karizma - Ultimate Warrior</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -11,11 +11,10 @@
     <style>
         :root {
             --ff-gold: #ffbe0b;
-            --ff-dark: #09090b;
-            --ff-panel: #18181b;
+            --ff-dark: #05070a;
+            --ff-card: #11141b;
             --heroic-red: #ff003c;
-            --booyah-yellow: #f1c40f;
-            --tech-blue: #00d2d3;
+            --success-green: #00ff88;
         }
 
         body {
@@ -26,7 +25,6 @@
             justify-content: center;
             color: #fff;
             overflow-x: hidden;
-            user-select: none;
         }
 
         .battle-container {
@@ -34,172 +32,219 @@
             max-width: 450px;
             background: var(--ff-dark);
             min-height: 100vh;
-            border: 1px solid #333;
+            border-left: 1px solid #222;
+            border-right: 1px solid #222;
             position: relative;
-            padding-bottom: 20px;
         }
 
-        /* --- الهيدر: المحارب المدجج --- */
+        /* واجهة المحارب المدجج */
         .warrior-header {
             width: 100%;
-            height: 320px;
+            height: 380px;
             position: relative;
-            background: url('https://w0.peakpx.com/wallpaper/326/289/HD-wallpaper-cobra-bundle-ff-cobra-bundle-fire-free-free-fire-thumbnail.jpg') center top/cover no-repeat;
+            background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat;
             display: flex;
             align-items: flex-end;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-            margin-bottom: -30px;
-            z-index: 10;
+            border-bottom: 4px solid var(--ff-gold);
         }
-        
+
         .warrior-header::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to top, var(--ff-dark), transparent 70%);
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--ff-dark) 10%, transparent 90%);
         }
 
-        .profile-info {
-            position: relative; z-index: 12; padding: 20px; width: 100%;
-            text-shadow: 2px 2px 4px #000; padding-bottom: 40px;
-        }
-
-        .rank-badge {
-            background: var(--heroic-red); color: #fff;
-            display: inline-block; padding: 3px 10px; border-radius: 4px;
-            font-size: 10px; font-weight: 900; box-shadow: 0 0 10px var(--heroic-red);
-        }
-
-        .player-name { font-size: 32px; font-weight: 900; margin: 0; color: #fff; font-style: italic; }
-        .player-name span { color: var(--ff-gold); }
-
-        /* --- منطقة العمليات --- */
-        .mission-control { padding: 50px 15px 10px 15px; background: var(--ff-dark); }
-
-        /* البطاقة المالية */
-        .stats-card {
-            background: #111; border: 1px solid #333; border-right: 4px solid var(--ff-gold);
-            border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px;
-        }
-        .money-val { font-size: 32px; color: var(--ff-gold); font-weight: 900; line-height: 1; }
-        .streak-box { text-align: center; }
-        .streak-num { font-size: 20px; font-weight: bold; color: var(--heroic-red); display: block; }
-
-        /* --- 🕹️ أزرار التحكم بالتاريخ (الجديد) --- */
-        .date-navigator {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #1c1c1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            padding: 5px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .nav-btn {
-            background: #333; color: var(--ff-gold); border: none;
-            width: 40px; height: 40px; border-radius: 6px;
-            font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
-        }
-        .nav-btn:active { transform: scale(0.9); background: var(--ff-gold); color: #000; }
-
-        .date-display-area {
-            flex: 1; text-align: center; cursor: pointer;
-        }
-        .date-main-text { font-size: 18px; font-weight: 900; display: block; line-height: 1.2; }
-        .date-sub-text { font-size: 11px; color: #777; font-weight: bold; display: block; margin-top: 2px;}
-        
-        /* مؤشرات الحالة تحت التاريخ */
-        .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 5px; }
-        .dot-green { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }
-        .dot-red { background: #e74c3c; box-shadow: 0 0 5px #e74c3c; }
-        .dot-gray { background: #555; }
-
-        /* أزرار الهجوم */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-
-        .btn-main {
-            border: none; padding: 20px 10px; font-size: 16px; font-weight: 900;
-            cursor: pointer; text-transform: uppercase;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        .player-info {
             position: relative;
+            z-index: 5;
+            padding: 20px;
+            width: 100%;
         }
-        .btn-win { background: linear-gradient(45deg, #f1c40f, #f39c12); color: #000; }
-        .btn-loss { background: linear-gradient(45deg, #c0392b, #e74c3c); color: #fff; }
-        
-        /* تأثير عند وجود نتيجة مسجلة */
-        .locked-mode { filter: grayscale(1); opacity: 0.5; pointer-events: none; }
 
-        /* السجل */
-        .log-container { background: #111; padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto; }
-        .log-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #222; font-size: 12px; }
-        .log-win { color: var(--booyah-yellow); }
-        .log-loss { color: var(--heroic-red); }
+        .rank-tag {
+            background: var(--heroic-red);
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 900;
+            border-radius: 3px;
+            box-shadow: 0 0 15px var(--heroic-red);
+        }
 
-        /* رسائل النظام */
-        .sys-toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #fff; color: #000; padding: 10px 20px; border-radius: 20px;
-            font-weight: bold; font-size: 12px; z-index: 100; display: none;
-            box-shadow: 0 0 20px var(--ff-gold);
+        .player-name {
+            font-size: 40px;
+            font-weight: 900;
+            color: #fff;
+            margin: 5px 0;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        /* أوامر القائد */
+        .commander-orders {
+            background: rgba(255, 190, 11, 0.1);
+            border: 1px dashed var(--ff-gold);
+            margin: 15px;
+            padding: 12px;
+            font-size: 12px;
+            border-radius: 8px;
+            color: #eee;
+        }
+
+        /* لوحة الجوائز */
+        .loot-card {
+            background: var(--ff-card);
+            margin: 0 15px 15px 15px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #333;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        .bounty-amount {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--ff-gold);
+            display: block;
+            line-height: 1;
+        }
+
+        /* التحكم بالتاريخ */
+        .date-shifter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c212a;
+            margin: 0 15px 15px 15px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .shift-btn {
+            background: #333;
+            border: none;
+            color: var(--ff-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .date-display {
+            flex: 1;
+            text-align: center;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        /* أزرار المعركة */
+        .battle-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 0 15px 25px 15px;
+        }
+
+        .action-btn {
+            padding: 20px 10px;
+            border: none;
+            font-family: 'Cairo';
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .btn-booyah { background: var(--ff-gold); color: #000; }
+        .btn-defeat { background: #333; color: #777; }
+        .btn-locked { opacity: 0.3; cursor: not-allowed; }
+
+        /* سجل المعارك الشهري */
+        .battle-log {
+            background: #090b10;
+            margin: 0 15px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+
+        .log-header {
+            padding: 10px;
+            font-size: 12px;
+            color: var(--ff-gold);
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .log-list {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            margin-bottom: 5px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .status-win { color: var(--success-green); font-weight: bold; }
+        .status-loss { color: var(--heroic-red); font-weight: bold; }
+
+        input[type="date"] {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="sys-toast" id="toast">تم تسجيل المهمة بنجاح!</div>
-
-<input type="date" id="hidden-date-picker" style="display:none;" onchange="handleDatePick(this.value)">
-
 <div class="battle-container">
     <div class="warrior-header">
-        <div class="profile-info">
-            <div class="rank-badge">ELITE PASS 🎖️</div>
-            <h1 class="player-name">Y.<span>KARIZMA</span></h1>
-            <div style="font-size: 12px; opacity: 0.8;">الوضع: اشتباك يومي</div>
+        <div class="player-info">
+            <span class="rank-tag">GRANDMASTER 🎖️</span>
+            <h1 class="player-name">Y.KARIZMA</h1>
+            <div style="font-size: 12px; color: #aaa;">MISSION: DRY PROTOCOL v4.0</div>
         </div>
     </div>
 
-    <div class="mission-control">
-        
-        <div class="stats-card">
-            <div>
-                <small style="color:#777">TOTAL BOUNTY</small>
-                <div class="money-val"><span id="money">1000</span> EGP</div>
-            </div>
-            <div class="streak-box">
-                <span class="streak-num" id="streak-val">0</span>
-                <small style="font-size:9px; color:#555">STREAK</small>
-            </div>
+    <div class="commander-orders">
+        💬 <b>أوامر القائد:</b> شهر يناير هو "تدريب" والجائزة ثابتة (1000ج). <br>
+        <span style="color: var(--heroic-red)">من الشهر القادم:</span> خطأ واحد سيكلفك الجائزة الكبرى، وسيتم احتساب اليوم الجاف بـ 10ج فقط!
+    </div>
+
+    <div class="loot-card">
+        <span style="font-size: 12px; color: #888;">STRATEGIC BOUNTY (الراتب الحالي)</span>
+        <span class="bounty-amount" id="money">1000</span>
+        <span style="font-size: 14px; font-weight: bold;">جنيه مصري</span>
+    </div>
+
+    <div class="date-shifter">
+        <button class="shift-btn" onclick="changeDay(-1)">◀</button>
+        <div class="date-display" onclick="document.getElementById('date-input').showPicker()">
+            <div id="date-text">تحميل...</div>
+            <div id="status-text" style="font-size:10px; color: #555;">بانتظار الرصد</div>
         </div>
+        <button class="shift-btn" onclick="changeDay(1)">▶</button>
+        <input type="date" id="date-input" onchange="setDate(this.value)">
+    </div>
 
-        <div class="date-navigator">
-            <button class="nav-btn" onclick="changeDay(-1)">◀</button>
-            <div class="date-display-area" onclick="document.getElementById('hidden-date-picker').showPicker()">
-                <span class="date-main-text" id="display-date">اليوم</span>
-                <span class="date-sub-text" id="display-status">
-                    <span class="status-dot dot-gray"></span> بانتظار التقرير
-                </span>
+    <div class="battle-actions" id="action-area">
+        <button class="action-btn btn-booyah" id="win-btn" onclick="register(true)">BOOYAH! ⚡</button>
+        <button class="action-btn btn-defeat" id="loss-btn" onclick="register(false)">DEFEAT 💀</button>
+    </div>
+
+    <div class="battle-log">
+        <div class="log-header">
+            <span>سجل معارك الشهر</span>
+            <span id="month-stat">0/0</span>
+        </div>
+        <div class="log-list" id="history-log">
             </div>
-            <button class="nav-btn" onclick="changeDay(1)">▶</button>
-        </div>
-
-        <div class="action-grid" id="action-buttons">
-            <button class="btn-main btn-win" onclick="saveResult(true)">
-                BOOYAH! 🦅
-                <div style="font-size:10px; font-weight:normal">(مهمة ناجحة)</div>
-            </button>
-            <button class="btn-main btn-loss" onclick="saveResult(false)">
-                DEFEAT 💀
-                <div style="font-size:10px; font-weight:normal">(فشل المهمة)</div>
-            </button>
-        </div>
-
-        <div style="font-size: 11px; color: #555; margin-bottom: 5px;">BATTLE LOG (Last 5 Days):</div>
-        <div class="log-container" id="mini-log"></div>
-
     </div>
 </div>
 
@@ -213,164 +258,140 @@
         messagingSenderId: "940031861888",
         appId: "1:940031861888:web:9b7600cbf80b6343"
     };
+
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // متغيرات الحالة
     let historyData = {};
-    let currentDate = new Date(); // التاريخ المختار حالياً
+    let activeDate = new Date(); // التاريخ الذي ينظر إليه المستخدم حالياً
 
-    // --- 1. إدارة التاريخ والوقت ---
-    
-    // تنسيق التاريخ للتخزين (YYYY-MM-DD)
-    const formatDateKey = (date) => date.toISOString().split('T')[0];
-    
-    // تنسيق التاريخ للعرض (مثل: الجمعة 25 يناير)
-    const formatDateDisplay = (date) => {
-        const options = { weekday: 'long', month: 'short', day: 'numeric' };
-        return date.toLocaleDateString('ar-EG', options);
-    };
+    // --- الوظائف الأساسية ---
 
-    // التحقق مما إذا كان التاريخ هو اليوم
-    const isToday = (date) => {
-        const today = new Date();
-        return date.getDate() === today.getDate() &&
-               date.getMonth() === today.getMonth() &&
-               date.getFullYear() === today.getFullYear();
-    };
+    function updateDisplay() {
+        const key = activeDate.toISOString().split('T')[0];
+        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+        document.getElementById('date-text').innerText = activeDate.toLocaleDateString('ar-EG', dateOptions);
+        
+        const winBtn = document.getElementById('win-btn');
+        const lossBtn = document.getElementById('loss-btn');
+        const statusText = document.getElementById('status-text');
 
-    // --- 2. وظائف التنقل ---
+        if (historyData[key]) {
+            winBtn.classList.add('btn-locked');
+            lossBtn.classList.add('btn-locked');
+            winBtn.disabled = true;
+            lossBtn.disabled = true;
+            const isWin = historyData[key] === 'dry';
+            statusText.innerText = isWin ? "✅ تم الرصد: انتصار" : "❌ تم الرصد: هزيمة";
+            statusText.style.color = isWin ? "var(--success-green)" : "var(--heroic-red)";
+        } else {
+            winBtn.classList.remove('btn-locked');
+            lossBtn.classList.remove('btn-locked');
+            winBtn.disabled = false;
+            lossBtn.disabled = false;
+            statusText.innerText = "بانتظار رصد المهمة...";
+            statusText.style.color = "#555";
+        }
+    }
 
     function changeDay(delta) {
-        currentDate.setDate(currentDate.getDate() + delta);
-        updateDateUI();
+        activeDate.setDate(activeDate.getDate() + delta);
+        updateDisplay();
     }
 
-    function handleDatePick(val) {
-        currentDate = new Date(val);
-        updateDateUI();
+    function setDate(val) {
+        activeDate = new Date(val);
+        updateDisplay();
     }
 
-    function updateDateUI() {
-        const key = formatDateKey(currentDate);
-        const displayEl = document.getElementById('display-date');
-        const statusEl = document.getElementById('display-status');
-        const btnsDiv = document.getElementById('action-buttons');
-        
-        // تحديث النص الرئيسي
-        if (isToday(currentDate)) {
-            displayEl.innerText = "اليوم (J.O.D.Y)";
-            displayEl.style.color = "var(--ff-gold)";
-        } else {
-            displayEl.innerText = formatDateDisplay(currentDate);
-            displayEl.style.color = "#fff";
-        }
-
-        // تحديث حالة هذا اليوم (هل هو مسجل أم لا؟)
-        if (historyData[key]) {
-            const status = historyData[key];
-            const isWin = status === 'dry';
-            statusEl.innerHTML = isWin 
-                ? `<span class="status-dot dot-green"></span> تم التسجيل: BOOYAH` 
-                : `<span class="status-dot dot-red"></span> تم التسجيل: DEFEAT`;
-            statusEl.style.color = isWin ? '#2ecc71' : '#e74c3c';
-            
-            // قفل الأزرار إذا كان مسجلاً لمنع التغيير (اختياري، هنا سأجعلها شفافة فقط)
-            btnsDiv.classList.add('locked-mode');
-        } else {
-            statusEl.innerHTML = `<span class="status-dot dot-gray"></span> لم يتم الرصد`;
-            statusEl.style.color = "#777";
-            btnsDiv.classList.remove('locked-mode');
-        }
-
-        // تحديث القيمة في الـ input المخفي
-        document.getElementById('hidden-date-picker').value = key;
-    }
-
-    // --- 3. فايربيس والمنطق ---
+    // --- الحساب والقواعد ---
 
     db.ref('yassin_money_quest/history').on('value', (snapshot) => {
         historyData = snapshot.val() || {};
-        calculateStats(historyData);
-        updateDateUI(); // تحديث الواجهة عند وصول بيانات جديدة
-        updateLog(historyData);
+        calculateBounty(historyData);
+        renderLog(historyData);
+        updateDisplay();
     });
 
-    function calculateStats(history) {
-        const entries = Object.entries(history);
+    function calculateBounty(history) {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth(); // 0 = يناير
+
+        let dryCount = 0;
         let wetCount = 0;
-        let streak = 0;
+        let hasWetInCurrentMonth = false;
+
+        Object.entries(history).forEach(([dateStr, status]) => {
+            const d = new Date(dateStr);
+            // التدقيق فقط في الشهر والسنة الحالية
+            if (d.getMonth() === activeDate.getMonth() && d.getFullYear() === activeDate.getFullYear()) {
+                if (status === 'dry') dryCount++;
+                else {
+                    wetCount++;
+                    hasWetInCurrentMonth = true;
+                }
+            }
+        });
+
+        let finalMoney = 1000;
         
-        // حساب الستريك (من أحدث تاريخ مسجل)
-        // نحتاج ترتيب التواريخ تنازلياً
-        const sortedDates = Object.keys(history).sort().reverse();
-        
-        // حساب بسيط للستريك: عد الأيام الجافة المتتالية من الأخير
-        for(let date of sortedDates) {
-            if(history[date] === 'dry') streak++;
-            else break;
+        // القاعدة الصارمة: لو مش شهر يناير 2026 (شهر التدريب)
+        // شهر يناير 2026 برمجياً هو سنة 2026 وشهر 0
+        const isTrainingMonth = (activeDate.getFullYear() === 2026 && activeDate.getMonth() === 0);
+
+        if (!isTrainingMonth) {
+            if (hasWetInCurrentMonth) {
+                finalMoney = dryCount * 10; // 10 جنيه لكل يوم جاف
+            } else {
+                finalMoney = 1000; // الجائزة الكبرى لو الشهر كامل نظيف
+            }
+        } else {
+            finalMoney = 1000; // شهر يناير دائماً 1000
         }
 
-        // حساب الفلوس
-        entries.forEach(e => { if(e[1] === 'wet') wetCount++; });
-        let money = 1000;
-        if (entries.length > 30) {
-            money = Math.max(0, 1000 - (wetCount * 50));
-        }
-
-        document.getElementById('money').innerText = money;
-        document.getElementById('streak-val').innerText = streak;
+        document.getElementById('money').innerText = finalMoney;
+        document.getElementById('month-stat').innerText = `Dry: ${dryCount} | Wet: ${wetCount}`;
     }
 
-    function updateLog(history) {
-        const container = document.getElementById('mini-log');
-        container.innerHTML = '';
-        const sorted = Object.entries(history).sort().reverse().slice(0, 10);
+    function renderLog(history) {
+        const logList = document.getElementById('history-log');
+        logList.innerHTML = '';
+        
+        // ترتيب التواريخ تنازلياً
+        const sorted = Object.entries(history).sort((a, b) => b[0].localeCompare(a[0]));
         
         sorted.forEach(([date, status]) => {
-            const isWin = status === 'dry';
-            container.innerHTML += `
-                <div class="log-row">
-                    <span>${date}</span>
-                    <span class="${isWin ? 'log-win' : 'log-loss'}">
-                        ${isWin ? 'BOOYAH' : 'DEFEAT'}
-                    </span>
-                </div>
-            `;
+            const d = new Date(date);
+            // إظهار أيام الشهر المختار فقط في السجل
+            if (d.getMonth() === activeDate.getMonth() && d.getFullYear() === activeDate.getFullYear()) {
+                const isWin = status === 'dry';
+                logList.innerHTML += `
+                    <div class="log-entry">
+                        <span>${date}</span>
+                        <span class="${isWin ? 'status-win' : 'status-loss'}">${isWin ? 'BOOYAH' : 'DEFEAT'}</span>
+                    </div>
+                `;
+            }
         });
     }
 
-    // --- 4. الحفظ ---
-
-    function saveResult(isDry) {
-        const key = formatDateKey(currentDate);
+    function register(isDry) {
+        const key = activeDate.toISOString().split('T')[0];
         
-        // حماية: هل اليوم مسجل مسبقاً؟
-        if (historyData[key]) {
-            showToast("⚠️ لا يمكن تعديل نتيجة مسجلة سابقاً!");
-            return;
-        }
+        if (historyData[key]) return; // منع التكرار
 
-        if(isDry) {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffbe0b', '#fff'] });
-            showToast("BOOYAH! 🦅 تم تأمين اليوم");
-        } else {
-            showToast("Mission Failed 💀 حاول غداً");
+        if (isDry) {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
 
         db.ref('yassin_money_quest/history').update({ [key]: isDry ? 'dry' : 'wet' });
     }
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg;
-        t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    }
-    
-    // بدء التشغيل
-    updateDateUI();
-
+    // القيمة الافتراضية للتقويم
+    document.getElementById('date-input').valueAsDate = new Date();
+    updateDisplay();
 </script>
+
 </body>
 </html>
