@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREE FIRE - SUPER SMSM EDITION</title>
+    <title>مغامرات Y.Karizma</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
-            --ff-yellow: #ffbe0b;
-            --ff-orange: #fb5607;
-            --ff-dark: #0b0e14;
-            --ff-card: #161b22;
-            --heroic-red: #ff0054;
+            --ff-gold: #ffbe0b;
+            --ff-dark: #0d0d0d;
+            --ff-card: #1a1a1a;
+            --danger: #ff4757;
+            --success: #2ed573;
         }
 
         body {
@@ -22,7 +22,6 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
             color: #fff;
         }
 
@@ -31,112 +30,131 @@
             max-width: 430px;
             background: var(--ff-dark);
             min-height: 100vh;
-            border: 2px solid var(--ff-yellow);
+            border: 1px solid #333;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
+        /* رأس التطبيق - الثيم القتالي */
         .game-header {
             padding: 20px;
             text-align: center;
-            background: linear-gradient(180deg, #1e293b 0%, #0b0e14 100%);
-            border-bottom: 3px solid var(--ff-yellow);
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-bottom: 2px solid var(--ff-gold);
         }
 
-        /* صورة الشخصية */
-        .character-img {
-            width: 130px;
-            height: 130px;
-            background: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Alok&backgroundColor=ffbe0b') center/cover;
-            border-radius: 20px;
-            margin: 0 auto 10px;
-            border: 3px solid var(--ff-yellow);
-            box-shadow: 0 0 20px var(--ff-orange);
-        }
-
-        .player-name { font-size: 26px; font-weight: 900; color: var(--ff-yellow); letter-spacing: 1px; margin: 5px 0; }
-        .warning-tag { background: var(--ff-orange); color: #000; padding: 3px 10px; font-size: 11px; font-weight: 900; border-radius: 4px; display: inline-block; }
-
-        .content { padding: 15px; flex: 1; }
-
-        /* منطقة الجواهر */
-        .reward-box {
-            background: var(--ff-card);
-            border: 2px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
+        /* صورة المقاتل المسلح */
+        .warrior-frame {
+            width: 100%;
+            height: 220px;
+            background: url('https://img.freepik.com/free-photo/view-futuristic-soldier-wearing-helmet-armor_23-2150911894.jpg') center/cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #444;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
             position: relative;
         }
 
-        .coin-val { font-size: 45px; font-weight: 900; color: var(--ff-yellow); }
-
-        /* رسالة القواعد */
-        .rules-alert {
-            background: rgba(255, 0, 84, 0.1);
-            border: 1px solid var(--heroic-red);
-            padding: 10px;
-            border-radius: 8px;
+        .rank-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--danger);
+            padding: 5px 15px;
+            font-weight: 900;
             font-size: 12px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .app-title { font-size: 24px; font-weight: 900; color: var(--ff-gold); margin: 0; }
+        .sub-title { font-size: 14px; opacity: 0.8; }
+
+        .content { padding: 15px; }
+
+        /* منطقة المكافأة */
+        .reward-zone {
+            background: var(--ff-card);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
             margin-bottom: 20px;
-            color: #ff79a1;
+            border-right: 4px solid var(--ff-gold);
         }
 
-        /* الأزرار العسكرية */
-        .btn-ff {
-            width: 100%; padding: 20px; border: none; font-size: 20px; font-weight: 900;
-            cursor: pointer; margin-bottom: 12px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+        .money-display { font-size: 48px; font-weight: 900; color: var(--ff-gold); text-shadow: 0 0 15px rgba(255,190,11,0.3); }
+
+        .alert-box {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px dashed var(--danger);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
-        .btn-booyah { background: var(--ff-yellow); color: #000; }
-        .btn-defeat { background: #30363d; color: #fff; }
+        /* أزرار المهمات */
+        .btn-action {
+            width: 100%; padding: 18px; border: none; font-size: 18px; font-weight: 900;
+            cursor: pointer; margin-bottom: 10px; border-radius: 5px; transition: 0.3s;
+        }
+        .btn-victory { background: var(--ff-gold); color: #000; }
+        .btn-defeat { background: #333; color: #aaa; }
 
         /* شات الفريق */
-        .team-chat { background: #161b22; padding: 15px; border-radius: 15px; border-top: 2px solid var(--ff-yellow); }
-        .msg-list { height: 120px; overflow-y: auto; font-size: 12px; margin-bottom: 10px; }
-        .msg-line { background: rgba(255,255,255,0.05); padding: 5px 10px; margin-bottom: 4px; border-right: 3px solid var(--ff-yellow); }
+        .chat-section { background: #161616; padding: 15px; border-radius: 10px; }
+        .chat-msg-box { height: 130px; overflow-y: auto; font-size: 12px; margin-bottom: 10px; }
+        .msg-line { background: #222; padding: 8px; margin-bottom: 5px; border-radius: 4px; border-right: 3px solid var(--ff-gold); }
 
-        .char-btn { padding: 8px; background: #30363d; border: none; color: #fff; border-radius: 5px; cursor: pointer; flex: 1; font-size: 10px; font-weight: bold; }
-        .char-btn.active { background: var(--ff-yellow); color: #000; }
+        .sender-selector { display: flex; gap: 5px; margin-bottom: 10px; }
+        .s-pill { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #fff; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 5px; }
+        .s-pill.active { background: var(--ff-gold); color: #000; border-color: var(--ff-gold); }
+
+        .input-group { display: flex; gap: 5px; }
+        .input-group input { flex: 1; background: #000; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 5px; }
+        .btn-fire { background: var(--danger); border: none; padding: 10px 20px; color: #fff; font-weight: bold; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
 <div class="battle-container">
     <header class="game-header">
-        <div class="character-img"></div>
-        <h1 class="player-name">DJ YASSIN - ALOK</h1>
-        <span class="warning-tag">مهمة الشهر الأول: تعزيز الموارد</span>
+        <div class="warrior-frame">
+            <span class="rank-tag">RANK: GRANDMASTER</span>
+        </div>
+        <h1 class="app-title">مغامرات Y.Karizma</h1>
+        <div class="sub-title">( البطل ياسين )</div>
     </header>
 
     <div class="content">
-        <div class="rules-alert">
-            🚨 <b>تنبيه من القيادة:</b> تم صرف 1000ج لدعمك في الشهر الأول.. ولكن! من الشهر القادم، أي "بلل" سيكلفك خسارة المكافأة الكبرى فوراً. كن رجلاً والتزم!
+        <div class="alert-box">
+            ⚠️ <b>بروتوكول الشهر الأول:</b> تم تفعيل دعم الـ 1000ج كمؤن استراتيجية. <br>
+            <b>تحذير:</b> من الشهر القادم، أي فشل في المهمة سيؤدي إلى مصادرة الجائزة الكبرى فوراً.
         </div>
 
-        <div class="reward-box">
-            <div style="font-size: 14px; color: var(--ff-yellow);">جواهر المكافأة الحالية 💎</div>
-            <div class="coin-val" id="money">1000</div>
-            <div style="font-size: 12px; font-weight: bold;">جنيه مصري</div>
+        <div class="reward-zone">
+            <div style="font-size: 12px; opacity: 0.7;">سلاح التطوير القادم 💠</div>
+            <div class="money-display"><span id="money">1000</span> <small style="font-size: 18px;">L.E</small></div>
+            <div style="font-size: 11px; color: var(--ff-gold);" id="status-note">الدعم اللوجيستي نشط ✅</div>
         </div>
 
-        <div class="battle-btns">
-            <input type="date" id="mission-date" style="width:100%; background:#0b0e14; border:1px solid #30363d; color:#fff; padding:10px; margin-bottom:10px; text-align:center; border-radius:8px;">
-            <button class="btn-ff btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
-            <button class="btn-ff btn-defeat" onclick="save(false)">DEFEAT (حاول مجدداً) ☁️</button>
+        <div class="mission-inputs">
+            <input type="date" id="mission-date" style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:12px; margin-bottom:15px; text-align:center; border-radius:5px; font-family:'Cairo';">
+            <button class="btn-action btn-victory" onclick="save(true)">MISSION BOOYAH! ⚡</button>
+            <button class="btn-action btn-defeat" onclick="save(false)">DEFEAT (سأعود أقوى)</button>
         </div>
 
-        <div class="team-chat">
-            <div style="display:flex; gap:5px; margin-bottom:10px;">
-                <button class="char-btn active" onclick="setSender('بابا', this)">BABA 🧔</button>
-                <button class="char-btn" onclick="setSender('ماما', this)">MAMA 👩</button>
-                <button class="char-btn" onclick="setSender('سوبر سمسم', this)">SMSM 🦸‍♂️</button>
+        <div class="chat-section">
+            <div class="sender-selector">
+                <button class="s-pill active" onclick="setSender('BABA', this)">BABA 👑</button>
+                <button class="s-pill" onclick="setSender('MAMA', this)">MAMA 🛡️</button>
+                <button class="s-pill" onclick="setSender('SMSM', this)">Y.KARIZMA 🔫</button>
             </div>
-            <div class="msg-list" id="chat"></div>
-            <div style="display:flex; gap:5px;">
-                <input type="text" id="msg" placeholder="أرسل إشارة.." style="flex:1; background:#0b0e14; border:1px solid #30363d; color:#fff; padding:10px; border-radius:5px;">
-                <button onclick="send()" style="background:var(--ff-orange); border:none; padding:10px; color:#fff; font-weight:bold; border-radius:5px;">FIRE</button>
+            <div class="chat-msg-box" id="chat"></div>
+            <div class="input-group">
+                <input type="text" id="msg" placeholder="أرسل إشارة لاسلكية..">
+                <button class="btn-fire" onclick="send()">FIRE</button>
             </div>
         </div>
     </div>
@@ -155,35 +173,29 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    let currentSender = 'بابا';
+    let currentSender = 'BABA';
     const today = () => new Date().toISOString().split('T')[0];
     document.getElementById('mission-date').valueAsDate = new Date();
 
     function setSender(sender, btn) {
         currentSender = sender;
-        document.querySelectorAll('.char-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.s-pill').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
-    // منطق الحساب الجديد (ضمان الـ 1000 في الشهر الأول)
     db.ref('yassin_money_quest').on('value', (snapshot) => {
         const data = snapshot.val() || { history: {} };
         const history = data.history || {};
-        const dates = Object.keys(history);
+        const datesCount = Object.keys(history).length;
         
-        // التحقق من تاريخ البداية (أول دخول)
-        // إذا كان عدد الأيام أقل من 30 يوم، فهو في الشهر الأول
-        // ملاحظة: يمكنك تعديل هذا المنطق لاحقاً ليكون أكثر صرامة
-        if (dates.length <= 30) {
+        // منطق الشهر الأول
+        if (datesCount <= 30) {
             document.getElementById('money').innerText = "1000";
         } else {
-            // منطق العقاب بعد الشهر الأول
-            let dryCount = 0; let wetCount = 0;
-            Object.values(history).forEach(status => {
-                if(status === 'dry') dryCount++; else wetCount++;
-            });
-            let finalMoney = (wetCount > 0 ? (dryCount * 10) : 1000);
-            document.getElementById('money').innerText = finalMoney;
+            let dry = 0; let wet = 0;
+            Object.values(history).forEach(s => s === 'dry' ? dry++ : wet++);
+            document.getElementById('money').innerText = (wet > 0 ? (dry * 10) : 1000);
+            document.getElementById('status-note').innerText = wet > 0 ? "نظام الـ 10 جنيهات نشط" : "مكافأة الالتزام الكامل";
         }
     });
 
@@ -193,7 +205,7 @@
         const curDate = today();
         Object.values(snapshot.val() || {}).forEach(m => {
             if(m.date === curDate) {
-                chatBox.innerHTML += `<div class="msg-line"><b style="color:var(--ff-yellow)">[${m.sender}]:</b> ${m.text}</div>`;
+                chatBox.innerHTML += `<div class="msg-line"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
             }
         });
         chatBox.scrollTop = chatBox.scrollHeight;
