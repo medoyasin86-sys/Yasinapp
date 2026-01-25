@@ -52,7 +52,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, var(--ff-dark) 10%, transparent 90%);
+            background: linear-gradient(to top, var(--ff-dark) 15%, transparent 90%);
         }
 
         .player-info {
@@ -69,14 +69,20 @@
             font-weight: 900;
             border-radius: 3px;
             box-shadow: 0 0 15px var(--heroic-red);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .player-name {
-            font-size: 40px;
+            font-size: 38px;
             font-weight: 900;
             color: #fff;
             margin: 5px 0;
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* أوامر القائد */
@@ -166,6 +172,7 @@
             margin: 0 15px;
             border-radius: 10px;
             border: 1px solid #222;
+            margin-bottom: 20px;
         }
 
         .log-header {
@@ -206,9 +213,9 @@
 <div class="battle-container">
     <div class="warrior-header">
         <div class="player-info">
-            <span class="rank-tag">GRANDMASTER 🎖️</span>
-            <h1 class="player-name">Y.KARIZMA</h1>
-            <div style="font-size: 12px; color: #aaa;">MISSION: DRY PROTOCOL v4.0</div>
+            <span class="rank-tag">🏆 GRANDMASTER 🎖️</span>
+            <h1 class="player-name">🥷 Y.KARIZMA 🔫</h1>
+            <div style="font-size: 12px; color: #aaa; letter-spacing: 1px;">🎖️ ELITE WARRIOR SQUAD 🎖️</div>
         </div>
     </div>
 
@@ -218,7 +225,7 @@
     </div>
 
     <div class="loot-card">
-        <span style="font-size: 12px; color: #888;">STRATEGIC BOUNTY (الراتب الحالي)</span>
+        <span style="font-size: 12px; color: #888;">💎 STRATEGIC BOUNTY 💎</span>
         <span class="bounty-amount" id="money">1000</span>
         <span style="font-size: 14px; font-weight: bold;">جنيه مصري</span>
     </div>
@@ -226,7 +233,7 @@
     <div class="date-shifter">
         <button class="shift-btn" onclick="changeDay(-1)">◀</button>
         <div class="date-display" onclick="document.getElementById('date-input').showPicker()">
-            <div id="date-text">تحميل...</div>
+            <div id="date-text">📅 جاري التحميل...</div>
             <div id="status-text" style="font-size:10px; color: #555;">بانتظار الرصد</div>
         </div>
         <button class="shift-btn" onclick="changeDay(1)">▶</button>
@@ -240,7 +247,7 @@
 
     <div class="battle-log">
         <div class="log-header">
-            <span>سجل معارك الشهر</span>
+            <span>📜 سجل معارك الشهر</span>
             <span id="month-stat">0/0</span>
         </div>
         <div class="log-list" id="history-log">
@@ -263,14 +270,12 @@
     const db = firebase.database();
 
     let historyData = {};
-    let activeDate = new Date(); // التاريخ الذي ينظر إليه المستخدم حالياً
-
-    // --- الوظائف الأساسية ---
+    let activeDate = new Date();
 
     function updateDisplay() {
         const key = activeDate.toISOString().split('T')[0];
         const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-        document.getElementById('date-text').innerText = activeDate.toLocaleDateString('ar-EG', dateOptions);
+        document.getElementById('date-text').innerText = "📅 " + activeDate.toLocaleDateString('ar-EG', dateOptions);
         
         const winBtn = document.getElementById('win-btn');
         const lossBtn = document.getElementById('loss-btn');
@@ -282,7 +287,7 @@
             winBtn.disabled = true;
             lossBtn.disabled = true;
             const isWin = historyData[key] === 'dry';
-            statusText.innerText = isWin ? "✅ تم الرصد: انتصار" : "❌ تم الرصد: هزيمة";
+            statusText.innerText = isWin ? "✅ تم الرصد: انتصار BOOYAH" : "❌ تم الرصد: هزيمة DEFEAT";
             statusText.style.color = isWin ? "var(--success-green)" : "var(--heroic-red)";
         } else {
             winBtn.classList.remove('btn-locked');
@@ -304,8 +309,6 @@
         updateDisplay();
     }
 
-    // --- الحساب والقواعد ---
-
     db.ref('yassin_money_quest/history').on('value', (snapshot) => {
         historyData = snapshot.val() || {};
         calculateBounty(historyData);
@@ -314,17 +317,12 @@
     });
 
     function calculateBounty(history) {
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentMonth = today.getMonth(); // 0 = يناير
-
         let dryCount = 0;
         let wetCount = 0;
         let hasWetInCurrentMonth = false;
 
         Object.entries(history).forEach(([dateStr, status]) => {
             const d = new Date(dateStr);
-            // التدقيق فقط في الشهر والسنة الحالية
             if (d.getMonth() === activeDate.getMonth() && d.getFullYear() === activeDate.getFullYear()) {
                 if (status === 'dry') dryCount++;
                 else {
@@ -335,41 +333,31 @@
         });
 
         let finalMoney = 1000;
-        
-        // القاعدة الصارمة: لو مش شهر يناير 2026 (شهر التدريب)
-        // شهر يناير 2026 برمجياً هو سنة 2026 وشهر 0
         const isTrainingMonth = (activeDate.getFullYear() === 2026 && activeDate.getMonth() === 0);
 
         if (!isTrainingMonth) {
-            if (hasWetInCurrentMonth) {
-                finalMoney = dryCount * 10; // 10 جنيه لكل يوم جاف
-            } else {
-                finalMoney = 1000; // الجائزة الكبرى لو الشهر كامل نظيف
-            }
+            finalMoney = hasWetInCurrentMonth ? (dryCount * 10) : 1000;
         } else {
-            finalMoney = 1000; // شهر يناير دائماً 1000
+            finalMoney = 1000;
         }
 
         document.getElementById('money').innerText = finalMoney;
-        document.getElementById('month-stat').innerText = `Dry: ${dryCount} | Wet: ${wetCount}`;
+        document.getElementById('month-stat').innerText = `✅ ${dryCount} | ❌ ${wetCount}`;
     }
 
     function renderLog(history) {
         const logList = document.getElementById('history-log');
         logList.innerHTML = '';
-        
-        // ترتيب التواريخ تنازلياً
         const sorted = Object.entries(history).sort((a, b) => b[0].localeCompare(a[0]));
         
         sorted.forEach(([date, status]) => {
             const d = new Date(date);
-            // إظهار أيام الشهر المختار فقط في السجل
             if (d.getMonth() === activeDate.getMonth() && d.getFullYear() === activeDate.getFullYear()) {
                 const isWin = status === 'dry';
                 logList.innerHTML += `
                     <div class="log-entry">
-                        <span>${date}</span>
-                        <span class="${isWin ? 'status-win' : 'status-loss'}">${isWin ? 'BOOYAH' : 'DEFEAT'}</span>
+                        <span>📅 ${date}</span>
+                        <span class="${isWin ? 'status-win' : 'status-loss'}">${isWin ? 'BOOYAH ⚡' : 'DEFEAT 💀'}</span>
                     </div>
                 `;
             }
@@ -378,17 +366,11 @@
 
     function register(isDry) {
         const key = activeDate.toISOString().split('T')[0];
-        
-        if (historyData[key]) return; // منع التكرار
-
-        if (isDry) {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        }
-
+        if (historyData[key]) return;
+        if (isDry) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         db.ref('yassin_money_quest/history').update({ [key]: isDry ? 'dry' : 'wet' });
     }
 
-    // القيمة الافتراضية للتقويم
     document.getElementById('date-input').valueAsDate = new Date();
     updateDisplay();
 </script>
