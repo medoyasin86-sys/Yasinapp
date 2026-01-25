@@ -3,75 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y.Karizma - Final Command</title>
+    <title>Y.Karizma - Tactical Whiteout</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --ff-gold: #ffbe0b;
-            --ff-dark: #05070a;
-            --ff-card: #11141b;
-            --heroic-red: #ff003c;
-            --success-green: #00ff88;
-            --squad-blue: #00d2d3;
-            --ammo-pink: #ff9ff3;
+            --ff-gold: #d4a017; /* ذهبي أغمق قليلاً للوضوح على الفاتح */
+            --ff-light-bg: #f4f7f6;
+            --ff-card: #ffffff;
+            --heroic-red: #d63031;
+            --success-green: #27ae60;
+            --squad-blue: #0984e3;
+            --ammo-pink: #e84393;
+            --text-main: #2d3436;
         }
 
-        body { font-family: 'Cairo', sans-serif; background: #000; margin: 0; display: flex; justify-content: center; color: #fff; overflow-x: hidden; }
-        .battle-container { width: 100%; max-width: 450px; background: var(--ff-dark); min-height: 100vh; border: 1px solid #222; position: relative; padding-bottom: 40px;}
+        body { font-family: 'Cairo', sans-serif; background: #dfe6e9; margin: 0; display: flex; justify-content: center; color: var(--text-main); overflow-x: hidden; }
+        .battle-container { width: 100%; max-width: 450px; background: var(--ff-light-bg); min-height: 100vh; border: 1px solid #ccc; position: relative; padding-bottom: 40px; box-shadow: 0 0 30px rgba(0,0,0,0.1); }
 
         /* Header */
         .warrior-header { width: 100%; height: 350px; position: relative; background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat; display: flex; align-items: flex-end; border-bottom: 4px solid var(--ff-gold); }
-        .warrior-header::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--ff-dark) 10%, transparent 90%); }
+        .warrior-header::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--ff-light-bg) 5%, transparent 80%); }
         .player-info { position: relative; z-index: 5; padding: 20px; width: 100%; }
-        .rank-tag { background: var(--heroic-red); padding: 2px 10px; font-size: 11px; font-weight: 900; border-radius: 3px; box-shadow: 0 0 15px var(--heroic-red); display: inline-flex; align-items: center; gap: 5px; }
-        .player-name { font-size: 38px; font-weight: 900; color: #fff; margin: 5px 0; display: flex; align-items: center; gap: 10px; }
+        .rank-tag { background: var(--heroic-red); color: white; padding: 2px 10px; font-size: 11px; font-weight: 900; border-radius: 3px; box-shadow: 0 4px 10px rgba(214, 48, 49, 0.3); display: inline-flex; align-items: center; gap: 5px; }
+        .player-name { font-size: 38px; font-weight: 900; color: #2d3436; margin: 5px 0; display: flex; align-items: center; gap: 10px; text-shadow: 1px 1px 0px white; }
 
-        /* Tactical Orders (Updated) */
-        .commander-orders { background: rgba(255, 190, 11, 0.08); border: 2px solid var(--ff-gold); margin: 15px; padding: 15px; font-size: 12px; border-radius: 8px; color: #fff; line-height: 1.6; position: relative; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { border-color: var(--ff-gold); } 50% { border-color: #fff; } 100% { border-color: var(--ff-gold); } }
+        /* Tactical Orders */
+        .commander-orders { background: #fff9e6; border: 2px solid var(--ff-gold); margin: 15px; padding: 15px; font-size: 12px; border-radius: 8px; color: #444; line-height: 1.6; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { border-color: var(--ff-gold); } 50% { border-color: #eee; } 100% { border-color: var(--ff-gold); } }
 
-        .loot-card { background: var(--ff-card); margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333; }
+        .loot-card { background: var(--ff-card); margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .bounty-amount { font-size: 40px; font-weight: 900; color: var(--ff-gold); display: block; }
 
         /* Date Controller */
-        .date-shifter { display: flex; justify-content: space-between; align-items: center; background: #1c212a; margin: 0 15px 15px 15px; padding: 8px; border-radius: 8px; border: 1px solid #333; }
-        .shift-btn { background: #333; border: none; color: var(--ff-gold); width: 40px; height: 40px; border-radius: 5px; cursor: pointer; }
-        .date-display { flex: 1; text-align: center; font-weight: 900; cursor: pointer; }
+        .date-shifter { display: flex; justify-content: space-between; align-items: center; background: #fff; margin: 0 15px 15px 15px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
+        .shift-btn { background: #f0f0f0; border: 1px solid #ddd; color: var(--ff-gold); width: 40px; height: 40px; border-radius: 5px; cursor: pointer; font-size: 18px; }
+        .date-display { flex: 1; text-align: center; font-weight: 900; cursor: pointer; color: #2d3436; }
 
         /* Actions */
         .battle-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 15px 20px 15px; }
-        .action-btn { padding: 15px; border: none; font-family: 'Cairo'; font-weight: 900; cursor: pointer; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
-        .btn-booyah { background: var(--ff-gold); color: #000; }
-        .btn-defeat { background: #222; color: #555; }
+        .action-btn { padding: 15px; border: none; font-family: 'Cairo'; font-weight: 900; cursor: pointer; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); transition: transform 0.2s; }
+        .action-btn:active { transform: scale(0.95); }
+        .btn-booyah { background: var(--ff-gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .btn-defeat { background: #f0f0f0; color: #b2bec3; border: 1px solid #ddd; }
 
         /* Squad Radio (Chat) */
-        .squad-radio-container { background: rgba(0,0,0,0.5); margin: 0 15px 20px 15px; border: 1px solid #333; border-radius: 10px; overflow: hidden; }
-        .radio-header { background: #1a1a1a; padding: 8px 12px; font-size: 10px; font-weight: 900; color: var(--squad-blue); border-bottom: 1px solid #333; display: flex; align-items: center; gap: 5px; }
-        .chat-box { height: 180px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 8px; }
-        .msg { font-size: 12px; line-height: 1.4; padding: 5px 8px; border-radius: 4px; background: rgba(255,255,255,0.03); border-right: 2px solid transparent; }
+        .squad-radio-container { background: #fff; margin: 0 15px 20px 15px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .radio-header { background: #f8f9fa; padding: 8px 12px; font-size: 10px; font-weight: 900; color: var(--squad-blue); border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 5px; }
+        .chat-box { height: 180px; overflow-y: auto; padding: 10px; background: #fff; display: flex; flex-direction: column; gap: 8px; }
+        .msg { font-size: 12px; line-height: 1.4; padding: 6px 10px; border-radius: 6px; background: #f1f2f6; border-right: 3px solid transparent; color: #2d3436; }
         
-        .msg-papa { border-right-color: var(--ff-gold); }
-        .msg-mama { border-right-color: var(--ammo-pink); }
-        .msg-yassin { border-right-color: var(--squad-blue); }
+        .msg-papa { border-right-color: var(--ff-gold); background: #fffdf2; }
+        .msg-mama { border-right-color: var(--ammo-pink); background: #fdf2f7; }
+        .msg-yassin { border-right-color: var(--squad-blue); background: #f2f7ff; }
         
-        .role-tag { font-weight: 900; font-size: 9px; margin-left: 5px; padding: 1px 4px; border-radius: 2px; }
-        .tag-papa { background: var(--ff-gold); color: #000; }
-        .tag-mama { background: var(--ammo-pink); color: #000; }
-        .tag-yassin { background: var(--squad-blue); color: #000; }
+        .role-tag { font-weight: 900; font-size: 9px; margin-left: 5px; padding: 1px 5px; border-radius: 3px; }
+        .tag-papa { background: var(--ff-gold); color: #fff; }
+        .tag-mama { background: var(--ammo-pink); color: #fff; }
+        .tag-yassin { background: var(--squad-blue); color: #fff; }
 
-        .chat-input-area { display: flex; background: #111; padding: 8px; gap: 5px; border-top: 1px solid #333; }
-        .sender-select { background: #222; color: #fff; border: 1px solid #444; font-size: 10px; border-radius: 4px; padding: 0 5px; }
-        .msg-input { flex: 1; background: transparent; border: 1px solid #333; color: #fff; padding: 8px; font-size: 12px; border-radius: 4px; }
-        .btn-send { background: var(--ff-gold); border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; font-weight: 900; }
+        .chat-input-area { display: flex; background: #f8f9fa; padding: 8px; gap: 5px; border-top: 1px solid #eee; }
+        .sender-select { background: #fff; border: 1px solid #ddd; font-size: 10px; border-radius: 4px; padding: 0 5px; }
+        .msg-input { flex: 1; border: 1px solid #ddd; padding: 8px; font-size: 12px; border-radius: 4px; outline: none; }
+        .btn-send { background: var(--ff-gold); border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; color: white; }
 
-        /* History */
-        .battle-log { background: #090b10; margin: 0 15px; border-radius: 10px; border: 1px solid #222; }
-        .log-header { padding: 10px; font-size: 12px; color: var(--ff-gold); border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+        /* History Log */
+        .battle-log { background: #fff; margin: 0 15px; border-radius: 10px; border: 1px solid #ddd; }
+        .log-header { padding: 10px; font-size: 12px; color: var(--ff-gold); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; }
         .log-list { max-height: 150px; overflow-y: auto; padding: 5px; }
-        .log-entry { display: flex; justify-content: space-between; padding: 6px; font-size: 12px; border-bottom: 1px solid #111; }
+        .log-entry { display: flex; justify-content: space-between; padding: 8px; font-size: 12px; border-bottom: 1px solid #f1f2f6; color: #636e72; }
         
         input[type="date"] { display: none; }
     </style>
@@ -89,12 +91,12 @@
     <div class="commander-orders">
         ⚠️ <b>أوامر القيادة العليا:</b> <br>
         1️⃣ الجائزة الكبرى <b>(1000ج)</b> مضمونة في "شهر التدريب" فقط.<br>
-        2️⃣ مستقبلاً: أي هزيمة واحدة ❌ تُفقدك الـ 1000ج فوراً، ويصبح حسابك <b>10ج</b> عن كل يوم جاف فقط!<br>
-        3️⃣ الـ <b>1000ج</b> تعود فقط إذا أتممت <b>الشهر كاملاً</b> دون هزيمة واحدة! 🔥
+        2️⃣ مستقبلاً: أي هزيمة تُفقدك الـ 1000ج، ويصبح حسابك <b>10ج</b> لليوم الجاف!<br>
+        3️⃣ الـ <b>1000ج</b> تعود فقط عند إتمام <b>الشهر كاملاً</b> دون خطأ! 🔥
     </div>
 
     <div class="loot-card">
-        <span style="font-size: 11px; color: #888;">💎 STRATEGIC BOUNTY</span>
+        <span style="font-size: 11px; color: #888; font-weight: bold;">💎 STRATEGIC BOUNTY</span>
         <span class="bounty-amount" id="money">1000</span>
     </div>
 
@@ -102,7 +104,7 @@
         <button class="shift-btn" onclick="changeDay(-1)">◀</button>
         <div class="date-display" onclick="document.getElementById('date-input').showPicker()">
             <div id="date-text">📅 تحميل...</div>
-            <div id="status-text" style="font-size:10px; color: #555;">بانتظار الرصد</div>
+            <div id="status-text" style="font-size:10px; color: #999;">بانتظار الرصد</div>
         </div>
         <button class="shift-btn" onclick="changeDay(1)">▶</button>
         <input type="date" id="date-input" onchange="setDate(this.value)">
@@ -114,7 +116,7 @@
     </div>
 
     <div class="squad-radio-container">
-        <div class="radio-header">📡 SQUAD RADIO - تواصل الفريق</div>
+        <div class="radio-header">📡 SQUAD RADIO - راديو الكتيبة</div>
         <div class="chat-box" id="chat-messages"></div>
         <div class="chat-input-area">
             <select id="sender-name" class="sender-select">
@@ -134,6 +136,7 @@
 </div>
 
 <script>
+    // نفس كود الـ Firebase والمنطق البرمجي تماماً دون أي تغيير
     const firebaseConfig = {
         apiKey: "AIzaSyAPhrEzYnHoL3ln8_5BFFyWCjx2Y-G80E0",
         authDomain: "yassinapp-20262.firebaseapp.com",
@@ -164,8 +167,7 @@
             const m = child.val();
             let roleClass = m.sender === 'بابا' ? 'msg-papa' : (m.sender === 'ماما' ? 'msg-mama' : 'msg-yassin');
             let tagClass = m.sender === 'بابا' ? 'tag-papa' : (m.sender === 'ماما' ? 'tag-mama' : 'tag-yassin');
-            let roleTitle = m.sender === 'بابا' ? '[COMMANDER]' : (m.sender === 'ماما' ? '[SUPPLY]' : '[VETERAN]');
-            box.innerHTML += `<div class="msg ${roleClass}"><span class="role-tag ${tagClass}">${roleTitle}</span> <b>${m.sender}:</b> ${m.text}</div>`;
+            box.innerHTML += `<div class="msg ${roleClass}"><span class="role-tag ${tagClass}">${m.sender}</span> ${m.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
@@ -202,7 +204,6 @@
                 if(stat === 'dry') dry++; else { wet++; hasWet = true; }
             }
         });
-        // قاعدة التدريب (يناير 2026) وقاعدة الصرامة لباقي الشهور
         const isJan26 = (activeDate.getFullYear() === 2026 && activeDate.getMonth() === 0);
         document.getElementById('money').innerText = isJan26 ? "1000" : (hasWet ? dry * 10 : 1000);
         document.getElementById('month-stat').innerText = `✅ ${dry} | ❌ ${wet}`;
