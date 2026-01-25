@@ -11,7 +11,6 @@
         :root {
             --ff-gold: #ffbe0b;
             --ff-dark: #05070a;
-            --ff-card: #11141b;
             --heroic-red: #ff003c;
         }
 
@@ -22,7 +21,6 @@
             display: flex;
             justify-content: center;
             color: #fff;
-            overflow-x: hidden;
         }
 
         .battle-container {
@@ -31,149 +29,130 @@
             background: var(--ff-dark);
             min-height: 100vh;
             border: 2px solid #222;
-            position: relative;
+            overflow-x: hidden;
         }
 
-        /* واجهة المقاتل المسلح بالكامل - القسم العلوي */
+        /* واجهة المقاتل المسلح - تم تحديث الرابط ليكون أكثر استقراراً */
         .warrior-header {
             width: 100%;
-            height: 320px;
+            height: 350px;
             position: relative;
-            background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat;
-            border-bottom: 4px solid var(--ff-gold);
-            display: flex;
-            align-items: flex-end;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0) 60%, var(--ff-dark) 100%), 
+                              url('https://images8.alphacoders.com/105/1055734.jpg');
+            background-size: cover;
+            background-position: center top;
+            border-bottom: 3px solid var(--ff-gold);
         }
 
-        /* تأثير التوهج خلف المقاتل */
-        .warrior-header::after {
-            content: '';
+        /* رتبة الـ Grandmaster */
+        .rank-tag {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(transparent, var(--ff-dark));
-        }
-
-        .rank-overlay {
-            position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 20px;
+            right: 15px;
             background: var(--heroic-red);
+            color: white;
             padding: 5px 15px;
             font-weight: 900;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 2;
+            border-radius: 3px;
             box-shadow: 0 0 15px var(--heroic-red);
-            animation: pulse 2s infinite;
+            z-index: 5;
+            font-size: 12px;
         }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-
-        .app-branding {
-            position: relative;
-            z-index: 2;
-            padding: 20px;
+        .app-info {
+            position: absolute;
+            bottom: 10px;
             width: 100%;
+            text-align: center;
+            z-index: 5;
         }
 
-        .app-title { font-size: 32px; font-weight: 900; color: var(--ff-gold); margin: 0; text-shadow: 3px 3px 0px #000; }
-        .hero-sub { font-size: 16px; color: #fff; font-weight: bold; }
+        .app-title { font-size: 30px; font-weight: 900; color: var(--ff-gold); text-shadow: 2px 2px 10px #000; margin: 0; }
+        .hero-sub { font-size: 16px; font-weight: bold; text-shadow: 1px 1px 5px #000; }
 
-        .main-mission-area { padding: 15px; }
+        .content-area { padding: 15px; }
 
-        /* صندوق الجوائز */
+        /* صندوق الجوائز التكتيكي */
         .loot-box {
-            background: var(--ff-card);
-            border: 2px solid #2d3436;
-            border-radius: 15px;
-            padding: 25px;
+            background: #11141b;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 20px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
         }
 
-        .diamond-val { font-size: 55px; font-weight: 900; color: var(--ff-gold); display: block; line-height: 1; }
-        
-        .alert-commander {
+        .money-val { font-size: 50px; font-weight: 900; color: var(--ff-gold); display: block; }
+
+        /* رسالة القائد */
+        .commander-note {
             background: rgba(255, 0, 60, 0.1);
             border-right: 4px solid var(--heroic-red);
-            padding: 12px;
+            padding: 10px;
             font-size: 11px;
-            border-radius: 4px;
             margin-bottom: 20px;
+            border-radius: 4px;
         }
 
-        /* أزرار الهجوم */
-        .attack-btns { display: flex; flex-direction: column; gap: 10px; }
+        /* الأزرار الهجومية */
         .btn-ff {
-            padding: 20px; border: none; font-size: 22px; font-weight: 900;
-            cursor: pointer; clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
-            transition: 0.2s;
+            width: 100%; padding: 18px; border: none; font-size: 22px; font-weight: 900;
+            cursor: pointer; margin-bottom: 10px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
         }
         .btn-booyah { background: var(--ff-gold); color: #000; }
-        .btn-defeat { background: #34495e; color: #bdc3c7; }
+        .btn-defeat { background: #2d3436; color: #fff; }
 
-        /* شات الكتيبة */
-        .squad-chat {
-            background: #090b10;
-            padding: 15px;
-            margin-top: 25px;
-            border-top: 2px solid var(--ff-gold);
-        }
+        /* الشات */
+        .chat-zone { background: #090b10; padding: 15px; border-radius: 10px; border-top: 2px solid var(--ff-gold); }
+        .chat-display { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
+        .m-line { background: rgba(255,255,255,0.05); padding: 6px; margin-bottom: 4px; border-radius: 3px; }
 
-        .chat-stream { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
-        .msg { background: rgba(255,255,255,0.05); padding: 8px; margin-bottom: 5px; border-left: 3px solid var(--ff-gold); }
+        .sender-select { display: flex; gap: 5px; margin-bottom: 10px; }
+        .s-pill { flex: 1; padding: 10px; background: #1c212a; border: none; color: #fff; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .s-pill.active { background: var(--ff-gold); color: #000; }
 
-        .selector { display: flex; gap: 5px; margin-bottom: 10px; }
-        .p-btn { flex: 1; padding: 10px; border: none; background: #1c212a; color: #fff; font-size: 10px; font-weight: 900; cursor: pointer; }
-        .p-btn.active { background: var(--ff-gold); color: #000; }
-
-        .fire-input { display: flex; gap: 5px; }
-        .fire-input input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; }
-        .btn-fire { background: var(--heroic-red); border: none; padding: 0 20px; color: #fff; font-weight: bold; }
+        .fire-group { display: flex; gap: 5px; }
+        .fire-group input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; }
+        .btn-fire { background: var(--heroic-red); border: none; padding: 0 20px; color: #fff; font-weight: 900; }
     </style>
 </head>
 <body>
 
 <div class="battle-container">
     <div class="warrior-header">
-        <div class="rank-overlay">GRANDMASTER 🎖️</div>
-        <div class="app-branding">
+        <div class="rank-tag">GRANDMASTER 🎖️</div>
+        <div class="app-info">
             <h1 class="app-title">مغامرات Y.Karizma</h1>
             <div class="hero-sub">( البطل ياسين المسلح )</div>
         </div>
     </div>
 
-    <div class="main-mission-area">
-        <div class="alert-commander">
-            ⚠️ <b>أوامر القائد:</b> الشهر الأول هو "تدريب بالذخيرة الحية" والـ 1000ج مضمونة. <br>
-            من الشهر القادم.. "لا تهاون مع البلل، القواعد صارمة!"
+    <div class="content-area">
+        <div class="commander-note">
+            🚀 <b>إمدادات الشهر الأول:</b> تم تأمين 1000ج كمكافأة تدريبية. <br>
+            ⚠️ <b>تحذير:</b> من الشهر القادم، أي هزيمة (بلل) ستؤدي لإلغاء المكافأة فوراً!
         </div>
 
         <div class="loot-box">
-            <span style="font-size: 14px; opacity: 0.7;">رصيد الجوائز الاستراتيجي 💎</span>
-            <span class="diamond-val" id="money">1000</span>
-            <span style="font-weight: bold; letter-spacing: 2px;">جنيه مصري</span>
+            <span style="font-size: 12px; opacity: 0.7;">رصيد الجواهر 💎</span>
+            <span class="money-val" id="money">1000</span>
+            <span style="font-size: 14px; font-weight: bold;">L.E - جنيه مصري</span>
         </div>
 
-        <div class="attack-btns">
-            <input type="date" id="mission-date" style="background:#11141b; border:1px solid #333; color:#fff; padding:12px; text-align:center; font-family:'Cairo'; margin-bottom:10px;">
-            <button class="btn-ff btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
-            <button class="btn-ff btn-defeat" onclick="save(false)">DEFEAT (سأنتقم غداً)</button>
-        </div>
+        <input type="date" id="mission-date" style="width:100%; background:#11141b; border:1px solid #333; color:#fff; padding:12px; margin-bottom:15px; text-align:center; border-radius:5px; font-family:'Cairo';">
+        
+        <button class="btn-ff btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
+        <button class="btn-ff btn-defeat" onclick="save(false)">DEFEAT (سأحاول مجدداً)</button>
 
-        <div class="squad-chat">
-            <div style="font-size: 11px; color: var(--ff-gold); margin-bottom: 8px;">SQUAD MESSAGES:</div>
-            <div class="selector">
-                <button class="p-btn active" onclick="setSender('BABA', this)">BABA 🧔</button>
-                <button class="p-btn" onclick="setSender('MAMA', this)">MAMA 👩</button>
-                <button class="p-btn" onclick="setSender('SMSM', this)">Y.KARIZMA 🔫</button>
+        <div class="chat-zone" style="margin-top: 20px;">
+            <div class="sender-select">
+                <button class="s-pill active" onclick="setSender('BABA', this)">BABA 🧔</button>
+                <button class="s-pill" onclick="setSender('MAMA', this)">MAMA 👩</button>
+                <button class="s-pill" onclick="setSender('SMSM', this)">Y.KARIZMA 🔫</button>
             </div>
-            <div class="chat-stream" id="chat"></div>
-            <div class="fire-input">
+            <div class="chat-display" id="chat"></div>
+            <div class="fire-group">
                 <input type="text" id="msg" placeholder="أرسل إشارة لاسلكية..">
                 <button class="btn-fire" onclick="send()">FIRE</button>
             </div>
@@ -182,6 +161,7 @@
 </div>
 
 <script>
+    // استخدم بيانات Firebase الخاصة بك هنا (كما في الأكواد السابقة)
     const firebaseConfig = {
         apiKey: "AIzaSyAPhrEzYnHoL3ln8_5BFFyWCjx2Y-G80E0",
         authDomain: "yassinapp-20262.firebaseapp.com",
@@ -200,7 +180,7 @@
 
     function setSender(sender, btn) {
         currentSender = sender;
-        document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.s-pill').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
@@ -208,7 +188,6 @@
         const data = snapshot.val() || { history: {} };
         const history = data.history || {};
         const datesCount = Object.keys(history).length;
-        
         if (datesCount <= 30) {
             document.getElementById('money').innerText = "1000";
         } else {
@@ -221,10 +200,9 @@
     db.ref('yassin_chat').on('value', (snapshot) => {
         const chatBox = document.getElementById('chat');
         chatBox.innerHTML = '';
-        const curDate = today();
         Object.values(snapshot.val() || {}).forEach(m => {
-            if(m.date === curDate) {
-                chatBox.innerHTML += `<div class="msg"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
+            if(m.date === today()) {
+                chatBox.innerHTML += `<div class="m-line"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
             }
         });
         chatBox.scrollTop = chatBox.scrollHeight;
