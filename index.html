@@ -126,13 +126,15 @@
         .history-table th { padding: 10px; background: #eee; color: #57606f; font-size: 14px; }
         .history-table td { padding: 10px; border-bottom: 1px solid #f1f2f6; font-weight: bold; }
 
-        /* تعديلات الشات الجديدة */
         .chat-section { background: #f1f2f6; padding: 20px; margin-top: 15px; }
+        
+        /* ترويسة الشات توضح التاريخ */
+        .chat-header { font-size: 12px; color: #777; margin-bottom: 5px; font-weight: bold; }
+
         .chat-display { height: 120px; background: #fff; border-radius: 15px; padding: 10px; overflow-y: auto; font-size: 14px; text-align: right; margin-bottom: 10px;}
-        .msg-bubble { margin-bottom: 8px; padding: 8px 12px; border-radius: 15px; display: block; width: fit-content; max-width: 90%; }
+        .msg-bubble { margin-bottom: 8px; padding: 8px 12px; border-radius: 15px; display: block; width: fit-content; max-width: 90%; position: relative;}
         .sender-tag { font-weight: 900; font-size: 11px; display: block; margin-bottom: 2px; }
         
-        /* ألوان المرسلون */
         .msg-baba { background: #dff9fb; border-right: 4px solid #30336b; }
         .msg-mama { background: #fce4ec; border-right: 4px solid #d81b60; }
         .msg-smsm { background: #f0f4c3; border-right: 4px solid #827717; }
@@ -193,6 +195,7 @@
     </div>
 
     <div class="chat-section">
+        <div class="chat-header">💬 رسائل تشجيع اليوم: <span id="today-date-display"></span></div>
         <div class="sender-selector">
             <button class="sender-btn btn-baba active" onclick="setSender('بابا', this)">بابا 🧔</button>
             <button class="sender-btn btn-mama" onclick="setSender('ماما', this)">ماما 👩</button>
@@ -202,7 +205,7 @@
         <div class="chat-display" id="chat"></div>
         
         <div style="display: flex; gap: 5px; margin-top: 10px;">
-            <input type="text" id="msg" placeholder="اكتب رسالة تشجيع..." style="flex:1; padding:10px; border-radius:10px; border:1px solid #ddd; font-family: 'Tajawal';">
+            <input type="text" id="msg" placeholder="اكتب رسالة لياسين..." style="flex:1; padding:10px; border-radius:10px; border:1px solid #ddd; font-family: 'Tajawal';">
             <button onclick="send()" style="background:var(--hero-sky); color:#fff; border:none; padding:10px 15px; border-radius:10px; font-weight: bold; cursor:pointer;">إرسال</button>
         </div>
     </div>
@@ -220,12 +223,14 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const todayStr = new Date().toISOString().split('T')[0];
-    let currentSender = 'بابا'; // الافتراضي
+    
+    // الحصول على تاريخ اليوم بتنسيق YYYY-MM-DD
+    const getTodayDate = () => new Date().toISOString().split('T')[0];
+    let currentSender = 'بابا';
 
     document.getElementById('mission-date').valueAsDate = new Date();
+    document.getElementById('today-date-display').innerText = getTodayDate();
 
-    // اختيار الشخص المرسل
     function setSender(sender, btn) {
         currentSender = sender;
         document.querySelectorAll('.sender-btn').forEach(b => b.classList.remove('active'));
@@ -261,21 +266,33 @@
         document.getElementById('status-note').innerText = wetCount > 0 ? "نظام الـ 10 جنيه" : "مكافأة الالتزام (1000ج)";
     });
 
+    // تحديث الشات ليعرض رسائل اليوم فقط
     db.ref('yassin_chat').on('value', (snapshot) => {
         const chatBox = document.getElementById('chat');
         chatBox.innerHTML = '';
-        Object.values(snapshot.val() || {}).forEach(m => {
-            // كلاس اللون بناء على المرسل
-            let typeClass = 'msg-baba';
-            if(m.sender === 'ماما') typeClass = 'msg-mama';
-            if(m.sender === 'سمسم') typeClass = 'msg-smsm';
+        const today = getTodayDate();
+        let hasMessages = false;
 
-            chatBox.innerHTML += `
-                <div class="msg-bubble ${typeClass}">
-                    <span class="sender-tag">${m.sender || 'مجهول'}</span>
-                    ${m.text}
-                </div>`;
+        Object.values(snapshot.val() || {}).forEach(m => {
+            // الشرط الأساسي: يعرض الرسالة فقط إذا كانت من تاريخ اليوم
+            if (m.date === today) {
+                hasMessages = true;
+                let typeClass = 'msg-baba';
+                if(m.sender === 'ماما') typeClass = 'msg-mama';
+                if(m.sender === 'سمسم') typeClass = 'msg-smsm';
+
+                chatBox.innerHTML += `
+                    <div class="msg-bubble ${typeClass}">
+                        <span class="sender-tag">${m.sender || 'مجهول'}</span>
+                        ${m.text}
+                    </div>`;
+            }
         });
+
+        if (!hasMessages) {
+            chatBox.innerHTML = '<div style="color:#aaa; font-style:italic; padding-top:20px;">لا توجد رسائل اليوم.. كن أول من يشجع ياسين!</div>';
+        }
+
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 
@@ -287,11 +304,10 @@
     function send() {
         const text = document.getElementById('msg').value;
         if(!text) return;
-        // حفظ الرسالة مع اسم المرسل
         db.ref('yassin_chat').push({ 
             text: text, 
             sender: currentSender, 
-            date: todayStr 
+            date: getTodayDate() // حفظ تاريخ اليوم مع الرسالة
         });
         document.getElementById('msg').value = '';
     }
