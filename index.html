@@ -10,155 +10,171 @@
     <style>
         :root {
             --ff-gold: #ffbe0b;
-            --ff-dark: #080a0f;
-            --ff-card: #12161d;
-            --heroic-red: #ff0040;
+            --ff-dark: #05070a;
+            --ff-card: #11141b;
+            --heroic-red: #ff003c;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--ff-dark);
-            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpapercave.com/wp/wp5240217.jpg'); /* خلفية حرب */
-            background-size: cover;
-            background-attachment: fixed;
+            background: #000;
             margin: 0;
             display: flex;
             justify-content: center;
             color: #fff;
+            overflow-x: hidden;
         }
 
         .battle-container {
             width: 100%;
             max-width: 430px;
-            background: rgba(8, 10, 15, 0.9);
-            backdrop-filter: blur(10px);
+            background: var(--ff-dark);
             min-height: 100vh;
-            border-left: 2px solid var(--ff-gold);
-            border-right: 2px solid var(--ff-gold);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 40px rgba(0,0,0,0.8);
-        }
-
-        /* واجهة المقاتل المسلح */
-        .warrior-portal {
-            width: 100%;
-            height: 280px;
-            background: url('https://i.pinimg.com/originals/a6/f9/7e/a6f97e885f9e2363198e370428989931.png') center top/contain no-repeat;
+            border: 2px solid #222;
             position: relative;
-            background-color: #1a1a1a;
+        }
+
+        /* واجهة المقاتل المسلح بالكامل - القسم العلوي */
+        .warrior-header {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat;
             border-bottom: 4px solid var(--ff-gold);
-            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
         }
 
-        /* رتبة الـ Grandmaster فوق صورة المقاتل */
-        .grandmaster-badge {
+        /* تأثير التوهج خلف المقاتل */
+        .warrior-header::after {
+            content: '';
             position: absolute;
-            top: 20px;
-            right: -30px;
-            background: var(--heroic-red);
-            padding: 5px 40px;
-            transform: rotate(45deg);
-            font-weight: 900;
-            font-size: 12px;
-            box-shadow: 0 0 15px var(--heroic-red);
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(transparent, var(--ff-dark));
         }
 
-        .header-content { padding: 15px; text-align: center; }
-        .app-title { font-size: 28px; font-weight: 900; color: var(--ff-gold); margin: 0; text-shadow: 0 0 10px var(--ff-gold); }
-        .hero-name { font-size: 14px; opacity: 0.8; letter-spacing: 1px; }
+        .rank-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--heroic-red);
+            padding: 5px 15px;
+            font-weight: 900;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 2;
+            box-shadow: 0 0 15px var(--heroic-red);
+            animation: pulse 2s infinite;
+        }
 
-        .main-content { padding: 15px; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* منطقة المكافأة والجواهر */
-        .reward-card {
-            background: var(--ff-card);
-            border: 1px solid #333;
-            border-radius: 8px;
+        .app-branding {
+            position: relative;
+            z-index: 2;
             padding: 20px;
+            width: 100%;
+        }
+
+        .app-title { font-size: 32px; font-weight: 900; color: var(--ff-gold); margin: 0; text-shadow: 3px 3px 0px #000; }
+        .hero-sub { font-size: 16px; color: #fff; font-weight: bold; }
+
+        .main-mission-area { padding: 15px; }
+
+        /* صندوق الجوائز */
+        .loot-box {
+            background: var(--ff-card);
+            border: 2px solid #2d3436;
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
             margin-bottom: 20px;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
 
-        .reward-card::after { content: '💎'; position: absolute; left: 10px; top: 10px; opacity: 0.3; font-size: 20px; }
-        .money-val { font-size: 50px; font-weight: 900; color: var(--ff-gold); display: block; }
-
-        .rules-warning {
-            background: rgba(255, 0, 64, 0.15);
-            border: 1px solid var(--heroic-red);
-            color: #ffb3c6;
+        .diamond-val { font-size: 55px; font-weight: 900; color: var(--ff-gold); display: block; line-height: 1; }
+        
+        .alert-commander {
+            background: rgba(255, 0, 60, 0.1);
+            border-right: 4px solid var(--heroic-red);
             padding: 12px;
             font-size: 11px;
-            border-radius: 6px;
+            border-radius: 4px;
             margin-bottom: 20px;
-            line-height: 1.5;
         }
 
-        /* الأزرار القتالية */
-        .action-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .btn-battle {
-            padding: 18px; border: none; font-size: 20px; font-weight: 900; border-radius: 4px;
-            cursor: pointer; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+        /* أزرار الهجوم */
+        .attack-btns { display: flex; flex-direction: column; gap: 10px; }
+        .btn-ff {
+            padding: 20px; border: none; font-size: 22px; font-weight: 900;
+            cursor: pointer; clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
             transition: 0.2s;
         }
-        .btn-booyah { background: var(--ff-gold); color: #000; box-shadow: 0 0 15px rgba(255,190,11,0.4); }
-        .btn-defeat { background: #2d3436; color: #636e72; }
+        .btn-booyah { background: var(--ff-gold); color: #000; }
+        .btn-defeat { background: #34495e; color: #bdc3c7; }
 
-        /* شات الفريق التكتيكي */
-        .team-chat { background: #0c0f14; border: 1px solid #222; border-radius: 8px; padding: 15px; }
-        .chat-wall { height: 140px; overflow-y: auto; font-size: 12px; margin-bottom: 15px; border-bottom: 1px solid #222; }
-        .msg-line { margin-bottom: 6px; padding: 5px; border-right: 3px solid var(--ff-gold); background: rgba(255,255,255,0.02); }
+        /* شات الكتيبة */
+        .squad-chat {
+            background: #090b10;
+            padding: 15px;
+            margin-top: 25px;
+            border-top: 2px solid var(--ff-gold);
+        }
 
-        .sender-selector { display: flex; gap: 5px; margin-bottom: 12px; }
-        .s-pill { flex: 1; padding: 8px; border: none; background: #1a1f26; color: #fff; font-size: 10px; font-weight: 900; cursor: pointer; border-radius: 4px; }
-        .s-pill.active { background: var(--ff-gold); color: #000; }
+        .chat-stream { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
+        .msg { background: rgba(255,255,255,0.05); padding: 8px; margin-bottom: 5px; border-left: 3px solid var(--ff-gold); }
 
-        .input-box { display: flex; gap: 5px; }
-        .input-box input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; }
-        .btn-fire { background: var(--heroic-red); color: white; border: none; padding: 0 20px; font-weight: 900; border-radius: 4px; }
+        .selector { display: flex; gap: 5px; margin-bottom: 10px; }
+        .p-btn { flex: 1; padding: 10px; border: none; background: #1c212a; color: #fff; font-size: 10px; font-weight: 900; cursor: pointer; }
+        .p-btn.active { background: var(--ff-gold); color: #000; }
+
+        .fire-input { display: flex; gap: 5px; }
+        .fire-input input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; }
+        .btn-fire { background: var(--heroic-red); border: none; padding: 0 20px; color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="battle-container">
-    <div class="warrior-portal">
-        <div class="grandmaster-badge">GRANDMASTER</div>
+    <div class="warrior-header">
+        <div class="rank-overlay">GRANDMASTER 🎖️</div>
+        <div class="app-branding">
+            <h1 class="app-title">مغامرات Y.Karizma</h1>
+            <div class="hero-sub">( البطل ياسين المسلح )</div>
+        </div>
     </div>
 
-    <header class="header-content">
-        <h1 class="app-title">مغامرات Y.Karizma</h1>
-        <div class="hero-name">( البطل ياسين )</div>
-    </header>
-
-    <div class="main-content">
-        <div class="rules-warning">
-            🚨 <b>توجيهات عسكرية:</b> تم تخصيص 1000ج لدعمك في الشهر الأول. <br>
-            <b>ابتداءً من الشهر الثاني:</b> الخطأ الواحد سيكلفك خسارة الجائزة الكبرى. الالتزام هو سلاحك الوحيد!
+    <div class="main-mission-area">
+        <div class="alert-commander">
+            ⚠️ <b>أوامر القائد:</b> الشهر الأول هو "تدريب بالذخيرة الحية" والـ 1000ج مضمونة. <br>
+            من الشهر القادم.. "لا تهاون مع البلل، القواعد صارمة!"
         </div>
 
-        <div class="reward-card">
-            <span style="font-size: 12px; opacity: 0.6; display: block;">رصيد الجواهر الاستراتيجي</span>
-            <span class="money-val" id="money">1000</span>
-            <span style="font-weight: bold; font-size: 14px;">LE - جنيه مصري</span>
+        <div class="loot-box">
+            <span style="font-size: 14px; opacity: 0.7;">رصيد الجوائز الاستراتيجي 💎</span>
+            <span class="diamond-val" id="money">1000</span>
+            <span style="font-weight: bold; letter-spacing: 2px;">جنيه مصري</span>
         </div>
 
-        <div class="action-btns">
-            <input type="date" id="mission-date" style="background:#12161d; border:1px solid #333; color:#fff; padding:10px; text-align:center; font-family:'Cairo'; border-radius:4px; margin-bottom:5px;">
-            <button class="btn-battle btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
-            <button class="btn-battle btn-defeat" onclick="save(false)">DEFEAT ☁️</button>
+        <div class="attack-btns">
+            <input type="date" id="mission-date" style="background:#11141b; border:1px solid #333; color:#fff; padding:12px; text-align:center; font-family:'Cairo'; margin-bottom:10px;">
+            <button class="btn-ff btn-booyah" onclick="save(true)">MISSION BOOYAH! ⚡</button>
+            <button class="btn-ff btn-defeat" onclick="save(false)">DEFEAT (سأنتقم غداً)</button>
         </div>
 
-        <div class="team-chat">
-            <div class="sender-selector">
-                <button class="s-pill active" onclick="setSender('BABA', this)">BABA 🧔</button>
-                <button class="s-pill" onclick="setSender('MAMA', this)">MAMA 👩</button>
-                <button class="s-pill" onclick="setSender('SMSM', this)">Y.KARIZMA 🦸‍♂️</button>
+        <div class="squad-chat">
+            <div style="font-size: 11px; color: var(--ff-gold); margin-bottom: 8px;">SQUAD MESSAGES:</div>
+            <div class="selector">
+                <button class="p-btn active" onclick="setSender('BABA', this)">BABA 🧔</button>
+                <button class="p-btn" onclick="setSender('MAMA', this)">MAMA 👩</button>
+                <button class="p-btn" onclick="setSender('SMSM', this)">Y.KARIZMA 🔫</button>
             </div>
-            <div class="chat-wall" id="chat"></div>
-            <div class="input-box">
-                <input type="text" id="msg" placeholder="أرسل إشارة للفريق..">
+            <div class="chat-stream" id="chat"></div>
+            <div class="fire-input">
+                <input type="text" id="msg" placeholder="أرسل إشارة لاسلكية..">
                 <button class="btn-fire" onclick="send()">FIRE</button>
             </div>
         </div>
@@ -184,17 +200,16 @@
 
     function setSender(sender, btn) {
         currentSender = sender;
-        document.querySelectorAll('.s-pill').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
     db.ref('yassin_money_quest').on('value', (snapshot) => {
         const data = snapshot.val() || { history: {} };
         const history = data.history || {};
-        const entriesCount = Object.keys(history).length;
+        const datesCount = Object.keys(history).length;
         
-        // الشهر الأول (أقل من 30 يوم) الـ 1000 ثابتة
-        if (entriesCount <= 30) {
+        if (datesCount <= 30) {
             document.getElementById('money').innerText = "1000";
         } else {
             let dry = 0; let wet = 0;
@@ -209,7 +224,7 @@
         const curDate = today();
         Object.values(snapshot.val() || {}).forEach(m => {
             if(m.date === curDate) {
-                chatBox.innerHTML += `<div class="msg-line"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
+                chatBox.innerHTML += `<div class="msg"><b style="color:var(--ff-gold)">[${m.sender}]:</b> ${m.text}</div>`;
             }
         });
         chatBox.scrollTop = chatBox.scrollHeight;
