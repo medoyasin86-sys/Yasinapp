@@ -40,7 +40,7 @@
         .rank-tag { background: var(--heroic-red); color: white; padding: 2px 10px; font-size: 11px; font-weight: 900; border-radius: 3px; box-shadow: 0 4px 10px rgba(214, 48, 49, 0.3); display: inline-flex; align-items: center; gap: 5px; }
         .player-name { font-size: 38px; font-weight: 900; color: #2d3436; margin: 5px 0; display: flex; align-items: center; gap: 10px; text-shadow: 1px 1px 0px white; }
 
-        /* أوامر القيادة العليا: تم وضع التنبيه المهم داخلها */
+        /* أوامر القيادة العليا: التنبيه المهم ضمن هذا المربع */
         .commander-orders {
             background: #fff9e6; border: 2px solid var(--ff-gold); margin: 15px; padding: 15px;
             font-size: 12px; border-radius: 8px; color: #444; line-height: 1.7; animation: pulse 2s infinite;
@@ -85,13 +85,15 @@
         .tag-yassin { background: var(--squad-blue); color: #fff; }
 
         .chat-input-area { display: flex; background: #f8f9fa; padding: 8px; gap: 5px; border-top: 1px solid #eee; }
-        .sender-select { background: #fff; border: 1px solid #ddd; font-size: 10px; border-radius: 4px; padding: 0 5px; }
+        .sender-select, .toolbar-select { background: #fff; border: 1px solid #ddd; font-size: 10px; border-radius: 4px; padding: 0 5px; }
         .msg-input { flex: 1; border: 1px solid #ddd; padding: 8px; font-size: 12px; border-radius: 4px; outline: none; }
         .btn-send { background: var(--ff-gold); border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-export, .btn-report { background: var(--ff-gold); border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 900; }
 
         /* History (Calendar) */
         .battle-log { background: #fff; margin: 0 15px; border-radius: 10px; border: 1px solid #ddd; }
-        .log-header { padding: 10px; font-size: 12px; color: var(--ff-gold); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; align-items: center; }
+        .log-header { padding: 10px; font-size: 12px; color: var(--ff-gold); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; align-items: center; gap: 8px; }
+        .log-tools { display:flex; gap:6px; align-items:center; flex-wrap: wrap; }
         .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 10px; }
         .cal-head { text-align: center; font-weight: 900; font-size: 11px; color: #777; }
         .cal-cell {
@@ -104,6 +106,7 @@
         .cal-status.dry { color: var(--success-green); font-weight: 900; }
         .cal-status.wet { color: var(--heroic-red); font-weight: 900; }
         .cal-cell.active { outline: 2px solid var(--ff-gold); }
+        .cal-cell.muted { opacity: .35; }
 
         input[type="date"] { display: none; }
     </style>
@@ -169,9 +172,28 @@
     <div class="battle-log">
         <div class="log-header">
             <span>📜 تقويم المهام الشهري</span>
-            <span id="month-stat">0/0</span>
+            <div class="log-tools">
+                <label for="calendar-filter" style="font-size:10px;color:#777">تصفية:</label>
+                <select id="calendar-filter" class="toolbar-select" title="تصفية التقويم">
+                    <option value="all">الكل</option>
+                    <option value="dry">جفاف</option>
+                    <option value="wet">بلل</option>
+                </select>
+
+                <label for="export-scope" style="font-size:10px;color:#777">تصدير:</label>
+                <select id="export-scope" class="toolbar-select" title="نطاق التصدير">
+                    <option value="month">الشهر الحالي</option>
+                    <option value="all">كل السجل</option>
+                </select>
+                <button class="btn-export" onclick="exportCSV()">⬇️ تصدير CSV</button>
+
+                <!-- NEW: زر تقرير شهري -->
+                <button class="btn-report" onclick="exportMonthlyReport()">🖨️ تقرير شهري</button>
+
+                <span id="month-stat">0/0</span>
+            </div>
         </div>
-        <!-- تقويم شهري بدل القائمة -->
+        <!-- تقويم شهري -->
         <div class="calendar" id="calendar"></div>
     </div>
 </div>
@@ -191,6 +213,7 @@
     const db = firebase.database();
     let historyData = {};
     let activeDate = new Date();
+    let currentFilter = 'all'; // all | dry | wet
 
     function sendMsg() {
         const sender = document.getElementById('sender-name').value;
@@ -243,7 +266,7 @@
         calculateBounty(); renderCalendar(); updateDisplay();
     });
 
-    /* منطق المكافأة (كما تم الاتفاق سابقًا) */
+    /* منطق المكافأة كما تم الاتفاق */
     function calculateBounty() {
         let dry = 0, wet = 0, hasWet = false;
         Object.entries(historyData).forEach(([date, stat]) => {
@@ -272,13 +295,13 @@
         document.getElementById('month-stat').innerText = `✅ ${dry} | ❌ ${wet}`;
     }
 
-    /* تقويم شهري يعرض (جفاف – ياسين) أو (بلل – ياسين) تحت كل يوم */
+    /* تقويم شهري مع تصفية (الكل/جفاف/بلل) */
     function renderCalendar() {
         const cal = document.getElementById('calendar');
         if(!cal) return;
         cal.innerHTML = '';
 
-        // رؤوس أيام الأسبوع (بدءًا من السبت → الجمعة)
+        // رؤوس أيام الأسبوع (السبت → الجمعة)
         const heads = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
         heads.forEach(h => cal.innerHTML += `<div class="cal-head">${h}</div>`);
 
@@ -287,18 +310,16 @@
         const firstDay = new Date(y, m, 1);
         const lastDayNum = new Date(y, m + 1, 0).getDate();
 
-        // تحويل getDay إلى فهرس يبدأ بالسبت عمود أول
-        const mapToSatFirst = d => (d + 6) % 7; // Sun(0) -> 6, Mon(1)->0 ... Sat(6)->5? (تصحيح أدناه)
-        // في JS: 0=Sun..6=Sat. نريد: Sat=0..Fri=6
-        // إذن: idx = (jsDay+6)%7
-        const padding = mapToSatFirst(firstDay.getDay());
+        // فهرس البداية: جعل السبت عمود 0
+        const indexFromSatFirst = (jsDay) => (jsDay + 1) % 7; // Sat(6)->0, Sun(0)->1, Mon(1)->2, ...
+        const padding = indexFromSatFirst(firstDay.getDay());
 
         // خلايا فارغة قبل اليوم الأول
         for(let i=0;i<padding;i++){
             cal.innerHTML += `<div class="cal-cell empty"></div>`;
         }
 
-        // أداة تنسيق المفتاح YYYY-MM-DD
+        // أدوات مساعدة
         const pad2 = n => String(n).padStart(2,'0');
         const keyOf = (yy, mm, dd) => `${yy}-${pad2(mm+1)}-${pad2(dd)}`;
 
@@ -309,19 +330,193 @@
             const stat = historyData[key]; // 'dry' | 'wet' | undefined
 
             let statusHtml = '';
-            if (stat === 'dry')  statusHtml = `<span class="cal-status dry">جفاف – ياسين</span>`;
-            else if (stat === 'wet') statusHtml = `<span class="cal-status wet">بلل – ياسين</span>`;
-            else statusHtml = `<span class="cal-status" style="color:#999">—</span>`;
+            let statClass = '';
+            if (stat === 'dry')  { statusHtml = `جفاف`; statClass = 'dry'; }
+            else if (stat === 'wet') { statusHtml = `بلل`; statClass = 'wet'; }
+            else { statusHtml = `—`; statClass = ''; }
 
             const isActive = (dateObj.toDateString() === activeDate.toDateString());
+
+            // تطبيق الترشيح: تخفيف غير المطابق
+            let muted = false;
+            if (currentFilter === 'dry' && stat !== 'dry') muted = true;
+            if (currentFilter === 'wet' && stat !== 'wet') muted = true;
+
             cal.innerHTML += `
-                <div class="cal-cell ${isActive ? 'active' : ''}">
+                <div class="cal-cell ${isActive ? 'active' : ''} ${muted ? 'muted' : ''}">
                     <div class="cal-date">${d}</div>
-                    ${statusHtml}
+                    <span class="cal-status ${statClass}">${statusHtml}</span>
                 </div>
             `;
         }
     }
+
+    /* تصدير السجل إلى CSV (الشهر الحالي/كل السجل) */
+    function exportCSV(){
+        const scope = document.getElementById('export-scope')?.value || 'month';
+        const rows = [];
+        const header = ['التاريخ','الحالة']; // Arabic headers
+
+        const pushRow = (dateStr, stat) => {
+            const ar = stat === 'dry' ? 'جفاف' : (stat === 'wet' ? 'بلل' : '-');
+            rows.push([dateStr, ar]);
+        };
+
+        if(scope === 'all'){
+            const keys = Object.keys(historyData || {}).sort();
+            keys.forEach(k => pushRow(k, historyData[k]));
+        } else {
+            const y = activeDate.getFullYear();
+            const m = activeDate.getMonth();
+            Object.entries(historyData).forEach(([date, stat]) => {
+                const d = new Date(date);
+                if(d.getFullYear() === y && d.getMonth() === m){
+                    pushRow(date, stat);
+                }
+            });
+            // ترتيب شهري
+            rows.sort((a,b)=> a[0].localeCompare(b[0]));
+        }
+
+        const csvLines = [header.join(','), ...rows.map(r=> r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))];
+        const csvContent = '\uFEFF' + csvLines.join('\n'); // BOM لدعم العربية في Excel
+        const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+
+        const y = activeDate.getFullYear();
+        const m = String(activeDate.getMonth()+1).padStart(2,'0');
+        const filename = scope === 'all' ? `history_all.csv` : `history_${y}-${m}.csv`;
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 0);
+    }
+
+    /* NEW: تقرير شهري قابل للطباعة (Print -> PDF) */
+    function exportMonthlyReport(){
+        // جمع بيانات الشهر الحالي
+        const y = activeDate.getFullYear();
+        const m = activeDate.getMonth(); // 0..11
+        const localeMonth = activeDate.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+
+        let dry = 0, wet = 0, hasWet = false;
+        const days = [];
+        const lastDayNum = new Date(y, m + 1, 0).getDate();
+        const pad2 = n => String(n).padStart(2, '0');
+
+        for(let d=1; d<=lastDayNum; d++){
+            const key = `${y}-${pad2(m+1)}-${pad2(d)}`;
+            const stat = historyData[key] || null; // 'dry'|'wet'|null
+            if (stat === 'dry') dry++;
+            if (stat === 'wet') { wet++; hasWet = true; }
+            days.push({ date: key, stat });
+        }
+
+        // احتساب المكافأة بنفس منطق التطبيق
+        const isJan26 = (y === 2026 && m === 0);
+        let bounty = 0;
+        if (isJan26) bounty = 1000;
+        else if (y === 2026 && m === 2) bounty = 0;
+        else if (y > 2026 || (y === 2026 && m >= 3)) bounty = hasWet ? (dry * 10) : 500;
+        else bounty = hasWet ? (dry * 10) : 1000;
+
+        const adherence = (dry + wet) > 0 ? Math.round((dry / (dry + wet)) * 100) : 0;
+
+        // بناء صفحة التقرير
+        const reportHTML = `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تقرير شهري — ${localeMonth}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#1a4d2e; --gold:#d4a017; --muted:#7a6b4e; --danger:#b33a3a; --ok:#27ae60; --border:#eadfbe;
+  }
+  body{ font-family:'Cairo',sans-serif; margin:18px; color:#2d3436; background:#fff; }
+  .hdr{ border:2px solid var(--gold); border-radius:12px; padding:12px 14px; margin-bottom:14px; background:linear-gradient(135deg,#fff9e6,#fff); }
+  .title{ font-weight:900; margin:0 0 6px 0; color:#634e1e; }
+  .tags{ display:flex; gap:10px; flex-wrap:wrap; color:#7a6b4e; font-weight:700; }
+  .tag{ background:#fff7d6; border:1px solid var(--gold); border-radius:999px; padding:2px 8px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; }
+  .card{ border:1px solid var(--border); border-radius:12px; padding:10px; background:#fff; }
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .kpi{ background:#faf7ea; border:1px solid var(--border); border-radius:10px; padding:8px; text-align:center; }
+  .kpi .k{ display:block; color:#7a6b4e; font-size:.9rem; }
+  .kpi .v{ display:block; font-weight:900; font-size:1.05rem; }
+  .table{ width:100%; border-collapse:collapse; margin-top:8px; }
+  .table th, .table td{ border:1px solid #eee5c8; padding:6px 8px; font-size:.95rem; }
+  .table th{ background:#fff9e6; color:#634e1e; }
+  .status{ font-weight:900; }
+  .dry{ color:var(--ok); } .wet{ color:var(--danger); } .none{ color:#999; }
+  .note{ font-size:.9rem; color:#7a6b4e; margin-top:8px; }
+  @media print{ body{ margin:12mm; } }
+</style>
+</head>
+<body>
+  <header class="hdr">
+    <h2 class="title">تقرير المهام الشهري</h2>
+    <div class="tags">
+      <span class="tag">الشهر: ${localeMonth}</span>
+      <span class="tag">تاريخ الإصدار: ${new Date().toLocaleString('ar-EG')}</span>
+    </div>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <h3 style="margin:0 0 6px 0; color:#0f3b22;">المؤشرات</h3>
+      <div class="kpis">
+        <div class="kpi"><span class="k">جفاف</span><span class="v">${dry}</span></div>
+        <div class="kpi"><span class="k">بلل</span><span class="v">${wet}</span></div>
+        <div class="kpi"><span class="k">نسبة الجفاف</span><span class="v">${adherence}%</span></div>
+        <div class="kpi"><span class="k">المكافأة</span><span class="v">${bounty} ج</span></div>
+      </div>
+      <div class="note">المكافأة تُحتسب وفق سياسة اللعبة المعمول بها في التطبيق.</div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 6px 0; color:#0f3b22;">فترة العقوبة</h3>
+      <div class="note">⛔ الفترة التي تم إيقافها: <b>٢٠ فبراير</b> → <b>٢ مارس</b></div>
+      <div class="note">لا تضع نفسك في هذا الموضع مرة أخرى — كن على قدر المسؤولية. 💪</div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:10px;">
+    <h3 style="margin:0 0 6px 0; color:#0f3b22;">سجل الأيام</h3>
+    <table class="table">
+      <thead><tr><th>التاريخ</th><th>الحالة</th></tr></thead>
+      <tbody>
+        ${days.map(d=>{
+          const label = d.stat==='dry' ? 'جفاف' : (d.stat==='wet' ? 'بلل' : '—');
+          const cls   = d.stat==='dry' ? 'dry' : (d.stat==='wet' ? 'wet' : 'none');
+          return `<tr><td>${d.date}</td><td class="status ${cls}">${label}</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </section>
+  <script>setTimeout(()=>{ try{ window.print(); }catch(e){} }, 300);</script>
+</body>
+</html>
+        `;
+
+        const w = window.open('', '_blank');
+        if(!w){ alert('تعذّر فتح نافذة التقرير. يرجى السماح بالنوافذ المنبثقة.'); return; }
+        w.document.open();
+        w.document.write(reportHTML);
+        w.document.close();
+    }
+
+    // أحداث الأدوات (التصفية)
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterSel = document.getElementById('calendar-filter');
+        if(filterSel){
+            filterSel.onchange = () => { currentFilter = filterSel.value || 'all'; renderCalendar(); };
+        }
+    });
 
     function register(isDry) {
         const key = activeDate.toISOString().split('T')[0];
