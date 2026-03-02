@@ -11,9 +11,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <!-- ✅ إضافات PDF والمخططات (جديدة) -->
+    <!-- NEW: مكتبات الرسم والتصدير PDF -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- END NEW -->
 
     <style>
         :root {
@@ -191,8 +192,12 @@
                 </select>
                 <button class="btn-export" onclick="exportCSV()">⬇️ تصدير</button>
 
-                <!-- ✅ زر تصدير PDF جذّاب (جديد) -->
-                <button class="btn-export" onclick="exportMonthlyPDF()">📄 تصدير PDF جذّاب</button>
+                <!-- زر طباعة التقرير الشهري (موجود لديك) -->
+                <button class="btn-export" onclick="exportMonthlyReport()">🖨️ طباعة التقرير الشهري</button>
+
+                <!-- NEW: زر تقرير PDF احترافي -->
+                <button class="btn-export" onclick="exportMonthlyPDF()">📄 تقرير PDF احترافي</button>
+                <!-- END NEW -->
 
                 <span id="month-stat">0/0</span>
             </div>
@@ -399,13 +404,12 @@
         setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 0);
     }
 
-    /* ✅ PDF جذّاب مع مخططات وألوان */
-    async function exportMonthlyPDF(){
+    /* طباعة تقرير شهري (Print -> PDF) - موجود لديك */
+    function exportMonthlyReport(){
         const y = activeDate.getFullYear();
         const m = activeDate.getMonth(); // 0..11
         const localeMonth = activeDate.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
 
-        // تجميع بيانات الشهر
         let dry = 0, wet = 0, hasWet = false;
         const days = [];
         const lastDayNum = new Date(y, m + 1, 0).getDate();
@@ -419,7 +423,7 @@
             days.push({ date: key, stat });
         }
 
-        // نفس قواعد مكافأتك
+        // احتساب المكافأة بنفس منطق التطبيق
         const isJan26 = (y === 2026 && m === 0);
         let bounty = 0;
         if (isJan26) bounty = 1000;
@@ -429,54 +433,206 @@
 
         const adherence = (dry + wet) > 0 ? Math.round((dry / (dry + wet)) * 100) : 0;
 
-        // إنشاء مخططات Chart.js على كانفاسات مؤقتة
+        const reportHTML = `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تقرير شهري — ${localeMonth}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --primary:#1a4d2e; --gold:#d4a017; --muted:#7a6b4e; --danger:#b33a3a; --ok:#27ae60; --border:#eadfbe; }
+  body{ font-family:'Cairo',sans-serif; margin:18px; color:#2d3436; background:#fff; }
+  .hdr{ border:2px solid var(--gold); border-radius:12px; padding:12px 14px; margin-bottom:14px; background:linear-gradient(135deg,#fff9e6,#fff); }
+  .title{ font-weight:900; margin:0 0 6px 0; color:#634e1e; }
+  .tags{ display:flex; gap:10px; flex-wrap:wrap; color:#7a6b4e; font-weight:700; }
+  .tag{ background:#fff7d6; border:1px solid var(--gold); border-radius:999px; padding:2px 8px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; }
+  .card{ border:1px solid var(--border); border-radius:12px; padding:10px; background:#fff; }
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .kpi{ background:#faf7ea; border:1px solid var(--border); border-radius:10px; padding:8px; text-align:center; }
+  .kpi .k{ display:block; color:#7a6b4e; font-size:.9rem; }
+  .kpi .v{ display:block; font-weight:900; font-size:1.05rem; }
+  .table{ width:100%; border-collapse:collapse; margin-top:8px; }
+  .table th, .table td{ border:1px solid #eee5c8; padding:6px 8px; font-size:.95rem; }
+  .table th{ background:#fff9e6; color:#634e1e; }
+  .status{ font-weight:900; }
+  .dry{ color:var(--ok); } .wet{ color:var(--danger); } .none{ color:#999; }
+  .note{ font-size:.9rem; color:#7a6b4e; margin-top:8px; }
+  @media print{ body{ margin:12mm; } }
+</style>
+</head>
+<body>
+  <header class="hdr">
+    <h2 class="title">تقرير المهام الشهري</h2>
+    <div class="tags">
+      <span class="tag">الشهر: ${localeMonth}</span>
+      <span class="tag">تاريخ الإصدار: ${new Date().toLocaleString('ar-EG')}</span>
+    </div>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <h3 style="margin:0 0 6px 0; color:#0f3b22;">المؤشرات</h3>
+      <div class="kpis">
+        <div class="kpi"><span class="k">جفاف</span><span class="v">${dry}</span></div>
+        <div class="kpi"><span class="k">بلل</span><span class="v">${wet}</span></div>
+        <div class="kpi"><span class="k">نسبة الجفاف</span><span class="v">${adherence}%</span></div>
+        <div class="kpi"><span class="k">المكافأة</span><span class="v">${bounty} ج</span></div>
+      </div>
+      <div class="note">المكافأة تُحتسب وفق سياسة اللعبة المعمول بها في التطبيق.</div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 6px 0; color:#0f3b22;">فترة العقوبة</h3>
+      <div class="note">⛔ الفترة التي تم إيقافها: <b>٢٠ فبراير</b> → <b>٢ مارس</b></div>
+      <div class="note">لا تضع نفسك في هذا الموضع مرة أخرى — كن على قدر المسؤولية. 💪</div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:10px;">
+    <h3 style="margin:0 0 6px 0; color:#0f3b22;">سجل الأيام</h3>
+    <table class="table">
+      <thead><tr><th>التاريخ</th><th>الحالة</th></tr></thead>
+      <tbody>
+        ${days.map(d=>{
+          const label = d.stat==='dry' ? 'جفاف' : (d.stat==='wet' ? 'بلل' : '—');
+          const cls   = d.stat==='dry' ? 'dry' : (d.stat==='wet' ? 'wet' : 'none');
+          return `<tr><td>${d.date}</td><td class="status ${cls}">${label}</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </section>
+  <script>setTimeout(()=>{ try{ window.print(); }catch(e){} }, 300);</script>
+</body>
+</html>
+        `;
+
+        const w = window.open('', '_blank');
+        if(!w){ alert('تعذّر فتح نافذة التقرير. يرجى السماح بالنوافذ المنبثقة.'); return; }
+        w.document.open();
+        w.document.write(reportHTML);
+        w.document.close();
+    }
+
+    /* NEW: تقرير PDF احترافي برسوم بيانية وتحليل ورسائل تحفيزية */
+    async function exportMonthlyPDF(){
+        const y = activeDate.getFullYear();
+        const m = activeDate.getMonth(); // 0..11
+        const localeMonth = activeDate.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+
+        // تجميع بيانات الشهر
+        const lastDayNum = new Date(y, m + 1, 0).getDate();
+        const pad2 = n => String(n).padStart(2, '0');
+        const days = [];
+        let dry = 0, wet = 0;
+
+        for(let d=1; d<=lastDayNum; d++){
+            const key = `${y}-${pad2(m+1)}-${pad2(d)}`;
+            const stat = historyData[key] || null; // 'dry'|'wet'|null
+            days.push({ date: key, day: d, stat });
+            if (stat === 'dry') dry++;
+            if (stat === 'wet') wet++;
+        }
+        const none = lastDayNum - (dry + wet);
+
+        // نفس قواعد المكافأة
+        const isJan26 = (y === 2026 && m === 0);
+        let bounty = 0;
+        if (isJan26) bounty = 1000;
+        else if (y === 2026 && m === 2) bounty = 0;
+        else if (y > 2026 || (y === 2026 && m >= 3)) bounty = (wet > 0) ? (dry * 10) : 500;
+        else bounty = (wet > 0) ? (dry * 10) : 1000;
+
+        const recorded = dry + wet;
+        const adherence = recorded > 0 ? Math.round((dry / recorded) * 100) : 0;
+
+        // تحليلات السلاسل (streaks)
+        let currentDryStreak = 0, longestDryStreak = 0, tmp = 0;
+        for (let i = 0; i < days.length; i++){
+            if(days[i].stat === 'dry'){ tmp++; longestDryStreak = Math.max(longestDryStreak, tmp); } else { tmp = 0; }
+        }
+        for (let i = days.length - 1; i >= 0; i--){
+            if(days[i].stat === 'dry') currentDryStreak++; else break;
+        }
+
+        // أسابيع خالية من البلل (حسب عرض التقويم: السبت عمود 0)
+        const firstDay = new Date(y, m, 1);
+        const indexFromSatFirst = (jsDay) => (jsDay + 1) % 7; // Sat(6)->0
+        const padding = indexFromSatFirst(firstDay.getDay());
+        const weekCount = Math.ceil((padding + lastDayNum)/7);
+        let noWetWeeks = 0;
+        for(let w=0; w<weekCount; w++){
+            const start = Math.max(1, w*7 - padding + 1);
+            const end   = Math.min(lastDayNum, start + 6);
+            let hasWet = false;
+            for(let d=start; d<=end; d++){
+                const st = days[d-1].stat;
+                if(st === 'wet'){ hasWet = true; break; }
+            }
+            if(!hasWet) noWetWeeks++;
+        }
+
+        // أول وآخر يوم بلل
+        const wetDays = days.filter(d => d.stat === 'wet');
+        const firstWet = wetDays.length ? wetDays[0].date : '—';
+        const lastWet  = wetDays.length ? wetDays[wetDays.length-1].date : '—';
+
+        // رسالة تحفيزية ذكية
+        let motivation = '';
+        if (wet === 0 && recorded >= Math.floor(lastDayNum*0.7)) {
+            motivation = '🔥 شهر أسطوري! بدون أي بلل تقريبًا. استمر بنفس النسق لتحصد المكافأة الكاملة.';
+        } else if (currentDryStreak >= 5) {
+            motivation = `💪 رائع! سلسلة جفاف حاليًا ${currentDryStreak} أيام. واصل حتى تحقق أفضل نتائج.`;
+        } else if (dry > wet) {
+            motivation = '✅ اتجاهك صحيح. زد من أيام الجفاف وقلّص البلل لتقارب المكافأة القصوى.';
+        } else if (wet > 0) {
+            motivation = '🌱 لا بأس، ابدأ صفحة جديدة اليوم. خطوة ثابتة كل يوم تصنع الفارق الكبير.';
+        } else {
+            motivation = '⚡ سجّل يومك أولًا بأول. الالتزام بالمتابعة نصف النجاح.';
+        }
+
+        /* إنشاء مخططات Chart.js على كانفاسات مخفية ثم تحويلها إلى صور */
         const tmpHost = document.createElement('div');
-        tmpHost.style.cssText = 'position:fixed;left:-10000px;top:-10000px;opacity:0;';
+        tmpHost.style.cssText = 'position:fixed;left:-10000px;top:-10000px;opacity:0;pointer-events:none;';
         document.body.appendChild(tmpHost);
 
         const pieCanvas = document.createElement('canvas');
-        pieCanvas.width = 360; pieCanvas.height = 360;
-        tmpHost.appendChild(pieCanvas);
+        pieCanvas.width = 360; pieCanvas.height = 360; tmpHost.appendChild(pieCanvas);
 
         const barCanvas = document.createElement('canvas');
-        barCanvas.width = 700; barCanvas.height = 320;
-        tmpHost.appendChild(barCanvas);
+        barCanvas.width = 820; barCanvas.height = 320; tmpHost.appendChild(barCanvas);
 
-        // مخطط دائري (جفاف/بلل)
+        // مخطط دائري: جفاف/بلل/غير مسجّل
         const pie = new Chart(pieCanvas.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['جفاف', 'بلل'],
+                labels: ['جفاف', 'بلل', 'غير مسجّل'],
                 datasets: [{
-                    data: [dry, wet],
-                    backgroundColor: ['#27ae60', '#d63031'],
+                    data: [dry, wet, none],
+                    backgroundColor: ['#27ae60', '#d63031', '#b2bec3'],
                     borderWidth: 0
                 }]
             },
             options: {
                 plugins: {
-                    legend: { position: 'bottom', labels: { font: { size: 12, family: 'Cairo' } } },
-                    title: { display: true, text: 'توزيع الشهر', font: { size: 16, family: 'Cairo', weight: 'bold' } }
+                    legend: { position: 'bottom', labels: { font: { family:'Cairo' } } },
+                    title: { display: true, text: 'توزيع حالات الشهر', font: { family:'Cairo', size: 16, weight:'bold' } }
                 },
-                cutout: '60%'
+                cutout: '55%'
             }
         });
 
-        // مخطط أعمدة لخط الزمن اليومي (لون لكل يوم)
-        const labels = Array.from({length:lastDayNum}, (_,i)=> String(i+1));
+        // مخطط أعمدة: لون لكل يوم
+        const labels = days.map(d => String(d.day));
         const bar = new Chart(barCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels,
                 datasets: [{
                     label: 'حالة اليوم',
-                    data: labels.map((_,i)=> days[i].stat ? 1 : 0.2),
-                    backgroundColor: labels.map((_,i)=>{
-                        const st = days[i].stat;
-                        if (st === 'dry') return '#27ae60';
-                        if (st === 'wet') return '#d63031';
-                        return '#b2bec3';
-                    }),
+                    data: days.map(d => d.stat ? 1 : 0.15),
+                    backgroundColor: days.map(d => d.stat==='dry' ? '#27ae60' : (d.stat==='wet' ? '#d63031' : '#b2bec3')),
                     borderWidth: 0
                 }]
             },
@@ -487,29 +643,28 @@
                 },
                 plugins: {
                     legend: { display:false },
-                    title: { display:true, text:'خط الزمن اليومي', font:{ size:16, family:'Cairo', weight:'bold' } }
+                    title: { display:true, text:'خط الزمن اليومي', font:{ family:'Cairo', size:16, weight:'bold' } }
                 }
             }
         });
 
-        // انتظار إكمال الرسم (إطار واحد كافٍ عادةً)
+        // انتظار الرسم
         await new Promise(r => setTimeout(r, 250));
-
         const pieImg = pieCanvas.toDataURL('image/png', 1.0);
         const barImg = barCanvas.toDataURL('image/png', 1.0);
 
-        // بناء عقدة HTML للتقرير (جميلة الألوان)
+        // بناء عقدة HTML للتقرير
         const node = document.createElement('div');
         node.style.cssText = `
-            width: 794px; /* عرض A4 عند 96dpi تقريبي */
+            width: 794px; /* تقريبًا عرض A4 @96dpi */
             box-sizing: border-box;
             padding: 16px;
             font-family: 'Cairo', sans-serif;
             color: #2d3436;
-            background: linear-gradient(180deg,#fff,#fff9e6 1200px);
+            background: linear-gradient(180deg,#ffffff,#fff9e6 1200px);
         `;
         node.innerHTML = `
-            <div style="border:2px solid #d4a017;border-radius:14px;padding:14px 16px;background:linear-gradient(135deg,#fff9e6,#fff)">
+            <div style="border:2px solid #d4a017;border-radius:14px;padding:14px;background:linear-gradient(135deg,#fff9e6,#fff);">
                 <h2 style="margin:0;color:#634e1e;font-weight:900;">تقرير المهام الشهري</h2>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;color:#7a6b4e;font-weight:700;">
                     <span style="background:#fff7d6;border:1px solid #d4a017;border-radius:999px;padding:2px 10px;">الشهر: ${localeMonth}</span>
@@ -519,8 +674,8 @@
 
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
                 ${[
-                    {k:'جفاف', v: dry, bg:'#f0fbf4', bd:'#cfe8d6', col:'#2e7d32'},
-                    {k:'بلل', v: wet, bg:'#fff1f1', bd:'#f4caca', col:'#b33a3a'},
+                    {k:'أيام الجفاف', v: dry, bg:'#f0fbf4', bd:'#cfe8d6', col:'#2e7d32'},
+                    {k:'أيام البلل', v: wet, bg:'#fff1f1', bd:'#f4caca', col:'#b33a3a'},
                     {k:'نسبة الجفاف', v: `${adherence}%`, bg:'#eef2ff', bd:'#d7defc', col:'#1f3c88'},
                     {k:'المكافأة', v: `${bounty} ج`, bg:'#fff7e3', bd:'#f2e0a1', col:'#8a6d1d'}
                 ].map(x=>`
@@ -532,8 +687,25 @@
             </div>
 
             <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;">
-                <img src="${pieImg}" alt="Pie" style="width: 360px; height:auto; align-self:center; justify-self:center; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
-                <img src="${barImg}" alt="Bar" style="width: 700px; height:auto; align-self:center; justify-self:center; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
+                <img src="${pieImg}" alt="pie" style="width:100%;border:1px solid #eee;border-radius:12px;background:#fff;">
+                <img src="${barImg}" alt="bar" style="width:100%;border:1px solid #eee;border-radius:12px;background:#fff;">
+            </div>
+
+            <div style="border:1px solid #eadfbe;border-radius:12px;padding:10px;margin-top:10px;background:#fff;">
+                <h3 style="margin:0 0 8px 0;color:#0f3b22;">تحليلات</h3>
+                <ul style="margin:0;padding-inline-start:18px;color:#534d3d;line-height:1.9;">
+                    <li>السلسلة الحالية للجفاف: <b>${currentDryStreak}</b> يوم</li>
+                    <li>أطول سلسلة جفاف خلال الشهر: <b>${longestDryStreak}</b> يوم</li>
+                    <li>عدد الأسابيع الخالية من البلل: <b>${noWetWeeks}</b> أسبوع</li>
+                    <li>أول يوم بلل: <b>${firstWet}</b> — آخر يوم بلل: <b>${lastWet}</b></li>
+                    <li>أيام مسجّلة: <b>${recorded}</b> / <b>${lastDayNum}</b></li>
+                </ul>
+                <div style="margin-top:8px;padding:10px;border-radius:10px;background:#f7fff4;border:1px solid #d7efd1;color:#1f6f34;font-weight:900;">
+                    💡 رسالة تحفيزية: ${motivation}
+                </div>
+                <div style="font-size:12px;color:#7a6b4e;margin-top:8px;">
+                    ⛔ فترة العقوبة التي تم إيقافها: <b>٢٠ فبراير</b> → <b>٢ مارس</b> — لا تضع نفسك في هذا الموضع مرة أخرى.
+                </div>
             </div>
 
             <div style="border:1px solid #eadfbe;border-radius:12px;padding:10px;margin-top:10px;background:#fff;">
@@ -556,13 +728,12 @@
                         }).join('')}
                     </tbody>
                 </table>
-                <div style="font-size:12px;color:#7a6b4e;margin-top:8px;">⛔ فترة العقوبة التي تم إيقافها: <b>٢٠ فبراير</b> → <b>٢ مارس</b> — لا تضع نفسك في هذا الموضع مرة أخرى.</div>
             </div>
         `;
 
         document.body.appendChild(node);
 
-        // حفظ PDF عبر html2pdf (يحافظ على العربية والألوان)
+        // حفظ PDF
         const mm = String(m+1).padStart(2,'0');
         const fileName = `monthly_report_${y}-${mm}.pdf`;
         await html2pdf().set({
@@ -578,6 +749,7 @@
         node.remove();
         tmpHost.remove();
     }
+    /* END NEW */
 
     // أحداث الأدوات (التصفية)
     document.addEventListener('DOMContentLoaded', () => {
