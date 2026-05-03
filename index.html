@@ -3,601 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Y.Karizma - Tactical Whiteout</title>
-
-    <!-- Fonts & Libs -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <!-- ✅ إضافات PDF والمخططات (جديدة) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+    <title>أجندة 2026 الرقمية | My Digital Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ff-gold: #d4a017; 
-            --ff-light-bg: #f4f7f6;
-            --ff-card: #ffffff;
-            --heroic-red: #d63031;
-            --success-green: #27ae60;
-            --squad-blue: #0984e3;
-            --ammo-pink: #e84393;
-            --text-main: #2d3436;
+            --primary-color: #7e9a9a;
+            --accent-color: #d4a373;
+            --bg-color: #fefae0;
+            --paper-color: #ffffff;
+            --text-color: #4a4a4a;
         }
 
         body {
-            font-family: 'Cairo', sans-serif; background: #dfe6e9; margin: 0;
-            display: flex; justify-content: center; color: var(--text-main); overflow-x: hidden;
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
-        .battle-container { width: 100%; max-width: 450px; background: var(--ff-light-bg); min-height: 100vh; border: 1px solid #ccc; position: relative; padding-bottom: 40px; box-shadow: 0 0 30px rgba(0,0,0,0.1); }
 
-        /* Header */
-        .warrior-header {
-            width: 100%; height: 350px; position: relative;
-            background: url('https://w0.peakpx.com/wallpaper/406/339/wallpaper-free-fire-warrior-with-gun-thumbnail.jpg') center top/cover no-repeat;
-            display: flex; align-items: flex-end; border-bottom: 4px solid var(--ff-gold);
+        /* Sidebar Navigation */
+        nav {
+            width: 80px;
+            background-color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 25px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-        .warrior-header::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--ff-light-bg) 5%, transparent 80%); }
-        .player-info { position: relative; z-index: 5; padding: 20px; width: 100%; }
-        .rank-tag { background: var(--heroic-red); color: white; padding: 2px 10px; font-size: 11px; font-weight: 900; border-radius: 3px; box-shadow: 0 4px 10px rgba(214, 48, 49, 0.3); display: inline-flex; align-items: center; gap: 5px; }
-        .player-name { font-size: 38px; font-weight: 900; color: #2d3436; margin: 5px 0; display: flex; align-items: center; gap: 10px; text-shadow: 1px 1px 0px white; }
 
-        /* أوامر القيادة العليا: التنبيه المهم ضمن هذا المربع */
-        .commander-orders {
-            background: #fff9e6; border: 2px solid var(--ff-gold); margin: 15px; padding: 15px;
-            font-size: 12px; border-radius: 8px; color: #444; line-height: 1.7; animation: pulse 2s infinite;
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 10px 5px;
         }
-        @keyframes pulse { 0%{border-color:var(--ff-gold);} 50%{border-color:#eee;} 100%{border-color:var(--ff-gold);} }
 
-        /* مربع فترة العقوبة */
-        .penalty-box {
-            background: #fff; border: 2px dashed #f1b6b6; margin: 0 15px 15px 15px; padding: 12px;
-            border-radius: 10px; color: #7a3b3b; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        nav button:hover, nav button.active {
+            background-color: var(--accent-color);
+            border-radius: 5px;
         }
-        .penalty-title { font-weight: 900; color: var(--heroic-red); display:inline-flex; align-items:center; gap:6px; }
-        .penalty-dates { font-weight: 900; color: #b84a4a; }
-        .penalty-hint { font-size: 12px; color: #8a6b6b; font-weight: 700; }
 
-        .loot-card { background: var(--ff-card); margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .bounty-amount { font-size: 40px; font-weight: 900; color: var(--ff-gold); display: block; }
-
-        /* Date Controller */
-        .date-shifter { display: flex; justify-content: space-between; align-items: center; background: #fff; margin: 0 15px 15px 15px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
-        .shift-btn { background: #f0f0f0; border: 1px solid #ddd; color: var(--ff-gold); width: 40px; height: 40px; border-radius: 5px; cursor: pointer; font-size: 18px; }
-        .date-display { flex: 1; text-align: center; font-weight: 900; cursor: pointer; color: #2d3436; }
-
-        /* Actions */
-        .battle-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 15px 20px 15px; }
-        .action-btn { padding: 15px; border: none; font-family: 'Cairo'; font-weight: 900; cursor: pointer; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); transition: transform 0.2s; }
-        .action-btn:active { transform: scale(0.95); }
-        .btn-booyah { background: var(--ff-gold); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .btn-defeat { background: #f0f0f0; color: #b2bec3; border: 1px solid #ddd; }
-
-        /* Squad Radio (Chat) */
-        .squad-radio-container { background: #fff; margin: 0 15px 20px 15px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .radio-header { background: #f8f9fa; padding: 8px 12px; font-size: 10px; font-weight: 900; color: var(--squad-blue); border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 5px; }
-        .chat-box { height: 180px; overflow-y: auto; padding: 10px; background: #fff; display: flex; flex-direction: column; gap: 8px; }
-        .msg { font-size: 12px; line-height: 1.4; padding: 6px 10px; border-radius: 6px; background: #f1f2f6; border-right: 3px solid transparent; color: #2d3436; }
-        .msg-papa { border-right-color: var(--ff-gold); background: #fffdf2; }
-        .msg-mama { border-right-color: var(--ammo-pink); background: #fdf2f7; }
-        .msg-yassin { border-right-color: var(--squad-blue); background: #f2f7ff; }
-        .role-tag { font-weight: 900; font-size: 9px; margin-left: 5px; padding: 1px 5px; border-radius: 3px; }
-        .tag-papa { background: var(--ff-gold); color: #fff; }
-        .tag-mama { background: var(--ammo-pink); color: #fff; }
-        .tag-yassin { background: var(--squad-blue); color: #fff; }
-
-        .chat-input-area { display: flex; background: #f8f9fa; padding: 8px; gap: 5px; border-top: 1px solid #eee; }
-        .sender-select, .toolbar-select { background: #fff; border: 1px solid #ddd; font-size: 10px; border-radius: 4px; padding: 0 5px; }
-        .msg-input { flex: 1; border: 1px solid #ddd; padding: 8px; font-size: 12px; border-radius: 4px; outline: none; }
-        .btn-send { background: var(--ff-gold); border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; color: white; }
-        .btn-export { background: var(--ff-gold); border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 900; }
-
-        /* History (Calendar) */
-        .battle-log { background: #fff; margin: 0 15px; border-radius: 10px; border: 1px solid #ddd; }
-        .log-header { padding: 10px; font-size: 12px; color: var(--ff-gold); border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; align-items: center; gap: 8px; }
-        .log-tools { display:flex; gap:6px; align-items:center; flex-wrap: wrap; }
-        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 10px; }
-        .cal-head { text-align: center; font-weight: 900; font-size: 11px; color: #777; }
-        .cal-cell {
-            background: #fff; border: 1px solid #eee; border-radius: 8px; min-height: 64px; padding: 6px;
-            display: flex; flex-direction: column; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        /* Main Content Area */
+        main {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .cal-cell.empty { background: #fafafa; border-style: dashed; opacity: 0.6; }
-        .cal-date { font-weight: 900; font-size: 12px; color: #2d3436; }
-        .cal-status { font-size: 11px; }
-        .cal-status.dry { color: var(--success-green); font-weight: 900; }
-        .cal-status.wet { color: var(--heroic-red); font-weight: 900; }
-        .cal-cell.active { outline: 2px solid var(--ff-gold); }
-        .cal-cell.muted { opacity: .35; }
 
-        input[type="date"] { display: none; }
+        .notebook-page {
+            background: var(--paper-color);
+            min-height: 80vh;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 40px;
+            position: relative;
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 100% 30px;
+            line-height: 30px;
+        }
+
+        h1 { color: var(--primary-color); margin-bottom: 10px; }
+        .date-badge { color: var(--accent-color); font-weight: bold; margin-bottom: 20px; display: block; }
+
+        textarea {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1rem;
+            line-height: 30px;
+            resize: none;
+            outline: none;
+            color: #333;
+        }
+
+        /* Grid for Life Plans */
+        .grid-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            border-right: 5px solid var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="battle-container">
-    <div class="warrior-header">
-        <div class="player-info">
-            <span class="rank-tag">🏆 GRANDMASTER 🎖️</span>
-            <h1 class="player-name">🥷 Y.KARIZMA 🔫</h1>
-        </div>
-    </div>
+    <nav>
+        <button onclick="showSection('daily')" id="btn-daily" class="active">اليومية</button>
+        <button onclick="showSection('thoughts')" id="btn-thoughts">خواطر</button>
+        <button onclick="showSection('goals')" id="btn-goals">أهداف 2026</button>
+    </nav>
 
-    <!-- أوامر القيادة العليا: التنبيه المهم ضمن هذا المربع -->
-    <div class="commander-orders" id="commander-orders">
-        📢 <b>تنبيه مهم:</b><br>
-        تمت إتاحة الفرصة مرة أخرى، ولكن تقلّصت المكافأة لتصبح <b>٥٠٠ جنيه</b> فقط،
-        وسيتم وضعك في <b>هذا الشهر تحت الاختبار</b>، لتبدأ المكافأة من الشهر القادم (<b>أبريل</b>).
-    </div>
-
-    <!-- مربع فترة العقوبة (تحفيزي) -->
-    <div class="penalty-box">
-        <div class="penalty-title">⛔ فترة العقوبة التي تم إيقافها:</div>
-        <div class="penalty-dates">من <b>٢٠ فبراير</b> إلى <b>٢ مارس</b></div>
-        <div class="penalty-hint">لا تضع نفسك في هذا الموضع مرة أخرى — أثبت لنفسك أولًا ثم للكتيبة أنك على قدر المسؤولية. 💪</div>
-    </div>
-
-    <div class="loot-card">
-        <span style="font-size: 11px; color: #888; font-weight: bold;">💎 STRATEGIC BOUNTY</span>
-        <span class="bounty-amount" id="money">1000</span>
-    </div>
-
-    <div class="date-shifter">
-        <button class="shift-btn" onclick="changeDay(-1)">◀️</button>
-        <div class="date-display" onclick="document.getElementById('date-input').showPicker()">
-            <div id="date-text">📅 تحميل...</div>
-            <div id="status-text" style="font-size:10px; color: #999;">بانتظار الرصد</div>
-        </div>
-        <button class="shift-btn" onclick="changeDay(1)">▶️</button>
-        <input type="date" id="date-input" onchange="setDate(this.value)">
-    </div>
-
-    <div class="battle-actions">
-        <button class="action-btn btn-booyah" id="win-btn" onclick="register(true)">BOOYAH!</button>
-        <button class="action-btn btn-defeat" id="loss-btn" onclick="register(false)">DEFEAT</button>
-    </div>
-
-    <div class="squad-radio-container">
-        <div class="radio-header">📡 SQUAD RADIO - راديو الكتيبة</div>
-        <div class="chat-box" id="chat-messages"></div>
-        <div class="chat-input-area">
-            <select id="sender-name" class="sender-select">
-                <option value="بابا">بابا (Commander)</option>
-                <option value="ماما">ماما (Supply)</option>
-                <option value="ياسين">سمسم (Veteran)</option>
-            </select>
-            <input type="text" id="msg-input" class="msg-input" placeholder="اكتب رسالة تكتيكية...">
-            <button class="btn-send" onclick="sendMsg()">📡</button>
-        </div>
-    </div>
-
-    <div class="battle-log">
-        <div class="log-header">
-            <span>📜 تقويم المهام الشهري</span>
-            <div class="log-tools">
-                <label for="calendar-filter" style="font-size:10px;color:#777">تصفية:</label>
-                <select id="calendar-filter" class="toolbar-select" title="تصفية التقويم">
-                    <option value="all">الكل</option>
-                    <option value="dry">جفاف</option>
-                    <option value="wet">بلل</option>
-                </select>
-
-                <label for="export-scope" style="font-size:10px;color:#777">تصدير:</label>
-                <select id="export-scope" class="toolbar-select" title="نطاق التصدير">
-                    <option value="month">الشهر الحالي</option>
-                    <option value="all">كل السجل</option>
-                </select>
-                <button class="btn-export" onclick="exportCSV()">⬇️ تصدير</button>
-
-                <!-- ✅ زر تصدير PDF جذّاب (جديد) -->
-                <button class="btn-export" onclick="exportMonthlyPDF()">📄 تصدير PDF جذّاب</button>
-
-                <span id="month-stat">0/0</span>
+    <main>
+        <!-- Daily Section -->
+        <section id="daily">
+            <h1>مخطط اليوم</h1>
+            <span class="date-badge" id="current-date"></span>
+            <div class="notebook-page">
+                <textarea id="daily-text" placeholder="ما هي خطتك لهذا اليوم؟..."></textarea>
             </div>
-        </div>
-        <!-- تقويم شهري -->
-        <div class="calendar" id="calendar"></div>
-    </div>
-</div>
+        </section>
 
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAPhrEzYnHoL3ln8_5BFFyWCjx2Y-G80E0",
-        authDomain: "yassinapp-20262.firebaseapp.com",
-        databaseURL: "https://yassinapp-20262-default-rtdb.firebaseio.com",
-        projectId: "yassinapp-20262",
-        storageBucket: "yassinapp-20262.firebasestorage.app",
-        messagingSenderId: "940031861888",
-        appId: "1:940031861888:web:9b7600cbf80b6343"
-    };
+        <!-- Thoughts Section -->
+        <section id="thoughts" class="hidden">
+            <h1>مساحة الأفكار والخواطر</h1>
+            <div class="notebook-page">
+                <textarea id="thoughts-text" placeholder="اكتب ما يجول في خاطرك هنا..."></textarea>
+            </div>
+        </section>
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    let historyData = {};
-    let activeDate = new Date();
-    let currentFilter = 'all'; // all | dry | wet
-
-    function sendMsg() {
-        const sender = document.getElementById('sender-name').value;
-        const text = document.getElementById('msg-input').value;
-        if(!text) return;
-        db.ref('squad_chat').push({ sender: sender, text: text, timestamp: Date.now() });
-        document.getElementById('msg-input').value = '';
-    }
-
-    db.ref('squad_chat').limitToLast(15).on('value', (snap) => {
-        const box = document.getElementById('chat-messages');
-        box.innerHTML = '';
-        snap.forEach(child => {
-            const m = child.val();
-            let roleClass = m.sender === 'بابا' ? 'msg-papa' : (m.sender === 'ماما' ? 'msg-mama' : 'msg-yassin');
-            let tagClass = m.sender === 'بابا' ? 'tag-papa' : (m.sender === 'ماما' ? 'tag-mama' : 'tag-yassin');
-            box.innerHTML += `<div class="msg ${roleClass}"><span class="role-tag ${tagClass}">${m.sender}</span> ${m.text}</div>`;
-        });
-        box.scrollTop = box.scrollHeight;
-    });
-
-    function updateDisplay() {
-        const key = activeDate.toISOString().split('T')[0];
-        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-        document.getElementById('date-text').innerText = "📅 " + activeDate.toLocaleDateString('ar-EG', dateOptions);
-
-        const winBtn = document.getElementById('win-btn'), lossBtn = document.getElementById('loss-btn'), statusText = document.getElementById('status-text');
-        if (historyData[key]) {
-            winBtn.disabled = lossBtn.disabled = true;
-            winBtn.style.opacity = lossBtn.style.opacity = "0.3";
-            statusText.innerText = historyData[key] === 'dry' ? "✅ تم الرصد: BOOYAH" : "❌ تم الرصد: DEFEAT";
-        } else {
-            winBtn.disabled = lossBtn.disabled = false;
-            winBtn.style.opacity = lossBtn.style.opacity = "1";
-            statusText.innerText = "بانتظار رصد المهمة...";
-        }
-    }
-
-    function changeDay(delta) {
-        activeDate.setDate(activeDate.getDate() + delta);
-        calculateBounty(); renderCalendar(); updateDisplay();
-    }
-    function setDate(val) {
-        activeDate = new Date(val);
-        calculateBounty(); renderCalendar(); updateDisplay();
-    }
-
-    db.ref('yassin_money_quest/history').on('value', (snap) => {
-        historyData = snap.val() || {};
-        calculateBounty(); renderCalendar(); updateDisplay();
-    });
-
-    /* منطق المكافأة كما تم الاتفاق */
-    function calculateBounty() {
-        let dry = 0, wet = 0, hasWet = false;
-        Object.entries(historyData).forEach(([date, stat]) => {
-            const d = new Date(date);
-            if(d.getMonth() === activeDate.getMonth() && d.getFullYear() === activeDate.getFullYear()){
-                if(stat === 'dry') dry++; else { wet++; hasWet = true; }
-            }
-        });
-
-        const y = activeDate.getFullYear();
-        const m = activeDate.getMonth(); // 0=يناير ... 2=مارس ... 3=أبريل
-        const isJan26 = (y === 2026 && m === 0);
-        let bounty = 0;
-
-        if (isJan26) {
-            bounty = 1000; // استثناء يناير 2026
-        } else if (y === 2026 && m === 2) {
-            bounty = 0;    // مارس 2026: شهر اختبار بلا مكافأة
-        } else if (y > 2026 || (y === 2026 && m >= 3)) {
-            bounty = hasWet ? (dry * 10) : 500; // من أبريل 2026: سقف 500
-        } else {
-            bounty = hasWet ? (dry * 10) : 1000; // ما قبل ذلك: كما كان (سقف 1000)
-        }
-
-        document.getElementById('money').innerText = String(bounty);
-        document.getElementById('month-stat').innerText = `✅ ${dry} | ❌ ${wet}`;
-    }
-
-    /* تقويم شهري مع تصفية (الكل/جفاف/بلل) */
-    function renderCalendar() {
-        const cal = document.getElementById('calendar');
-        if(!cal) return;
-        cal.innerHTML = '';
-
-        // رؤوس أيام الأسبوع (السبت → الجمعة)
-        const heads = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
-        heads.forEach(h => cal.innerHTML += `<div class="cal-head">${h}</div>`);
-
-        const y = activeDate.getFullYear();
-        const m = activeDate.getMonth();
-        const firstDay = new Date(y, m, 1);
-        const lastDayNum = new Date(y, m + 1, 0).getDate();
-
-        // فهرس البداية: جعل السبت عمود 0
-        const indexFromSatFirst = (jsDay) => (jsDay + 1) % 7; // Sat(6)->0, Sun(0)->1, Mon(1)->2, ...
-        const padding = indexFromSatFirst(firstDay.getDay());
-
-        // خلايا فارغة قبل اليوم الأول
-        for(let i=0;i<padding;i++){
-            cal.innerHTML += `<div class="cal-cell empty"></div>`;
-        }
-
-        // أدوات مساعدة
-        const pad2 = n => String(n).padStart(2,'0');
-        const keyOf = (yy, mm, dd) => `${yy}-${pad2(mm+1)}-${pad2(dd)}`;
-
-        // رسم الأيام
-        for(let d=1; d<=lastDayNum; d++){
-            const dateObj = new Date(y, m, d);
-            const key = keyOf(y, m, d);
-            const stat = historyData[key]; // 'dry' | 'wet' | undefined
-
-            let statusHtml = '';
-            let statClass = '';
-            if (stat === 'dry')  { statusHtml = `جفاف`; statClass = 'dry'; }
-            else if (stat === 'wet') { statusHtml = `بلل`; statClass = 'wet'; }
-            else { statusHtml = `—`; statClass = ''; }
-
-            const isActive = (dateObj.toDateString() === activeDate.toDateString());
-
-            // تطبيق الترشيح: تخفيف غير المطابق
-            let muted = false;
-            if (currentFilter === 'dry' && stat !== 'dry') muted = true;
-            if (currentFilter === 'wet' && stat !== 'wet') muted = true;
-
-            cal.innerHTML += `
-                <div class="cal-cell ${isActive ? 'active' : ''} ${muted ? 'muted' : ''}">
-                    <div class="cal-date">${d}</div>
-                    <span class="cal-status ${statClass}">${statusHtml}</span>
+        <!-- Goals Section -->
+        <section id="goals" class="hidden">
+            <h1>رؤية عام 2026</h1>
+            <div class="grid-plans">
+                <div class="card">
+                    <h3>الصحة والرياضة</h3>
+                    <textarea style="height: 150px;" id="goal-health"></textarea>
                 </div>
-            `;
+                <div class="card">
+                    <h3>الجانب المهني</h3>
+                    <textarea style="height: 150px;" id="goal-work"></textarea>
+                </div>
+                <div class="card">
+                    <h3>تطوير الذات</h3>
+                    <textarea style="height: 150px;" id="goal-self"></textarea>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // عرض التاريخ الحالي
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('ar-EG', options);
+
+        // وظيفة التنقل بين الأقسام
+        function showSection(sectionId) {
+            document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById('btn-' + sectionId).classList.add('active');
         }
-    }
 
-    /* تصدير السجل إلى CSV (الشهر الحالي/كل السجل) */
-    function exportCSV(){
-        const scope = document.getElementById('export-scope')?.value || 'month';
-        const rows = [];
-        const header = ['التاريخ','الحالة']; // Arabic headers
-
-        const pushRow = (dateStr, stat) => {
-            const ar = stat === 'dry' ? 'جفاف' : (stat === 'wet' ? 'بلل' : '-');
-            rows.push([dateStr, ar]);
-        };
-
-        if(scope === 'all'){
-            const keys = Object.keys(historyData || {}).sort();
-            keys.forEach(k => pushRow(k, historyData[k]));
-        } else {
-            const y = activeDate.getFullYear();
-            const m = activeDate.getMonth();
-            Object.entries(historyData).forEach(([date, stat]) => {
-                const d = new Date(date);
-                if(d.getFullYear() === y && d.getMonth() === m){
-                    pushRow(date, stat);
-                }
+        // حفظ البيانات تلقائياً
+        const fields = ['daily-text', 'thoughts-text', 'goal-health', 'goal-work', 'goal-self'];
+        
+        fields.forEach(field => {
+            const element = document.getElementById(field);
+            // تحميل البيانات المحفوظة
+            element.value = localStorage.getItem(field) || '';
+            
+            // الحفظ عند الكتابة
+            element.addEventListener('input', () => {
+                localStorage.setItem(field, element.value);
             });
-            // ترتيب شهري
-            rows.sort((a,b)=> a[0].localeCompare(b[0]));
-        }
-
-        const csvLines = [header.join(','), ...rows.map(r=> r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))];
-        const csvContent = '\uFEFF' + csvLines.join('\n'); // BOM لدعم العربية في Excel
-        const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-
-        const y = activeDate.getFullYear();
-        const m = String(activeDate.getMonth()+1).padStart(2,'0');
-        const filename = scope === 'all' ? `history_all.csv` : `history_${y}-${m}.csv`;
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 0);
-    }
-
-    /* ✅ PDF جذّاب مع مخططات وألوان */
-    async function exportMonthlyPDF(){
-        const y = activeDate.getFullYear();
-        const m = activeDate.getMonth(); // 0..11
-        const localeMonth = activeDate.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
-
-        // تجميع بيانات الشهر
-        let dry = 0, wet = 0, hasWet = false;
-        const days = [];
-        const lastDayNum = new Date(y, m + 1, 0).getDate();
-        const pad2 = n => String(n).padStart(2, '0');
-
-        for(let d=1; d<=lastDayNum; d++){
-            const key = `${y}-${pad2(m+1)}-${pad2(d)}`;
-            const stat = historyData[key] || null; // 'dry'|'wet'|null
-            if (stat === 'dry') dry++;
-            if (stat === 'wet') { wet++; hasWet = true; }
-            days.push({ date: key, stat });
-        }
-
-        // نفس قواعد مكافأتك
-        const isJan26 = (y === 2026 && m === 0);
-        let bounty = 0;
-        if (isJan26) bounty = 1000;
-        else if (y === 2026 && m === 2) bounty = 0;
-        else if (y > 2026 || (y === 2026 && m >= 3)) bounty = hasWet ? (dry * 10) : 500;
-        else bounty = hasWet ? (dry * 10) : 1000;
-
-        const adherence = (dry + wet) > 0 ? Math.round((dry / (dry + wet)) * 100) : 0;
-
-        // إنشاء مخططات Chart.js على كانفاسات مؤقتة
-        const tmpHost = document.createElement('div');
-        tmpHost.style.cssText = 'position:fixed;left:-10000px;top:-10000px;opacity:0;';
-        document.body.appendChild(tmpHost);
-
-        const pieCanvas = document.createElement('canvas');
-        pieCanvas.width = 360; pieCanvas.height = 360;
-        tmpHost.appendChild(pieCanvas);
-
-        const barCanvas = document.createElement('canvas');
-        barCanvas.width = 700; barCanvas.height = 320;
-        tmpHost.appendChild(barCanvas);
-
-        // مخطط دائري (جفاف/بلل)
-        const pie = new Chart(pieCanvas.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['جفاف', 'بلل'],
-                datasets: [{
-                    data: [dry, wet],
-                    backgroundColor: ['#27ae60', '#d63031'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: { position: 'bottom', labels: { font: { size: 12, family: 'Cairo' } } },
-                    title: { display: true, text: 'توزيع الشهر', font: { size: 16, family: 'Cairo', weight: 'bold' } }
-                },
-                cutout: '60%'
-            }
         });
-
-        // مخطط أعمدة لخط الزمن اليومي (لون لكل يوم)
-        const labels = Array.from({length:lastDayNum}, (_,i)=> String(i+1));
-        const bar = new Chart(barCanvas.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels,
-                datasets: [{
-                    label: 'حالة اليوم',
-                    data: labels.map((_,i)=> days[i].stat ? 1 : 0.2),
-                    backgroundColor: labels.map((_,i)=>{
-                        const st = days[i].stat;
-                        if (st === 'dry') return '#27ae60';
-                        if (st === 'wet') return '#d63031';
-                        return '#b2bec3';
-                    }),
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                scales: {
-                    y: { display:false, min:0, max:1.1 },
-                    x: { ticks: { font: { family:'Cairo' } } }
-                },
-                plugins: {
-                    legend: { display:false },
-                    title: { display:true, text:'خط الزمن اليومي', font:{ size:16, family:'Cairo', weight:'bold' } }
-                }
-            }
-        });
-
-        // انتظار إكمال الرسم (إطار واحد كافٍ عادةً)
-        await new Promise(r => setTimeout(r, 250));
-
-        const pieImg = pieCanvas.toDataURL('image/png', 1.0);
-        const barImg = barCanvas.toDataURL('image/png', 1.0);
-
-        // بناء عقدة HTML للتقرير (جميلة الألوان)
-        const node = document.createElement('div');
-        node.style.cssText = `
-            width: 794px; /* عرض A4 عند 96dpi تقريبي */
-            box-sizing: border-box;
-            padding: 16px;
-            font-family: 'Cairo', sans-serif;
-            color: #2d3436;
-            background: linear-gradient(180deg,#fff,#fff9e6 1200px);
-        `;
-        node.innerHTML = `
-            <div style="border:2px solid #d4a017;border-radius:14px;padding:14px 16px;background:linear-gradient(135deg,#fff9e6,#fff)">
-                <h2 style="margin:0;color:#634e1e;font-weight:900;">تقرير المهام الشهري</h2>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;color:#7a6b4e;font-weight:700;">
-                    <span style="background:#fff7d6;border:1px solid #d4a017;border-radius:999px;padding:2px 10px;">الشهر: ${localeMonth}</span>
-                    <span style="background:#fff7d6;border:1px solid #d4a017;border-radius:999px;padding:2px 10px;">تاريخ الإصدار: ${new Date().toLocaleString('ar-EG')}</span>
-                </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
-                ${[
-                    {k:'جفاف', v: dry, bg:'#f0fbf4', bd:'#cfe8d6', col:'#2e7d32'},
-                    {k:'بلل', v: wet, bg:'#fff1f1', bd:'#f4caca', col:'#b33a3a'},
-                    {k:'نسبة الجفاف', v: `${adherence}%`, bg:'#eef2ff', bd:'#d7defc', col:'#1f3c88'},
-                    {k:'المكافأة', v: `${bounty} ج`, bg:'#fff7e3', bd:'#f2e0a1', col:'#8a6d1d'}
-                ].map(x=>`
-                    <div style="background:${x.bg};border:1px solid ${x.bd};border-radius:12px;padding:10px;text-align:center;">
-                        <div style="color:#7a6b4e;font-size:12px;">${x.k}</div>
-                        <div style="color:${x.col};font-size:20px;font-weight:900;">${x.v}</div>
-                    </div>
-                `).join('')}
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;">
-                <img src="${pieImg}" alt="Pie" style="width: 360px; height:auto; align-self:center; justify-self:center; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
-                <img src="${barImg}" alt="Bar" style="width: 700px; height:auto; align-self:center; justify-self:center; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)">
-            </div>
-
-            <div style="border:1px solid #eadfbe;border-radius:12px;padding:10px;margin-top:10px;background:#fff;">
-                <h3 style="margin:0 0 8px 0;color:#0f3b22;">سجل الأيام</h3>
-                <table style="width:100%;border-collapse:collapse;">
-                    <thead>
-                        <tr>
-                            <th style="text-align:right;border:1px solid #eee5c8;padding:6px 8px;background:#fff9e6;color:#634e1e;">التاريخ</th>
-                            <th style="text-align:right;border:1px solid #eee5c8;padding:6px 8px;background:#fff9e6;color:#634e1e;">الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${days.map(d=>{
-                            const label = d.stat==='dry' ? 'جفاف' : (d.stat==='wet' ? 'بلل' : '—');
-                            const col   = d.stat==='dry' ? '#27ae60' : (d.stat==='wet' ? '#d63031' : '#999');
-                            return `<tr>
-                                <td style="border:1px solid #eee5c8;padding:6px 8px;">${d.date}</td>
-                                <td style="border:1px solid #eee5c8;padding:6px 8px;font-weight:900;color:${col}">${label}</td>
-                            </tr>`;
-                        }).join('')}
-                    </tbody>
-                </table>
-                <div style="font-size:12px;color:#7a6b4e;margin-top:8px;">⛔ فترة العقوبة التي تم إيقافها: <b>٢٠ فبراير</b> → <b>٢ مارس</b> — لا تضع نفسك في هذا الموضع مرة أخرى.</div>
-            </div>
-        `;
-
-        document.body.appendChild(node);
-
-        // حفظ PDF عبر html2pdf (يحافظ على العربية والألوان)
-        const mm = String(m+1).padStart(2,'0');
-        const fileName = `monthly_report_${y}-${mm}.pdf`;
-        await html2pdf().set({
-            margin:       [8,8,8,8],
-            filename:     fileName,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(node).save();
-
-        // تنظيف
-        try { pie.destroy(); bar.destroy(); } catch(_){}
-        node.remove();
-        tmpHost.remove();
-    }
-
-    // أحداث الأدوات (التصفية)
-    document.addEventListener('DOMContentLoaded', () => {
-        const filterSel = document.getElementById('calendar-filter');
-        if(filterSel){
-            filterSel.onchange = () => { currentFilter = filterSel.value || 'all'; renderCalendar(); };
-        }
-    });
-
-    function register(isDry) {
-        const key = activeDate.toISOString().split('T')[0];
-        if(historyData[key]) return;
-        if(isDry) confetti({ particleCount: 100, spread: 70 });
-        db.ref('yassin_money_quest/history').update({ [key]: isDry ? 'dry' : 'wet' });
-    }
-
-    document.getElementById('date-input').valueAsDate = new Date();
-    calculateBounty();
-    renderCalendar();
-    updateDisplay();
-</script>
+    </script>
 </body>
 </html>
