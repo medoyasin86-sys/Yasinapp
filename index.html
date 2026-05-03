@@ -3,209 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mo Yasin Ultimate Planner 26-27</title>
+    <title>Mo Yasin Personal Legacy 2026-2027</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
 
         :root {
-            --royal-paper: #f9f5eb; 
-            --mo-gold: #c5a059;
-            --dark-leather: #2c2520;
-            --line: #e4dec0;
+            --vintage-paper: #f4eee0; 
+            --ink: #2b2b2b;
+            --gold-leaf: #b38b4d;
+            --leather: #3d342d;
+            --notebook-lines: #d1c7ac;
         }
 
         body, html {
             margin: 0; padding: 0;
-            background: #0a0a0a;
+            background: #0f0f0f;
             font-family: 'Amiri', serif;
             height: 100vh; display: flex;
             justify-content: center; align-items: center;
             overflow: hidden;
         }
 
-        .planner-frame {
+        .notebook-container {
             width: 1024px;
             height: 768px;
-            background: var(--royal-paper);
+            background: var(--vintage-paper);
             display: flex;
             position: relative;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-            border-left: 15px solid var(--dark-leather);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+            border-left: 20px solid var(--leather);
+            border-radius: 4px;
         }
 
-        /* نظام التبويبات الجانبي */
-        .sidebar {
-            width: 80px;
-            background: var(--dark-leather);
+        /* التبويبات الجانبية الأنيقة */
+        .tabs {
+            width: 70px;
+            background: var(--leather);
             display: flex;
             flex-direction: column;
-            padding-top: 20px;
-            z-index: 100;
+            padding-top: 50px;
         }
 
         .tab {
-            padding: 20px 0;
-            color: #9b8a78;
+            padding: 30px 0;
+            color: #8c7d6b;
             text-align: center;
             writing-mode: vertical-rl;
             text-orientation: mixed;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 700;
-            border-right: 4px solid transparent;
-            transition: 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.4s;
+            border-right: 5px solid transparent;
         }
 
         .tab.active {
-            background: var(--royal-paper);
-            color: var(--mo-gold);
-            border-right: 4px solid var(--mo-gold);
+            background: var(--vintage-paper);
+            color: var(--gold-leaf);
+            border-right: 5px solid var(--gold-leaf);
         }
 
-        /* المحتوى */
-        .main-content {
+        /* مساحة المحتوى */
+        .page {
             flex: 1;
-            padding: 40px;
-            position: relative;
-            background-image: linear-gradient(var(--line) 1px, transparent 1px);
-            background-size: 100% 32px;
+            padding: 60px 80px;
             overflow-y: auto;
+            background-image: linear-gradient(var(--notebook-lines) 1px, transparent 1px);
+            background-size: 100% 34px; /* تسطير احترافي مريح */
+            line-height: 34px;
         }
 
-        /* لوحة التقويم الكاملة */
-        .calendar-grid-view {
-            display: none;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            background: var(--royal-paper);
-            padding: 20px;
-        }
-
-        .month-box {
-            border: 1px solid var(--mo-gold);
-            padding: 10px;
-            text-align: center;
-        }
-
-        .days-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            font-size: 10px;
-            margin-top: 10px;
-        }
-
-        .day-btn {
-            cursor: pointer;
-            padding: 2px;
-            border-radius: 3px;
-        }
-
-        .day-btn:hover { background: var(--mo-gold); color: white; }
-
-        /* ترويسة الصفحة اليومية */
         header {
+            border-bottom: 2px solid var(--gold-leaf);
+            margin-bottom: 40px;
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px solid var(--mo-gold);
-            margin-bottom: 20px;
+            align-items: flex-end;
             padding-bottom: 10px;
         }
 
-        .writing-area {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr;
-            gap: 30px;
+        h1 { margin: 0; color: var(--gold-leaf); font-size: 2.8rem; font-weight: 400; }
+
+        /* سجل الإبداع المالي (Mo Yasin Classic) */
+        .finance-section {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--gold-leaf);
+            margin-top: 20px;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th { background: var(--gold-leaf); color: white; padding: 12px; font-weight: bold; }
+        td { border: 1px solid var(--notebook-lines); height: 34px; padding: 0 15px; }
+
+        .summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: var(--leather);
+            color: var(--gold-leaf);
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 2px;
+        }
+
+        /* مساحة الكتابة الحرة */
         textarea {
-            width: 100%; height: 500px;
-            background: transparent; border: none; outline: none;
-            font-family: 'Amiri', serif; font-size: 1.5rem;
-            line-height: 32px; resize: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Amiri', serif;
+            font-size: 1.6rem;
+            color: var(--ink);
+            resize: none;
+            line-height: 34px;
         }
 
         .wax-seal {
-            position: absolute; bottom: 30px; left: 30px;
-            width: 80px; height: 80px;
-            background: radial-gradient(#9b2c2c, #5d1a1a);
+            position: absolute; bottom: 40px; left: 40px;
+            width: 100px; height: 100px;
+            background: radial-gradient(#8b1a1a, #5c0a0a);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: #d4af37; transform: rotate(5deg);
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+            color: #d4af37; transform: rotate(-12deg);
+            box-shadow: 10px 10px 25px rgba(0,0,0,0.4);
+            font-size: 0.9rem; text-align: center; font-weight: bold;
         }
 
     </style>
 </head>
 <body>
 
-<div class="planner-frame">
-    <nav class="sidebar">
-        <div class="tab" onclick="showView('cal')">تقويم السنتين</div>
-        <div class="tab active" onclick="showView('daily')">اليوم الحالي</div>
-        <div class="tab" onclick="showView('notes')">الخواطر</div>
-    </nav>
+    <div class="notebook-container">
+        <nav class="tabs">
+            <div class="tab active" onclick="view('diary')">خواطر ٢٠٢٦-٢٠٢٧</div>
+            <div class="tab" onclick="view('finance')">سجل الإبداع المالي</div>
+            <div class="tab" onclick="view('calendar')">تقويم السنتين</div>
+        </nav>
 
-    <main class="main-content" id="main-area">
-        <!-- عرض اليوم (تلقائي) -->
-        <div id="daily-view">
-            <header>
-                <h1 id="current-date" style="color:var(--mo-gold); margin:0;">٣ مايو ٢٠٢٦</h1>
-                <div style="text-align:left; color:#888;">Mo Yasin Edition</div>
-            </header>
-            <div class="writing-area">
-                <textarea placeholder="اكتب يومياتك هنا..."></textarea>
-                <div class="widgets">
-                    <div style="border:1px solid var(--mo-gold); padding:15px; margin-bottom:20px;">
-                        <strong style="color:var(--mo-gold)">أولويات اليوم:</strong>
-                        <div style="height:100px;"></div>
+        <main class="page" id="content">
+            <!-- سيتم التبديل هنا -->
+        </main>
+
+        <div class="wax-seal">MO.<br>YASIN</div>
+    </div>
+
+    <script>
+        function view(type) {
+            const content = document.getElementById('content');
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(type === 'diary') {
+                content.innerHTML = `
+                    <header>
+                        <h1>فيضُ الخاطر اليومي</h1>
+                        <span style="color:#888;">${new Date().toLocaleDateString('ar-EG')}</span>
+                    </header>
+                    <textarea placeholder="هنا تُحفظ الأسرار وتبنى الأحلام..."></textarea>
+                `;
+            } else if(type === 'finance') {
+                content.innerHTML = `
+                    <header>
+                        <h1>كشف المصروفات والدخل</h1>
+                        <span style="color:#888;">سجل الإبداع المالي</span>
+                    </header>
+                    <table class="finance-section">
+                        <thead>
+                            <tr>
+                                <th>اليوم</th><th>التاريخ</th><th>البيان</th><th>دخل (+)</th><th>صرف (-)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array(10).fill('<tr><td></td><td> / </td><td></td><td></td><td></td></tr>').join('')}
+                        </tbody>
+                    </table>
+                    <div class="summary">
+                        <div>إجمالي الدخل: ---</div>
+                        <div>إجمالي المصاريف: ---</div>
+                        <div style="color:white;">الصافي: ---</div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- عرض التقويم الكامل للسنتين -->
-        <div id="calendar-view" class="calendar-grid-view">
-            <!-- سيتم توليد الشهور هنا برمجياً لضمان الدقة -->
-        </div>
-    </main>
-    <div class="wax-seal">MO</div>
-</div>
-
-<script>
-    function showView(view) {
-        document.getElementById('daily-view').style.display = view === 'daily' ? 'block' : 'none';
-        document.getElementById('calendar-view').style.display = view === 'cal' ? 'grid' : 'none';
-    }
-
-    // توليد تقويم السنتين
-    const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-    const calendarContainer = document.getElementById('calendar-view');
-
-    function generateCalendar(year) {
-        months.forEach((month, idx) => {
-            const monthDiv = document.createElement('div');
-            monthDiv.className = 'month-box';
-            monthDiv.innerHTML = `<strong style="color:var(--mo-gold)">${month} ${year}</strong>`;
-            
-            const daysDiv = document.createElement('div');
-            daysDiv.className = 'days-grid';
-            for(let i=1; i<=30; i++) { // تبسيط لأغراض العرض
-                daysDiv.innerHTML += `<span class="day-btn" onclick="goToDate('${i} ${month} ${year}')">${i}</span>`;
+                `;
+            } else if(type === 'calendar') {
+                content.innerHTML = `
+                    <header>
+                        <h1>بوصلة الزمن</h1>
+                        <span style="color:#888;">٢٠٢٦ - ٢٠٢٧</span>
+                    </header>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; text-align:center;">
+                        ${['يناير','فبراير','مارس','أبريل','مايو','يونيو'].map(m => `
+                            <div style="border:1px solid var(--gold-leaf); padding:10px;">
+                                <strong style="color:var(--gold-leaf)">${m} ٢٠٢٦</strong>
+                                <div style="font-size:12px; margin-top:5px; color:#666;">انقر لتحديد يوم...</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
             }
-            monthDiv.appendChild(daysDiv);
-            calendarContainer.appendChild(monthDiv);
-        });
-    }
-
-    function goToDate(dateStr) {
-        document.getElementById('current-date').innerText = dateStr;
-        showView('daily');
-    }
-
-    generateCalendar(2026);
-    generateCalendar(2027);
-</script>
-
+        }
+        // البداية
+        view('diary');
+    </script>
 </body>
 </html>
