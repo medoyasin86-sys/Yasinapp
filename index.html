@@ -3,237 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>المخطط الرقمي الاحترافي | 2026-2027</title>
+    <title>المخطط الملكي المتكامل 2026-2027</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
 
         :root {
-            --paper-texture: #fdfaf3;
-            --ink: #3d3d3d;
-            --gold-leaf: #a68b5a;
-            --sidebar-dark: #362e26;
-            --lines: #e0ddd5;
+            --paper: #fdfaf3; /* ملمس ورق طبيعي */
+            --ink: #2c2c2c;
+            --gold: #a68b5a;
+            --sidebar: #362e26;
+            --line: #e0ddd5;
+            --accent-red: #8e2a20;
         }
 
         body, html {
             margin: 0; padding: 0;
-            background-color: #1a1a1a;
+            background: #121212;
             font-family: 'Amiri', serif;
             height: 100vh; display: flex;
             justify-content: center; align-items: center;
             overflow: hidden;
         }
 
-        /* حاوية الأجندة - أبعاد iPad 10.2 المحددة */
-        .planner-frame {
+        /* هيكل الآيباد 10.2 المطور */
+        .planner-root {
             width: 1024px;
             height: 768px;
-            background-color: var(--paper-texture);
+            background: var(--paper);
             display: flex;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            border-radius: 5px;
-            border-left: 12px solid #2a241e;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            border-radius: 6px;
+            border-left: 15px solid #2a241e;
         }
 
-        /* شريط التبويبات الاحترافي */
-        .tabs-nav {
-            width: 75px;
-            background-color: var(--sidebar-dark);
+        /* نظام التبويبات الاحترافي (Navigation) */
+        .nav-sidebar {
+            width: 85px;
+            background: var(--sidebar);
             display: flex;
             flex-direction: column;
-            padding-top: 40px;
-            gap: 2px;
-            z-index: 10;
+            padding-top: 30px;
+            gap: 1px;
+            z-index: 20;
         }
 
-        .tab {
-            padding: 20px 5px;
+        .tab-btn {
+            padding: 22px 5px;
             color: #c5b8a5;
             text-align: center;
             writing-mode: vertical-rl;
             text-orientation: mixed;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            border-right: 4px solid transparent;
-            background: rgba(255,255,255,0.03);
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255,255,255,0.02);
+            border-right: 5px solid transparent;
         }
 
-        .tab.active, .tab:hover {
-            background: var(--paper-texture);
-            color: var(--gold-leaf);
-            border-right: 4px solid var(--gold-leaf);
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--paper);
+            color: var(--gold);
+            border-right: 5px solid var(--gold);
         }
 
-        /* الصفحة الرئيسية */
-        .page-content {
+        /* منطقة المحتوى الذكي */
+        .page-container {
             flex: 1;
             padding: 40px 60px;
             position: relative;
-            background-image: linear-gradient(var(--lines) 1px, transparent 1px);
+            background-image: linear-gradient(var(--line) 1px, transparent 1px);
             background-size: 100% 32px;
             line-height: 32px;
-            display: flex;
-            flex-direction: column;
+            overflow-y: auto;
         }
 
-        /* ترويسة كلاسيكية */
+        /* ترويسة ملكية */
         header {
-            border-bottom: 2px double var(--gold-leaf);
-            margin-bottom: 30px;
-            text-align: center;
-            padding-bottom: 10px;
+            border-bottom: 3px double var(--gold);
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
         }
 
-        header h1 {
-            margin: 0; font-size: 3rem; color: var(--gold-leaf);
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
-        }
+        .header-title h1 { margin: 0; font-size: 3.2rem; color: var(--gold); }
+        .header-date { font-size: 1.2rem; color: #777; letter-spacing: 2px; }
 
-        .layout-grid {
+        /* الأقسام المزدوجة (Writing & Planning) */
+        .planner-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 40px;
-            flex: 1;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 50px;
+            min-height: 520px;
         }
 
-        /* مساحة الكتابة */
-        .writing-area h3 { color: var(--gold-leaf); margin: 0 0 10px 0; font-style: italic; }
-        
+        .writing-zone h3 { 
+            color: var(--gold); 
+            font-size: 1.8rem; 
+            margin-bottom: 15px;
+            border-right: 5px solid var(--gold);
+            padding-right: 15px;
+        }
+
         textarea {
             width: 100%; height: 100%;
             background: transparent; border: none; outline: none;
-            font-family: 'Amiri', serif; font-size: 1.5rem;
+            font-family: 'Amiri', serif; font-size: 1.55rem;
             color: var(--ink); resize: none; line-height: 32px;
         }
 
-        /* صناديق التخطيط الجانبية */
-        .planner-widgets { display: flex; flex-direction: column; gap: 25px; }
+        /* أدوات التخطيط الجانبية */
+        .widget-stack { display: flex; flex-direction: column; gap: 30px; }
 
-        .widget {
-            border: 1px solid var(--gold-leaf);
-            background: rgba(255,255,255,0.4);
-            padding: 15px;
+        .widget-card {
+            border: 1px solid var(--gold);
+            background: rgba(255,255,255,0.5);
+            padding: 20px;
             position: relative;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.02);
         }
 
-        .widget::after {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 5px; background: var(--gold-leaf);
-        }
+        .widget-card strong { display: block; color: var(--gold); margin-bottom: 15px; font-size: 1.2rem; }
 
-        /* قصاصات وجماليات */
-        .washi-tape {
-            position: absolute; top: 20px; right: 15%;
-            width: 140px; height: 35px;
+        /* القصاصات الكلاسيكية */
+        .vintage-tape {
+            position: absolute; top: 15px; left: 10%;
+            width: 150px; height: 40px;
             background: rgba(166, 139, 90, 0.3);
-            transform: rotate(-2deg);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
+            transform: rotate(2deg);
             pointer-events: none;
         }
 
-        .wax-seal {
-            position: absolute; bottom: 40px; left: 50px;
-            width: 100px; height: 100px;
-            background: radial-gradient(#b03a2e, #8e2a20);
+        .wax-seal-btn {
+            position: absolute; bottom: 50px; right: 60px;
+            width: 110px; height: 110px;
+            background: radial-gradient(var(--accent-red), #5a1a14);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: #f1c40f; box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
-            transform: rotate(12deg); font-weight: bold; font-size: 0.9rem;
-            text-align: center; border: 2px solid rgba(0,0,0,0.1);
+            color: #d4af37; box-shadow: 5px 10px 20px rgba(0,0,0,0.4);
+            transform: rotate(-5deg); font-weight: bold;
+            border: 3px solid rgba(0,0,0,0.1);
         }
 
-        footer {
-            text-align: center; font-size: 0.8rem; color: #aaa;
-            margin-top: 20px; font-style: italic;
+        /* التقويم المصغر الذكي */
+        .mini-calendar {
+            font-size: 0.9rem;
+            line-height: 1.2;
+            text-align: center;
+            color: #555;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="planner-frame">
-        <!-- التبويبات -->
-        <nav class="tabs-nav">
-            <div class="tab active" onclick="updatePage('main')">الرئيسية</div>
-            <div class="tab" onclick="updatePage('2026')">٢٠٢٦ السنوية</div>
-            <div class="tab" onclick="updatePage('2027')">٢٠٢٧ السنوية</div>
-            <div class="tab" onclick="updatePage('thoughts')">خواطر وأفكار</div>
-            <div class="tab" onclick="updatePage('goals')">مخططات حياتية</div>
+    <div class="planner-root">
+        <!-- نظام التبويبات الفوري -->
+        <nav class="nav-sidebar">
+            <div class="tab-btn active" onclick="app('home')">الرئيسية</div>
+            <div class="tab-btn" onclick="app('2026')">تقويم 2026</div>
+            <div class="tab-btn" onclick="app('2027')">تقويم 2027</div>
+            <div class="tab-btn" onclick="app('diary')">اليوميات</div>
+            <div class="tab-btn" onclick="app('goals')">الأهداف</div>
+            <div class="tab-btn" onclick="app('finance')">المالية</div>
         </nav>
 
-        <!-- المحتوى -->
-        <main class="page-content">
-            <div class="washi-tape"></div>
+        <!-- المحتوى الديناميكي -->
+        <main class="page-container">
+            <div class="vintage-tape"></div>
             
             <header>
-                <h1 id="main-title">أجندة الذكريات والخطط</h1>
-                <p id="sub-title" style="color: #888; margin: 0;">الإصدار الكامل الفاخر ٢٠٢٦-٢٠٢٧</p>
+                <div class="header-title">
+                    <h1 id="view-title">أجندة الخواطر الكبرى</h1>
+                </div>
+                <div class="header-date" id="view-subtitle">خطة العامين ٢٠٢٦ - ٢٠٢٧</div>
             </header>
 
-            <div class="layout-grid">
-                <section class="writing-area">
-                    <h3 id="section-label">فيضُ الخاطر اليوم ...</h3>
-                    <textarea id="editor" placeholder="ابدأ بكتابة رؤيتك هنا..."></textarea>
+            <div class="planner-grid">
+                <!-- منطقة الكتابة الرئيسية -->
+                <section class="writing-zone">
+                    <h3 id="label-text">تأملات اليوم ...</h3>
+                    <textarea id="editor" placeholder="اكتب بصدق، فالورق لا يشي بصاحبه..."></textarea>
                 </section>
 
-                <aside class="planner-widgets">
-                    <div class="widget">
-                        <strong style="color: var(--gold-leaf);">أولويات اليوم:</strong>
-                        <div style="height: 120px; margin-top: 10px; border-bottom: 1px dashed var(--lines);"></div>
-                        <div style="height: 120px; margin-top: 10px;"></div>
+                <!-- صناديق التخطيط (الذكاء الاصطناعي للأجندة) -->
+                <aside class="widget-stack">
+                    <div class="widget-card">
+                        <strong>أولويات لا تؤجل:</strong>
+                        <div style="height: 100px; border-bottom: 1px dashed var(--line);"></div>
+                        <div style="height: 100px;"></div>
                     </div>
-                    <div class="widget">
-                        <strong style="color: var(--gold-leaf);">اقتباس ملهم:</strong>
-                        <p id="quote" style="font-style: italic; font-size: 1.1rem; line-height: 1.5; color: #555;">
-                            "أفضل طريقة للتنبؤ بالمستقبل هي اختراعه."
+                    
+                    <div class="widget-card" style="background: #faf7f0;">
+                        <strong>اقتباس ملهم:</strong>
+                        <p id="quote-text" style="font-style: italic; color: #444;">
+                            "الكتابة هي الطريقة الوحيدة لتنظيم فوضى العالم الداخلي."
                         </p>
+                    </div>
+
+                    <div class="widget-card mini-calendar">
+                        <strong>نظرة سريعة:</strong>
+                        <div id="calendar-area">مايو ٢٠٢٦</div>
                     </div>
                 </aside>
             </div>
 
-            <div class="wax-seal">حصري<br>٢٠٢٦-٢٠٢٧</div>
-            <footer>تم التصميم ليناسب الكتابة الإبداعية على أجهزة الآيباد</footer>
+            <div class="wax-seal-btn">الإصدار<br>الفاخر</div>
         </main>
     </div>
 
     <script>
-        function updatePage(page) {
-            const title = document.getElementById('main-title');
-            const sub = document.getElementById('sub-title');
-            const label = document.getElementById('section-label');
-            const quote = document.getElementById('quote');
-            const tabs = document.querySelectorAll('.tab');
+        // نظام إدارة المحتوى الذكي للأجندة
+        function app(view) {
+            const title = document.getElementById('view-title');
+            const sub = document.getElementById('view-subtitle');
+            const label = document.getElementById('label-text');
+            const quote = document.getElementById('quote-text');
+            const editor = document.getElementById('editor');
+            const tabs = document.querySelectorAll('.tab-btn');
 
             tabs.forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
 
-            if(page === '2026') {
-                title.innerText = 'تقويم عام ٢٠٢٦';
-                sub.innerText = 'سنة الإنجازات والطموح';
-                label.innerText = 'أهداف العام الرئيسية:';
-                quote.innerText = '"اجعل من ٢٠٢٦ عاماً لا يُنسى."';
-            } else if(page === '2027') {
-                title.innerText = 'تقويم عام ٢٠٢٧';
-                sub.innerText = 'سنة الحصاد والتوسع';
-                label.innerText = 'رؤية العام القادم:';
-                quote.innerText = '"الاستمرارية هي سر النجاح العظيم."';
-            } else if(page === 'thoughts') {
-                title.innerText = 'مساحة التأمل';
-                sub.innerText = 'أفرغ ما في قلبك وعقلك';
-                label.innerText = 'بوح قلم ...';
-                quote.innerText = '"الكتابة هي مرآة الروح."';
-            } else if(page === 'goals') {
-                title.innerText = 'مخططات حياتية';
-                sub.innerText = 'هندسة المسار الشخصي';
-                label.innerText = 'خطوات عملية للتنفيذ:';
-                quote.innerText = '"الخطة الجيدة اليوم أفضل من الخطة المثالية غداً."';
-            } else {
-                title.innerText = 'أجندة الذكريات والخطط';
-                sub.innerText = 'الإصدار الكامل الفاخر ٢٠٢٦-٢٠٢٧';
-                label.innerText = 'فيضُ الخاطر اليوم ...';
+            switch(view) {
+                case '2026':
+                    title.innerText = 'خطة عام ٢٠٢٦';
+                    sub.innerText = 'سنة التأسيس والانطلاق';
+                    label.innerText = 'أهداف السنة الاستراتيجية:';
+                    quote.innerText = '"عام جديد، يعني فرصة جديدة لتكون ما تريد."';
+                    break;
+                case '2027':
+                    title.innerText = 'رؤية عام ٢٠٢٧';
+                    sub.innerText = 'سنة الحصاد والتميز';
+                    label.innerText = 'مشاريع العام القادم:';
+                    quote.innerText = '"الاستمرار في السعي هو سر الوصول العظيم."';
+                    break;
+                case 'diary':
+                    title.innerText = 'دفتر اليوميات';
+                    sub.innerText = 'توثيق اللحظات العابرة';
+                    label.innerText = 'ماذا حدث اليوم؟';
+                    quote.innerText = '"نحن نكتب لنعيش الحياة مرتين."';
+                    break;
+                case 'goals':
+                    title.innerText = 'مخطط الأهداف';
+                    sub.innerText = 'هندسة الذات';
+                    label.innerText = 'الخطة الخمسية:';
+                    quote.innerText = '"الهدف بدون خطة هو مجرد أمنية."';
+                    break;
+                default:
+                    title.innerText = 'أجندة الخواطر الكبرى';
+                    sub.innerText = 'خطة العامين ٢٠٢٦ - ٢٠٢٧';
+                    label.innerText = 'تأملات اليوم ...';
             }
         }
     </script>
