@@ -1,214 +1,85 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mo Yasin Personal Legacy 2026-2027</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+# ملف: planner_2026_2027.py
+# أجندة رقمية عربية كاملة (يومي + أسبوعي + شهري) لعامي 2026-2027
 
-        :root {
-            --vintage-paper: #f4eee0; 
-            --ink: #2b2b2b;
-            --gold-leaf: #b38b4d;
-            --leather: #3d342d;
-            --notebook-lines: #d1c7ac;
-        }
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.colors import HexColor
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+import calendar
+import datetime
 
-        body, html {
-            margin: 0; padding: 0;
-            background: #0f0f0f;
-            font-family: 'Amiri', serif;
-            height: 100vh; display: flex;
-            justify-content: center; align-items: center;
-            overflow: hidden;
-        }
+# تسجيل خط عربي
+pdfmetrics.registerFont(TTFont('Amiri', 'Amiri-Regular.ttf'))
 
-        .notebook-container {
-            width: 1024px;
-            height: 768px;
-            background: var(--vintage-paper);
-            display: flex;
-            position: relative;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
-            border-left: 20px solid var(--leather);
-            border-radius: 4px;
-        }
+def draw_header(c, text, y):
+    c.setFont("Amiri", 24)
+    c.setFillColor(HexColor("#c49b63"))
+    c.drawCentredString(A4[0]/2, A4[1]-y, text)
 
-        /* التبويبات الجانبية الأنيقة */
-        .tabs {
-            width: 70px;
-            background: var(--leather);
-            display: flex;
-            flex-direction: column;
-            padding-top: 50px;
-        }
+def daily_page(c, date):
+    c.setFillColor(HexColor("#fdfaf6"))
+    c.rect(0, 0, A4[0], A4[1], fill=True, stroke=False)
 
-        .tab {
-            padding: 30px 0;
-            color: #8c7d6b;
-            text-align: center;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.4s;
-            border-right: 5px solid transparent;
-        }
+    # عنوان اليوم
+    draw_header(c, f"اليوم: {date.strftime('%d %B %Y')}", 60)
 
-        .tab.active {
-            background: var(--vintage-paper);
-            color: var(--gold-leaf);
-            border-right: 5px solid var(--gold-leaf);
-        }
+    # أقسام الصفحة
+    sections = [
+        ("أهداف اليوم", 150),
+        ("خواطري", 300),
+        ("مخططاتي", 450),
+        ("اقتباس اليوم", 600)
+    ]
+    c.setFont("Amiri", 16)
+    for title, y in sections:
+        c.setFillColor(HexColor("#c49b63"))
+        c.drawRightString(A4[0]-50, A4[1]-y, title)
+        c.setStrokeColor(HexColor("#d9cbb6"))
+        c.rect(50, A4[1]-y-30, A4[0]-100, 100, stroke=True, fill=False)
 
-        /* مساحة المحتوى */
-        .page {
-            flex: 1;
-            padding: 60px 80px;
-            overflow-y: auto;
-            background-image: linear-gradient(var(--notebook-lines) 1px, transparent 1px);
-            background-size: 100% 34px; /* تسطير احترافي مريح */
-            line-height: 34px;
-        }
+    c.showPage()
 
-        header {
-            border-bottom: 2px solid var(--gold-leaf);
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-bottom: 10px;
-        }
+def weekly_page(c, year, week_num):
+    draw_header(c, f"الأسبوع {week_num} - {year}", 60)
+    days = ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"]
+    c.setFont("Amiri", 14)
+    y = 150
+    for d in days:
+        c.drawRightString(A4[0]-50, A4[1]-y, d)
+        c.rect(50, A4[1]-y-30, A4[0]-100, 60, stroke=True, fill=False)
+        y += 80
+    c.showPage()
 
-        h1 { margin: 0; color: var(--gold-leaf); font-size: 2.8rem; font-weight: 400; }
+def monthly_page(c, year, month):
+    draw_header(c, f"شهر {calendar.month_name[month]} {year}", 60)
+    c.setFont("Amiri", 16)
+    c.drawRightString(A4[0]-50, A4[1]-150, "أهداف الشهر")
+    c.rect(50, A4[1]-180, A4[0]-100, 200, stroke=True, fill=False)
+    c.showPage()
 
-        /* سجل الإبداع المالي (Mo Yasin Classic) */
-        .finance-section {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid var(--gold-leaf);
-            margin-top: 20px;
-        }
+def create_planner(filename):
+    c = canvas.Canvas(filename, pagesize=A4)
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    for year in [2026, 2027]:
+        # صفحات شهرية
+        for month in range(1, 13):
+            monthly_page(c, year, month)
 
-        th { background: var(--gold-leaf); color: white; padding: 12px; font-weight: bold; }
-        td { border: 1px solid var(--notebook-lines); height: 34px; padding: 0 15px; }
+        # صفحات أسبوعية
+        for week in range(1, 53):
+            weekly_page(c, year, week)
 
-        .summary {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            background: var(--leather);
-            color: var(--gold-leaf);
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-            border-radius: 2px;
-        }
+        # صفحات يومية
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+        delta = datetime.timedelta(days=1)
+        d = start_date
+        while d <= end_date:
+            daily_page(c, d)
+            d += delta
 
-        /* مساحة الكتابة الحرة */
-        textarea {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-family: 'Amiri', serif;
-            font-size: 1.6rem;
-            color: var(--ink);
-            resize: none;
-            line-height: 34px;
-        }
+    c.save()
 
-        .wax-seal {
-            position: absolute; bottom: 40px; left: 40px;
-            width: 100px; height: 100px;
-            background: radial-gradient(#8b1a1a, #5c0a0a);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #d4af37; transform: rotate(-12deg);
-            box-shadow: 10px 10px 25px rgba(0,0,0,0.4);
-            font-size: 0.9rem; text-align: center; font-weight: bold;
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="notebook-container">
-        <nav class="tabs">
-            <div class="tab active" onclick="view('diary')">خواطر ٢٠٢٦-٢٠٢٧</div>
-            <div class="tab" onclick="view('finance')">سجل الإبداع المالي</div>
-            <div class="tab" onclick="view('calendar')">تقويم السنتين</div>
-        </nav>
-
-        <main class="page" id="content">
-            <!-- سيتم التبديل هنا -->
-        </main>
-
-        <div class="wax-seal">MO.<br>YASIN</div>
-    </div>
-
-    <script>
-        function view(type) {
-            const content = document.getElementById('content');
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if(type === 'diary') {
-                content.innerHTML = `
-                    <header>
-                        <h1>فيضُ الخاطر اليومي</h1>
-                        <span style="color:#888;">${new Date().toLocaleDateString('ar-EG')}</span>
-                    </header>
-                    <textarea placeholder="هنا تُحفظ الأسرار وتبنى الأحلام..."></textarea>
-                `;
-            } else if(type === 'finance') {
-                content.innerHTML = `
-                    <header>
-                        <h1>كشف المصروفات والدخل</h1>
-                        <span style="color:#888;">سجل الإبداع المالي</span>
-                    </header>
-                    <table class="finance-section">
-                        <thead>
-                            <tr>
-                                <th>اليوم</th><th>التاريخ</th><th>البيان</th><th>دخل (+)</th><th>صرف (-)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${Array(10).fill('<tr><td></td><td> / </td><td></td><td></td><td></td></tr>').join('')}
-                        </tbody>
-                    </table>
-                    <div class="summary">
-                        <div>إجمالي الدخل: ---</div>
-                        <div>إجمالي المصاريف: ---</div>
-                        <div style="color:white;">الصافي: ---</div>
-                    </div>
-                `;
-            } else if(type === 'calendar') {
-                content.innerHTML = `
-                    <header>
-                        <h1>بوصلة الزمن</h1>
-                        <span style="color:#888;">٢٠٢٦ - ٢٠٢٧</span>
-                    </header>
-                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; text-align:center;">
-                        ${['يناير','فبراير','مارس','أبريل','مايو','يونيو'].map(m => `
-                            <div style="border:1px solid var(--gold-leaf); padding:10px;">
-                                <strong style="color:var(--gold-leaf)">${m} ٢٠٢٦</strong>
-                                <div style="font-size:12px; margin-top:5px; color:#666;">انقر لتحديد يوم...</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-        // البداية
-        view('diary');
-    </script>
-</body>
-</html>
+if __name__ == "__main__":
+    create_planner("planner_2026_2027.pdf")
