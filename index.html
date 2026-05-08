@@ -2,227 +2,142 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mo Yasin Ultimate Legacy 2026-2027</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
-
-        :root {
-            --vintage-paper: #fdfaf3; 
-            --ink: #2c2c2c;
-            --mo-gold: #c5a059;
-            --leather: #2a241e;
-            --line: #e4dec0;
+        .exam-paper {
+            width: 210mm;
+            margin: auto;
+            padding: 20mm;
+            border: 1px solid #ccc;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff;
+            line-height: 1.6;
         }
-
-        body, html {
-            margin: 0; padding: 0;
-            background: #111;
-            font-family: 'Amiri', serif;
-            height: 100vh; display: flex;
-            justify-content: center; align-items: center;
-            overflow: hidden;
-        }
-
-        /* هيكل الأجندة الاحترافي */
-        .planner-container {
-            width: 1024px;
-            height: 768px;
-            background: var(--vintage-paper);
-            display: flex;
-            position: relative;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
-            border-left: 20px solid var(--leather);
-            border-radius: 4px;
-        }
-
-        /* شريط التنقل الجانبي الذكي */
-        .sidebar {
-            width: 90px;
-            background: var(--leather);
-            display: flex;
-            flex-direction: column;
-            padding-top: 30px;
-            gap: 2px;
-        }
-
-        .tab {
-            padding: 22px 5px;
-            color: #9b8a78;
-            text-align: center;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            border-right: 5px solid transparent;
-        }
-
-        .tab.active {
-            background: var(--vintage-paper);
-            color: var(--mo-gold);
-            border-right: 5px solid var(--mo-gold);
-        }
-
-        /* مساحة الورقة المسطرة */
-        .page-content {
-            flex: 1;
-            padding: 40px 60px;
-            overflow-y: auto;
-            background-image: linear-gradient(var(--line) 1px, transparent 1px);
-            background-size: 100% 32px;
-            line-height: 32px;
-            position: relative;
-        }
-
-        header {
-            border-bottom: 2px solid var(--mo-gold);
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 10px;
-        }
-
-        h1 { margin: 0; color: var(--mo-gold); font-size: 2.8rem; }
-
-        /* جداول Mo Yasin المالية (سجل الإبداع) */
-        .finance-table {
+        .header-table, .grading-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-bottom: 15px;
         }
-
-        .finance-table th { background: var(--mo-gold); color: white; padding: 10px; }
-        .finance-table td { border: 1px solid var(--line); height: 32px; padding: 0 10px; }
-
-        .summary-bar {
+        .header-table td {
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #000;
+            padding: 5px;
+        }
+        .grading-table th, .grading-table td {
+            border: 1px solid #000;
+            text-align: center;
+            font-size: 12px;
+            padding: 4px;
+        }
+        .section-title {
+            background-color: #f2f2f2;
+            padding: 5px;
+            font-weight: bold;
+            border: 1px solid #000;
+            margin-top: 15px;
+        }
+        .question-box {
+            margin: 15px 0;
+            padding-right: 20px;
+        }
+        .options {
             display: flex;
             justify-content: space-around;
-            background: var(--leather);
-            color: var(--mo-gold);
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
+            list-style: none;
         }
-
-        /* تصميم المخطط الأسبوعي */
-        .weekly-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .weekday-box {
-            border: 1px solid var(--mo-gold);
-            height: 350px;
-            padding: 10px;
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* اليوميات (تسطير كامل) */
-        textarea {
-            width: 100%;
-            height: 520px;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-family: 'Amiri', serif;
-            font-size: 1.6rem;
-            color: var(--ink);
-            resize: none;
-            line-height: 32px;
-        }
-
-        .wax-seal {
-            position: absolute; bottom: 30px; left: 30px;
-            width: 90px; height: 90px;
-            background: radial-gradient(#8e2a20, #5c1a14);
+        .circle {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #d4af37; transform: rotate(-5deg);
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
-            font-weight: bold;
+            margin-left: 5px;
         }
-
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="exam-paper">
+        <table class="header-table">
+            <tr>
+                <td style="width: 30%;">سلطنة عمان<br>وزارة التربية والتعليم<br>مدرسة المشاش (1-12)</td>
+                <td style="width: 40%;"><strong>امتحان مادة: الفنون التشكيلية [cite: 1]</strong><br>للصف: الحادي عشر [cite: 1]<br>الفصل الدراسي الثاني - الدور الأول [cite: 1]<br>العام الدراسي: 2025 / 2026م [cite: 2]</td>
+                <td style="width: 30%;">زمن الامتحان: ساعتان [cite: 3]<br>الدرجة الكلية: 30 درجة </td>
+            </tr>
+        </table>
 
-<div class="planner-container">
-    <nav class="sidebar">
-        <div class="tab active" onclick="navigate('monthly')">الشهرية (2026-27)</div>
-        <div class="tab" onclick="navigate('weekly')">المخطط الأسبوعي</div>
-        <div class="tab" onclick="navigate('daily')">اليوميات (الخواطر)</div>
-        <div class="tab" onclick="navigate('finance')">سجل الإبداع المالي</div>
-    </nav>
+        <div style="margin: 10px 0;">
+            اسم الطالب: ............................................................ الصف: الحادي عشر / ........ [cite: 4]
+        </div>
 
-    <main class="page-content" id="viewer">
-        <!-- المحتوى يتغير هنا -->
-    </main>
+        <table class="grading-table">
+            <tr style="background-color: #eee;">
+                <th rowspan="2">السؤال </th>
+                <th colspan="2">الدرجة بالأرقام </th>
+                <th rowspan="2">الدرجة بالحروف </th>
+                <th colspan="2">التوقيع بالاسم </th>
+            </tr>
+            <tr>
+                <th>آحاد </th>
+                <th>عشرات </th>
+                <th>المصحح </th>
+                <th>المدقق </th>
+            </tr>
+            <tr>
+                <td>الأول [cite: 6, 9]</td>
+                <td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>الثاني </td>
+                <td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td>المجموع </td>
+                <td colspan="2">30 درجة </td>
+                <td></td><td></td><td></td>
+            </tr>
+        </table>
 
-    <div class="wax-seal">MO.<br>YASIN</div>
-</div>
+        <div class="section-title">السؤال الأول: (10 درجات) [cite: 9]</div>
+        
+        <div class="question-box">
+            <p><strong>أولاً: ظلّل الشكل ( <span class="circle"></span> ) المقترن بالإجابة الصحيحة: </strong></p>
+            <p>1. العلم الذي يدرس الجبس كخامة تشكيلية يسمى علم (البلورات):</p>
+            <ul class="options">
+                <li><span class="circle"></span> أ- الكيمياء</li>
+                <li><span class="circle"></span> ب- الجيولوجيا</li>
+                <li><span class="circle"></span> ج- الهندسة</li>
+            </ul>
+        </div>
 
-<script>
-    function navigate(view) {
-        const viewer = document.getElementById('viewer');
-        const tabs = document.querySelectorAll('.tab');
-        tabs.forEach(t => t.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        <div class="question-box">
+            <p><strong>ثانياً: أكمل العبارات التالية بما يتناسب معها: [cite: 13]</strong></p>
+            <p>1. يعتبر التكرار المعتمد على نقطة مركزية في الزخرفة نوعاً من التكرار ..........</p>
+        </div>
 
-        if(view === 'monthly') {
-            viewer.innerHTML = `
-                <header><h1>التخطيط الشهري ٢٠٢٦-٢٠٢٧</h1><span>بوصلة العامين</span></header>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
-                    ${['مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر'].map(m => `
-                        <div style="border:1px solid var(--mo-gold); padding:10px; text-align:center; cursor:pointer;" onclick="navigate('weekly')">
-                            <strong style="color:var(--mo-gold)">${m} ٢٠٢٦</strong>
-                            <div style="font-size:10px; color:#aaa;">انقر للعرض الأسبوعي</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        } else if(view === 'weekly') {
-            viewer.innerHTML = `
-                <header><h1>المخطط الأسبوعي</h1><span>التركيز العالي</span></header>
-                <div class="weekly-grid">
-                    ${['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'].map(d => `
-                        <div class="weekday-box">
-                            <strong style="color:var(--mo-gold)">${d}</strong>
-                            <div style="height:100%; border-top:1px dashed var(--line); margin-top:10px;"></div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        } else if(view === 'daily') {
-            viewer.innerHTML = `
-                <header><h1>فيضُ الخاطر</h1><span>${new Date().toLocaleDateString('ar-EG')}</span></header>
-                <textarea placeholder="هنا يكتب التاريخ الشخصي..."></textarea>
-            `;
-        } else if(view === 'finance') {
-            viewer.innerHTML = `
-                <header><h1>سجل الإبداع المالي</h1><span>كشف المصروفات والدخل</span></header>
-                <table class="finance-table">
-                    <thead>
-                        <tr><th>اليوم</th><th>التاريخ</th><th>البيان</th><th>دخل (+)</th><th>صرف (-)</th></tr>
-                    </thead>
-                    <tbody>
-                        ${Array(12).fill('<tr><td></td><td>/</td><td></td><td></td><td></td></tr>').join('')}
-                    </tbody>
-                </table>
-                <div class="summary-bar">
-                    <div>إجمالي الدخل: 0.00</div><div>إجمالي المصاريف: 0.00</div><div style="color:white">الصافي: 0.00</div>
-                </div>
-            `;
-        }
-    }
+        <div class="section-title">السؤال الثاني: (20 درجة)</div>
+        
+        <div class="question-box">
+            <p><strong>أولاً: أجب عن الأسئلة الآتية: </strong></p>
+            <p>1. اشرح الفرق بين "مشاهد البيئة" و "مشاهد الحياة اليومية" في الفن العماني المعاصر؟ (5 درجات)</p>
+            <div style="border-bottom: 1px dotted #000; height: 40px;"></div>
+        </div>
 
-    // التشغيل الافتراضي
-    navigate('monthly');
-</script>
+        <div class="question-box">
+            <p><strong>ثانياً: الجانب المهارى (رسم): </strong></p>
+            <p>قم بتصميم وحدة زخرفية هندسية تعتمد على "أسس التشعب" داخل مربع مساحته (10سم × 10سم): (15 درجة)</p>
+            <div style="width: 150px; height: 150px; border: 2px solid #000; margin: 20px auto;"></div>
+        </div>
 
+        <div class="footer-note">
+            ــ انتهت الأسئلة مع دعائنا لكم بالتوفيق والنجاح ــ [cite: 26]
+        </div>
+    </div>
 </body>
 </html>
