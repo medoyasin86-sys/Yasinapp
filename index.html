@@ -3,140 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        .exam-paper {
-            width: 210mm;
-            margin: auto;
-            padding: 20mm;
-            border: 1px solid #ccc;
-            font-family: 'Arial', sans-serif;
-            background-color: #fff;
-            line-height: 1.6;
+        @page { size: A4; margin: 0; }
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+        .container {
+            width: 210mm; height: 297mm;
+            position: relative;
         }
-        .header-table, .grading-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
+        .box-part {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 165mm; height: 150mm;
         }
-        .header-table td {
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #000;
-            padding: 5px;
+        .back-panel {
+            width: 100mm; height: 150mm;
+            border: 2px dashed #000;
+            position: absolute; left: 50mm;
+            display: flex; align-items: center; justify-content: center;
         }
-        .grading-table th, .grading-table td {
-            border: 1px solid #000;
-            text-align: center;
-            font-size: 12px;
-            padding: 4px;
+        .side-panel-left {
+            width: 50mm; height: 150mm;
+            border: 2px solid #000;
+            position: absolute; left: 0;
         }
-        .section-title {
-            background-color: #f2f2f2;
-            padding: 5px;
-            font-weight: bold;
-            border: 1px solid #000;
-            margin-top: 15px;
-        }
-        .question-box {
-            margin: 15px 0;
-            padding-right: 20px;
-        }
-        .options {
-            display: flex;
-            justify-content: space-around;
-            list-style: none;
-        }
-        .circle {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid #000;
-            border-radius: 50%;
-            margin-left: 5px;
-        }
-        .footer-note {
-            text-align: center;
-            margin-top: 30px;
-            font-weight: bold;
-            border-top: 2px solid #000;
-            padding-top: 10px;
+        .glue-tab {
+            width: 15mm; height: 140mm;
+            border: 1px solid #666;
+            position: absolute; left: 150mm; top: 5mm;
+            background: #f9f9f9;
+            font-size: 10px; text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="exam-paper">
-        <table class="header-table">
-            <tr>
-                <td style="width: 30%;">سلطنة عمان<br>وزارة التربية والتعليم<br>مدرسة المشاش (1-12)</td>
-                <td style="width: 40%;"><strong>امتحان مادة: الفنون التشكيلية [cite: 1]</strong><br>للصف: الحادي عشر [cite: 1]<br>الفصل الدراسي الثاني - الدور الأول [cite: 1]<br>العام الدراسي: 2025 / 2026م [cite: 2]</td>
-                <td style="width: 30%;">زمن الامتحان: ساعتان [cite: 3]<br>الدرجة الكلية: 30 درجة </td>
-            </tr>
-        </table>
-
-        <div style="margin: 10px 0;">
-            اسم الطالب: ............................................................ الصف: الحادي عشر / ........ [cite: 4]
-        </div>
-
-        <table class="grading-table">
-            <tr style="background-color: #eee;">
-                <th rowspan="2">السؤال </th>
-                <th colspan="2">الدرجة بالأرقام </th>
-                <th rowspan="2">الدرجة بالحروف </th>
-                <th colspan="2">التوقيع بالاسم </th>
-            </tr>
-            <tr>
-                <th>آحاد </th>
-                <th>عشرات </th>
-                <th>المصحح </th>
-                <th>المدقق </th>
-            </tr>
-            <tr>
-                <td>الأول [cite: 6, 9]</td>
-                <td></td><td></td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td>الثاني </td>
-                <td></td><td></td><td></td><td></td><td></td>
-            </tr>
-            <tr style="font-weight: bold;">
-                <td>المجموع </td>
-                <td colspan="2">30 درجة </td>
-                <td></td><td></td><td></td>
-            </tr>
-        </table>
-
-        <div class="section-title">السؤال الأول: (10 درجات) [cite: 9]</div>
-        
-        <div class="question-box">
-            <p><strong>أولاً: ظلّل الشكل ( <span class="circle"></span> ) المقترن بالإجابة الصحيحة: </strong></p>
-            <p>1. العلم الذي يدرس الجبس كخامة تشكيلية يسمى علم (البلورات):</p>
-            <ul class="options">
-                <li><span class="circle"></span> أ- الكيمياء</li>
-                <li><span class="circle"></span> ب- الجيولوجيا</li>
-                <li><span class="circle"></span> ج- الهندسة</li>
-            </ul>
-        </div>
-
-        <div class="question-box">
-            <p><strong>ثانياً: أكمل العبارات التالية بما يتناسب معها: [cite: 13]</strong></p>
-            <p>1. يعتبر التكرار المعتمد على نقطة مركزية في الزخرفة نوعاً من التكرار ..........</p>
-        </div>
-
-        <div class="section-title">السؤال الثاني: (20 درجة)</div>
-        
-        <div class="question-box">
-            <p><strong>أولاً: أجب عن الأسئلة الآتية: </strong></p>
-            <p>1. اشرح الفرق بين "مشاهد البيئة" و "مشاهد الحياة اليومية" في الفن العماني المعاصر؟ (5 درجات)</p>
-            <div style="border-bottom: 1px dotted #000; height: 40px;"></div>
-        </div>
-
-        <div class="question-box">
-            <p><strong>ثانياً: الجانب المهارى (رسم): </strong></p>
-            <p>قم بتصميم وحدة زخرفية هندسية تعتمد على "أسس التشعب" داخل مربع مساحته (10سم × 10سم): (15 درجة)</p>
-            <div style="width: 150px; height: 150px; border: 2px solid #000; margin: 20px auto;"></div>
-        </div>
-
-        <div class="footer-note">
-            ــ انتهت الأسئلة مع دعائنا لكم بالتوفيق والنجاح ــ [cite: 26]
+    <div class="container">
+        <div class="box-part">
+            <div class="side-panel-left"><center>جانب أيسر (50x150)</center></div>
+            <div class="back-panel"><b>اللوحة الخلفية (ب)</b></div>
+            <div class="glue-tab"><br><br>منطقة<br>لاصق</div>
         </div>
     </div>
 </body>
