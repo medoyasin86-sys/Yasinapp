@@ -3,360 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الدخل والمديونيات</title>
+    <title>💰 نظامي المالي</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
         
-        .wallets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .wallet-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .wallet-card h3 { color: #34495e; margin-bottom: 15px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .balance { font-size: 24px; font-weight: bold; color: #27ae60; margin: 10px 0; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
         
-        .section { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .section h2 { color: #2c3e50; margin-bottom: 20px; }
+        .wallets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .wallet { background: white; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .wallet h3 { color: #555; margin-bottom: 10px; font-size: 1.1em; }
+        .wallet .amount { font-size: 1.8em; font-weight: bold; color: #27ae60; }
+        .wallet .currency { color: #888; font-size: 0.9em; }
         
+        .card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .card h2 { color: #2c3e50; margin-bottom: 20px; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input, select, button { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        button { background: #3498db; color: white; border: none; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #2980b9; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        input:focus, select:focus { border-color: #3498db; outline: none; }
         
-        .transaction-list { margin-top: 20px; }
-        .transaction-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .income { color: #27ae60; }
-        .expense { color: #e74c3c; }
-        
-        .debts-section { background: #fff5f5; border-right: 4px solid #e74c3c; }
-        .debt-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; margin: 8px 0; border-radius: 8px; }
-        
-        .currency-badge { background: #f39c12; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-success { background: #27ae60; color: white; }
         
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab { padding: 10px 20px; background: #ecf0f1; border: none; border-radius: 8px; cursor: pointer; }
-        .tab.active { background: #3498db; color: white; }
+        .tab { flex: 1; padding: 15px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .tab.active { background: white; color: #667eea; }
         
         .hidden { display: none; }
+        
+        .list-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
+        .list-item:hover { background: #f8f9fa; }
+        .income { color: #27ae60; font-weight: bold; }
+        .expense { color: #e74c3c; font-weight: bold; }
+        .badge { background: #f39c12; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+        
+        .date-display { color: #7f8c8d; font-size: 13px; }
+        
+        .debt-on-me { border-right: 4px solid #e74c3c; }
+        .debt-on-them { border-right: 4px solid #27ae60; }
+        
+        .empty { text-align: center; color: #999; padding: 30px; }
+        
+        .delete-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>💰 نظام إدارة الدخل والمديونيات</h1>
-        
-        <!-- المحافظ -->
-        <div class="wallets-grid">
-            <div class="wallet-card">
-                <h3>🏦 بنك QNB</h3>
-                <div class="balance" id="qnb-balance">0 ج.م</div>
+        <div class="header">
+            <h1>💰 نظامي المالي</h1>
+            <p>إدارة الدخل والمديونيات</p>
+        </div>
+
+        <div class="wallets">
+            <div class="wallet">
+                <h3>🏦 QNB</h3>
+                <div class="amount" id="qnb-bal">0</div>
+                <div class="currency">جنيه مصري</div>
             </div>
-            <div class="wallet-card">
-                <h3>🏛️ بنك مسقط</h3>
-                <div class="balance" id="muscat-balance">0 ر.ع</div>
+            <div class="wallet">
+                <h3>🏛️ مسقط</h3>
+                <div class="amount" id="muscat-bal">0</div>
+                <div class="currency">ريال عماني</div>
             </div>
-            <div class="wallet-card">
-                <h3>💼 دخل إضافي</h3>
-                <div class="balance" id="extra-balance">0 $</div>
+            <div class="wallet">
+                <h3>💼 إضافي</h3>
+                <div class="amount" id="extra-bal">0</div>
+                <div class="currency">دولار</div>
             </div>
         </div>
 
-        <!-- التبويبات -->
         <div class="tabs">
-            <button class="tab active" onclick="showTab('transactions')">📊 العمليات</button>
+            <button class="tab active" onclick="showTab('trans')">📊 العمليات</button>
             <button class="tab" onclick="showTab('debts')">⚠️ المديونيات</button>
         </div>
 
-        <!-- قسم العمليات -->
-        <div id="transactions" class="section">
-            <h2>تسجيل عملية جديدة</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <!-- العمليات -->
+        <div id="trans" class="card">
+            <h2>➕ عملية جديدة</h2>
+            <div class="form-row">
                 <div class="form-group">
-                    <label>نوع العملية</label>
-                    <select id="type">
+                    <label>النوع</label>
+                    <select id="t-type">
                         <option value="income">دخل (+)</option>
                         <option value="expense">مصروف (-)</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>المحفظة</label>
-                    <select id="wallet">
+                    <select id="t-wallet">
                         <option value="qnb">QNB</option>
                         <option value="muscat">مسقط</option>
                         <option value="extra">دخل إضافي</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label>المبلغ</label>
-                    <input type="number" id="amount" placeholder="0.00">
+                    <input type="number" id="t-amount" placeholder="0.00" step="0.01">
                 </div>
                 <div class="form-group">
                     <label>العملة</label>
-                    <select id="currency">
-                        <option value="EGP">جنيه مصري (EGP)</option>
-                        <option value="USD">دولار أمريكي (USD)</option>
-                        <option value="OMR">ريال عماني (OMR)</option>
+                    <select id="t-currency">
+                        <option value="EGP">جنيه مصري</option>
+                        <option value="OMR">ريال عماني</option>
+                        <option value="USD">دولار</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label>الوصف</label>
-                <input type="text" id="description" placeholder="وصف العملية...">
+                <input type="text" id="t-desc" placeholder="وصف العملية...">
             </div>
-            <button onclick="addTransaction()">➕ إضافة العملية</button>
-            
-            <div class="transaction-list" id="transaction-list">
-                <h3>سجل العمليات</h3>
+            <button class="btn btn-primary" onclick="addTrans()">💾 حفظ العملية</button>
+
+            <div id="trans-list" style="margin-top: 25px;">
+                <h3 style="margin-bottom: 15px;">📋 السجل</h3>
+                <div class="empty">لا توجد عمليات</div>
             </div>
         </div>
 
-        <!-- قسم المديونيات -->
-        <div id="debts" class="section debts-section hidden">
-            <h2>⚠️ إدارة المديونيات</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <!-- المديونيات -->
+        <div id="debts" class="card hidden">
+            <h2>⚠️ مديونية جديدة</h2>
+            <div class="form-row">
                 <div class="form-group">
-                    <label>اسم الدائن / المدين</label>
-                    <input type="text" id="debt-person" placeholder="الاسم">
+                    <label>الشخص</label>
+                    <input type="text" id="d-person" placeholder="اسم الشخص">
                 </div>
                 <div class="form-group">
                     <label>المبلغ</label>
-                    <input type="number" id="debt-amount" placeholder="0.00">
+                    <input type="number" id="d-amount" placeholder="0.00" step="0.01">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label>العملة</label>
-                    <select id="debt-currency">
+                    <select id="d-currency">
                         <option value="EGP">جنيه مصري</option>
-                        <option value="USD">دولار أمريكي</option>
                         <option value="OMR">ريال عماني</option>
+                        <option value="USD">دولار</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>نوع المديونية</label>
-                    <select id="debt-type">
-                        <option value="on-me">عليا (مديون لشخص)</option>
-                        <option value="on-them">ليا (شخص مديون لي)</option>
+                    <label>النوع</label>
+                    <select id="d-type">
+                        <option value="on-me">🔴 عليا (أدفع له)</option>
+                        <option value="on-them">🟢 ليا (يدفع لي)</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <label>الوصف / التفاصيل</label>
-                <input type="text" id="debt-desc" placeholder="تفاصيل...">
-            </div>
-            <button onclick="addDebt()" style="background: #e74c3c;">➕ إضافة المديونية</button>
-            
-            <div id="debt-list" style="margin-top: 20px;">
-                <h3>سجل المديونيات</h3>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // البيانات
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        let debts = JSON.parse(localStorage.getItem('debts')) || [];
-
-        // رموز العملات
-        const currencySymbols = { 'EGP': 'ج.م', 'USD': '$', 'OMR': 'ر.ع' };
-
-        // عرض التبويب
-        function showTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('transactions').classList.toggle('hidden', tab !== 'transactions');
-            document.getElementById('debts').classList.toggle('hidden', tab !== 'debts');
-        }
-
-        // إضافة عملية
-        function addTransaction() {
-            const type = document.getElementById('type').value;
-            const wallet = document.getElementById('wallet').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const currency = document.getElementById('currency').value;
-            const description = document.getElementById('description').value;
-
-            if (!amount || amount <= 0) {
-                alert('الرجاء إدخال مبلغ صحيح');
-                return;
-            }
-
-            const transaction = {
-                id: Date.now(),
-                type,
-                wallet,
-                amount,
-                currency,
-                description,
-                date: new Date().toLocaleString('ar-EG')
-            };
-
-            transactions.push(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            
-            updateBalances();
-            renderTransactions();
-            
-            // إعادة تعيين الحقول
-            document.getElementById('amount').value = '';
-            document.getElementById('description').value = '';
-        }
-
-        // إضافة مديونية
-        function addDebt() {
-            const person = document.getElementById('debt-person').value;
-            const amount = parseFloat(document.getElementById('debt-amount').value);
-            const currency = document.getElementById('debt-currency').value;
-            const type = document.getElementById('debt-type').value;
-            const desc = document.getElementById('debt-desc').value;
-
-            if (!person || !amount) {
-                alert('الرجاء إدخال جميع البيانات المطلوبة');
-                return;
-            }
-
-            const debt = {
-                id: Date.now(),
-                person,
-                amount,
-                currency,
-                type,
-                description: desc,
-                date: new Date().toLocaleString('ar-EG'),
-                status: 'active'
-            };
-
-            debts.push(debt);
-            localStorage.setItem('debts', JSON.stringify(debts));
-            renderDebts();
-            
-            document.getElementById('debt-person').value = '';
-            document.getElementById('debt-amount').value = '';
-            document.getElementById('debt-desc').value = '';
-        }
-
-        // تحديث الأرصدة
-        function updateBalances() {
-            const balances = { qnb: {}, muscat: {}, extra: {} };
-            
-            transactions.forEach(t => {
-                if (!balances[t.wallet][t.currency]) balances[t.wallet][t.currency] = 0;
-                if (t.type === 'income') {
-                    balances[t.wallet][t.currency] += t.amount;
-                } else {
-                    balances[t.wallet][t.currency] -= t.amount;
-                }
-            });
-
-            // عرض الأرصدة
-            ['qnb', 'muscat', 'extra'].forEach(wallet => {
-                const el = document.getElementById(wallet + '-balance');
-                const bals = balances[wallet];
-                let html = '';
-                for (let curr in bals) {
-                    if (bals[curr] !== 0) {
-                        html += `<div>${bals[curr].toFixed(2)} ${currencySymbols[curr]}</div>`;
-                    }
-                }
-                el.innerHTML = html || '0';
-            });
-        }
-
-        // عرض العمليات
-        function renderTransactions() {
-            const list = document.getElementById('transaction-list');
-            let html = '<h3>سجل العمليات</h3>';
-            
-            if (transactions.length === 0) {
-                html += '<p style="color: #999; text-align: center;">لا توجد عمليات مسجلة</p>';
-            } else {
-                transactions.slice().reverse().forEach(t => {
-                    const colorClass = t.type === 'income' ? 'income' : 'expense';
-                    const sign = t.type === 'income' ? '+' : '-';
-                    const walletNames = { qnb: 'QNB', muscat: 'مسقط', extra: 'دخل إضافي' };
-                    
-                    html += `
-                        <div class="transaction-item">
-                            <div>
-                                <strong>${walletNames[t.wallet]}</strong> - ${t.description || 'بدون وصف'}
-                                <div style="font-size: 12px; color: #999;">${t.date}</div>
-                            </div>
-                            <div style="text-align: left;">
-                                <span class="${colorClass}">${sign}${t.amount.toFixed(2)}</span>
-                                <span class="currency-badge">${currencySymbols[t.currency]}</span>
-                                <button onclick="deleteTransaction(${t.id})" style="width: auto; padding: 4px 8px; background: #e74c3c; margin-right: 5px;">🗑️</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            list.innerHTML = html;
-        }
-
-        // عرض المديونيات
-        function renderDebts() {
-            const list = document.getElementById('debt-list');
-            let html = '<h3>سجل المديونيات</h3>';
-            
-            if (debts.length === 0) {
-                html += '<p style="color: #999; text-align: center;">لا توجد مديونيات مسجلة</p>';
-            } else {
-                debts.slice().reverse().forEach(d => {
-                    const typeText = d.type === 'on-me' ? '🔴 عليا' : '🟢 ليا';
-                    const typeColor = d.type === 'on-me' ? '#e74c3c' : '#27ae60';
-                    
-                    html += `
-                        <div class="debt-item">
-                            <div>
-                                <strong style="color: ${typeColor}">${typeText}</strong> - ${d.person}
-                                <div style="font-size: 12px; color: #666;">${d.description || ''}</div>
-                                <div style="font-size: 11px; color: #999;">${d.date}</div>
-                            </div>
-                            <div style="text-align: left;">
-                                <span style="font-size: 20px; font-weight: bold;">${d.amount.toFixed(2)} ${currencySymbols[d.currency]}</span>
-                                <button onclick="deleteDebt(${d.id})" style="width: auto; padding: 4px 8px; background: #e74c3c; margin-right: 5px;">🗑️</button>
-                                ${d.status === 'active' ? `<button onclick="settleDebt(${d.id})" style="width: auto; padding: 4px 8px; background: #27ae60; margin-right: 5px;">✓ تسوية</button>` : '<span style="color: #27ae60;">✓ تم التسوية</span>'}
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            list.innerHTML = html;
-        }
-
-        // حذف عملية
-        function deleteTransaction(id) {
-            if (confirm('هل أنت متأكد من الحذف؟')) {
-                transactions = transactions.filter(t => t.id !== id);
-                localStorage.setItem('transactions', JSON.stringify(transactions));
-                updateBalances();
-                renderTransactions();
-            }
-        }
-
-        // حذف مديونية
-        function deleteDebt(id) {
-            if (confirm('هل أنت متأكد من الحذف؟')) {
-                debts = debts.filter(d => d.id !== id);
-                localStorage.setItem('debts', JSON.stringify(debts));
-                renderDebts();
-            }
-        }
-
-        // تسوية مديونية
-        function settleDebt(id) {
-            if (confirm('تأكيد تسوية هذه المديونية؟')) {
-                const debt = debts.find(d => d.id === id);
-                if (debt) {
-                    debt.status = 'settled';
-                    localStorage.setItem('debts', JSON.stringify(debts));
-                    renderDebts();
-                }
-            }
-        }
-
-        // التحميل الأولي
-        updateBalances();
-        renderTransactions();
-        renderDebts();
-    </script>
-</body>
-</html>
+                <label>الوصف</label>
+               
