@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المحفظة الذكية - نظام التقارير المتزامن</title>
+    <title>المحفظة الذكية المحلية</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -112,17 +112,12 @@
         button.btn-danger { background: var(--accent-red); }
         button.btn-purple { background: var(--accent-purple); }
 
-        button:disabled {
-            background: #475569;
-            cursor: not-allowed;
-        }
-
-        /* تنسيق أزرار التقارير */
         .report-filters {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .report-summary-box {
@@ -162,22 +157,22 @@
         .type-مديونية { color: #f59e0b; }
         .type-جمعية { color: var(--accent-purple); }
         
-        .status-sync {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #10b981;
-            margin-top: -15px;
-            margin-bottom: 20px;
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--accent-red);
+            cursor: pointer;
             font-weight: bold;
+            padding: 0;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📊 نظام المحفظة والتقارير الذكية</h1>
-    <div class="status-sync" id="sync-status">🔄 جاري المزامنة مع السحابة...</div>
+    <h1>📊 محفظتي الرقمية (حفظ محلي آمن)</h1>
     
+    <!-- قسم كروت الحسابات والمحافظ -->
     <div class="wallets-grid">
         <div class="wallet-card" style="border-color: #3b82f6;"><div class="wallet-title">QNB</div><div id="bal-qnb"></div></div>
         <div class="wallet-card" style="border-color: #10b981;"><div class="wallet-title">MSCT</div><div id="bal-msct"></div></div>
@@ -185,6 +180,7 @@
         <div class="wallet-card" style="border-color: #a855f7;"><div class="wallet-title">EXTRA</div><div id="bal-extra"></div></div>
     </div>
 
+    <!-- قسم الإدخال -->
     <div class="form-section">
         <h2>إضافة معاملة جديدة</h2>
         <form id="finance-form">
@@ -221,12 +217,13 @@
                 </div>
                 <div class="form-group"><label>المبلغ</label><input type="number" id="amount" step="0.001" required></div>
             </div>
-            <button type="submit" id="submit-btn" class="btn-success" style="width:100%; margin-top:10px; padding:12px;">حفظ المعاملة ومزامنتها</button>
+            <button type="submit" class="btn-success" style="width:100%; margin-top:10px; padding:12px;">حفظ العملية في الجهاز</button>
         </form>
     </div>
 
+    <!-- قسم استخراج التقارير الماليّة -->
     <div class="report-section">
-        <h2>📑 مركز استخراج التقارير والبيانات الحسابية</h2>
+        <h2>📑 مركز استخراج التقارير الحسابية</h2>
         <div class="report-filters">
             <button onclick="filterReport('all')">كل البيانات</button>
             <button onclick="filterReport('today')" class="btn-purple">تقرير اليوم</button>
@@ -236,17 +233,17 @@
 
         <div class="report-summary-box">
             <h3 style="margin-top:0; color:#cbd5e1; font-size:1rem;" id="report-title">نوع التقرير الحالي: كل البيانات</h3>
-            <div class="summary-grid" id="summary-container">
-                </div>
+            <div class="summary-grid" id="summary-container"></div>
         </div>
     </div>
 
+    <!-- سجل العمليات -->
     <div class="logs-section">
         <h2 id="table-title">سجل العمليات المعروضة</h2>
         <div style="overflow-x: auto;">
-            <table id="finance-table">
+            <table>
                 <thead>
-                    <tr><th>التاريخ</th><th>البيان</th><th>النوع</th><th>المحفظة</th><th>المبلغ</th><th>العملة</th></tr>
+                    <tr><th>التاريخ</th><th>البيان</th><th>النوع</th><th>المحفظة</th><th>المبلغ</th><th>العملة</th><th>إجراء</th></tr>
                 </thead>
                 <tbody id="logs-body"></tbody>
             </table>
@@ -255,34 +252,22 @@
 </div>
 
 <script>
-    // ⚠️ ضع رابط قوقل سكريبت (Web app URL) الخاص بك هنا بالأسفل
-    const SCRIPT_URL = 'رابط_جوجل_سكريبت_الخاص_بك'; 
-    
     document.getElementById('date').valueAsDate = new Date();
-    let allTransactions = [];
-    let filteredTransactions = [];
+    
+    // جلب البيانات المحلية المخزنة في المتصفح فوراً
+    let allTransactions = JSON.parse(localStorage.getItem('local_wallet_data')) || [];
+    let currentFilter = 'all';
+
     const walletKeys = ['qnb', 'msct', 'cash', 'extra'];
     const currencies = ['ر.ع', 'ج.م', '$'];
 
-    async function fetchFromSheets() {
-        document.getElementById('sync-status').style.color = '#94a3b8';
-        document.getElementById('sync-status').innerText = "🔄 جاري تحديث الأرصدة والعمليات من السحابة...";
-        try {
-            const res = await fetch(SCRIPT_URL);
-            allTransactions = await res.json();
-            // تصفية وحساب الأرصدة الكلية أولاً للمحافظ العلوية
-            calculateWalletBalances();
-            // بشكل افتراضي نعرض "كل البيانات" في البداية
-            filterReport('all');
-            document.getElementById('sync-status').style.color = '#10b981';
-            document.getElementById('sync-status').innerText = "✅ متزامن بالكامل (محدث الآن)";
-        } catch (error) {
-            document.getElementById('sync-status').style.color = '#ef4444';
-            document.getElementById('sync-status').innerText = "❌ فشل التحديث التلقائي. تحقق من الاتصال.";
-        }
+    // دالة لتحديث الواجهة بالكامل
+    function refreshUI() {
+        calculateWalletBalances();
+        filterReport(currentFilter);
     }
 
-    // حساب أرصدة المحافظ الرئيسية العلوية (دائماً تعرض الإجمالي الحقيقي)
+    // حساب أرصدة المحافظ الكلية المستقرة علوياً
     function calculateWalletBalances() {
         let walletBalances = {};
         walletKeys.forEach(w => { walletBalances[w] = {}; currencies.forEach(c => walletBalances[w][c] = 0); });
@@ -310,74 +295,70 @@
         });
     }
 
-    // 🎯 دالة فرز وتوليد التقارير الحسابية (يومي / شهري / كلي)
+    // فرز وتصفية التقارير حسب الفاصل الزمني (يومي / شهري / كلي)
     function filterReport(range) {
+        currentFilter = range;
         const todayStr = new Date().toISOString().split('T')[0];
-        const currentMonthStr = todayStr.substring(0, 7); // YYYY-MM
+        const currentMonthStr = todayStr.substring(0, 7);
+        let filtered = [];
 
         if (range === 'today') {
             document.getElementById('report-title').innerText = `نوع التقرير الحالي: تقرير اليوم (${todayStr})`;
             document.getElementById('table-title').innerText = "حركات اليوم الحالية";
-            filteredTransactions = allTransactions.filter(t => t.date.startsWith(todayStr));
+            filtered = allTransactions.filter(t => t.date === todayStr);
         } else if (range === 'month') {
             document.getElementById('report-title').innerText = `نوع التقرير الحالي: تقرير الشهر الحالي (${currentMonthStr})`;
             document.getElementById('table-title').innerText = "حركات الشهر الحالي";
-            filteredTransactions = allTransactions.filter(t => t.date.startsWith(currentMonthStr));
+            filtered = allTransactions.filter(t => t.date.startsWith(currentMonthStr));
         } else {
             document.getElementById('report-title').innerText = "نوع التقرير الحالي: كل البيانات التاريخية";
             document.getElementById('table-title').innerText = "سجل العمليات الكلية المعروضة";
-            filteredTransactions = [...allTransactions];
+            filtered = [...allTransactions];
         }
 
-        // عكس الترتيب لعرض الأحدث في الجدول أولاً
-        filteredTransactions.reverse();
-        
-        renderReportTableAndSummary();
+        // ترتيب الأحدث في الأعلى دائماً
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        renderTableAndSummary(filtered);
     }
 
-    // بناء ملخص التقرير المالي المفصل حسب العملة وبناء الجدول
-    function renderReportTableAndSummary() {
+    // بناء الجدول والملخص المالي للتقرير
+    function renderTableAndSummary(dataList) {
         const tbody = document.getElementById('logs-body');
         tbody.innerHTML = '';
 
-        // كائنات لحفظ المجاميع للتقرير الحالي
-        let totalIn = {};  // إيرادات
-        let totalOut = {}; // مصروفات
+        let totalIn = {}; let totalOut = {};
         currencies.forEach(c => { totalIn[c] = 0; totalOut[c] = 0; });
 
-        filteredTransactions.forEach((t) => {
+        dataList.forEach((t) => {
             const amt = parseFloat(t.amount);
             const curr = t.currency || 'ر.ع';
 
-            // حساب المجموع للتقرير
             if (t.type === 'إيراد' || (t.type === 'مديونية' && amt > 0)) {
                 totalIn[curr] += amt;
             } else {
                 totalOut[curr] += amt;
             }
 
-            let displayDate = t.date.includes('T') ? t.date.split('T')[0] : t.date;
-
             tbody.innerHTML += `<tr>
-                <td>${displayDate}</td>
+                <td>${t.date}</td>
                 <td>${t.description}</td>
                 <td class="type-${t.type}">${t.type}</td>
                 <td>${t.wallet.toUpperCase()}</td>
                 <td>${amt.toFixed(2)}</td>
                 <td><strong>${curr}</strong></td>
+                <td><button class="delete-btn" onclick="deleteTransaction('${t.id}')">حذف</button></td>
             </tr>`;
         });
 
-        // تحديث المربعات التلخيصية للتقرير الذكي
+        // تحديث الصناديق التلخيصية للعملات
         const summaryContainer = document.getElementById('summary-container');
         summaryContainer.innerHTML = '';
 
         currencies.forEach(c => {
-            // نعرض العملة فقط إذا كان لها حركات مالية في هذا التقرير لعدم زحام الشاشة
             if (totalIn[c] > 0 || totalOut[c] > 0) {
                 const net = totalIn[c] - totalOut[c];
                 const netColor = net >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-                
                 summaryContainer.innerHTML += `
                     <div class="summary-item">
                         <strong style="color: #67e8f9; display:block; margin-bottom:5px;">💰 العملة: ${c}</strong>
@@ -391,43 +372,16 @@
         });
 
         if (summaryContainer.innerHTML === '') {
-            summaryContainer.innerHTML = '<div style="color:#94a3b8; font-size:0.9rem;">لا توجد حركات مالية مسجلة لهذه الفئة الزمنية.</div>';
+            summaryContainer.innerHTML = '<div style="color:#94a3b8; font-size:0.9rem;">لا توجد حركات مالية مسجلة في هذا النطاق.</div>';
         }
     }
 
-    // 📥 دالة استخراج وتحميل التقرير الحالي كملف Excel مبسط (CSV)
-    function exportToCSV() {
-        if(filteredTransactions.length === 0) {
-            alert("لا توجد بيانات مستخرجة في التقرير الحالي لتحميلها!");
-            return;
-        }
-
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // لدعم اللغة العربية في إكسيل
-        csvContent += "التاريخ,البيان,النوع,المحفظة,المبلغ,العملة\n";
-
-        filteredTransactions.forEach(t => {
-            let displayDate = t.date.includes('T') ? t.date.split('T')[0] : t.date;
-            let row = `"${displayDate}","${t.description}","${t.type}","${t.wallet.toUpperCase()}",${t.amount},"${t.currency}"`;
-            csvContent += row + "\n";
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `تقرير_مالي_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    // حفظ المعاملة الجديدة
-    document.getElementById('finance-form').addEventListener('submit', async function(e) {
+    // إضافة حركة مالية جديدة وحفظها محلياً
+    document.getElementById('finance-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        const btn = document.getElementById('submit-btn');
-        btn.innerText = "⚡ جاري الترحيل للحسابات...";
-        btn.disabled = true;
 
         const t = {
+            id: 'id_' + Date.now() + Math.random().toString(36).substr(2, 4), // معرف فريد للحذف
             date: document.getElementById('date').value,
             description: document.getElementById('description').value,
             type: document.getElementById('type').value,
@@ -436,27 +390,48 @@
             amount: document.getElementById('amount').value
         };
 
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(t)
-            });
+        allTransactions.push(t);
+        localStorage.setItem('local_wallet_data', JSON.stringify(allTransactions));
 
-            document.getElementById('description').value = '';
-            document.getElementById('amount').value = '';
-            await fetchFromSheets();
-        } catch (error) {
-            alert("حدث خطأ في الشبكة، يرجى المحاولة لاحقاً.");
-        } finally {
-            btn.innerText = "حفظ المعاملة ومزامنتها";
-            btn.disabled = false;
-        }
+        document.getElementById('description').value = '';
+        document.getElementById('amount').value = '';
+        
+        refreshUI();
     });
 
-    // جلب البيانات الأساسية عند تشغيل المنظومة
-    fetchFromSheets();
+    // دالة حذف معاملة معينة
+    function deleteTransaction(id) {
+        if(confirm("هل أنت متأكد من حذف هذه المعاملة نهائياً؟")) {
+            allTransactions = allTransactions.filter(t => t.id !== id);
+            localStorage.setItem('local_wallet_data', JSON.stringify(allTransactions));
+            refreshUI();
+        }
+    }
+
+    // تحميل التقرير الحالي كملف Excel مبسط (CSV)
+    function exportToCSV() {
+        if(allTransactions.length === 0) {
+            alert("لا توجد بيانات لتحميلها!");
+            return;
+        }
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+        csvContent += "التاريخ,البيان,النوع,المحفظة,المبلغ,العملة\n";
+
+        allTransactions.forEach(t => {
+            csvContent += `"${t.date}","${t.description}","${t.type}","${t.wallet.toUpperCase()}",${t.amount},"${t.currency}"\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `تقرير_مالي_محلي_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // تشغيل التطبيق فور فتح الصفحة
+    refreshUI();
 </script>
 </body>
 </html>
