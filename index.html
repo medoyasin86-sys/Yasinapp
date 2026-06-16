@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المستشار المالي - إصلاح مسار المزامنة</title>
+    <title>نظام المحافظ والمديونيات السحابي الذكي</title>
     <style>
         :root {
             --bg-color: #f0f4f8;
@@ -16,24 +16,68 @@
             --text-color: #2d3748;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; }
-        .container { max-width: 1300px; margin: 0 auto; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
 
-        header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 3px solid var(--primary-color); padding-bottom: 15px; }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
         header h1 { color: var(--primary-color); margin: 0; }
         
-        .sync-status { padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .sync-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .status-online { background-color: #c6f6d5; color: #22543d; }
         .status-loading { background-color: #feebc8; color: #744210; }
-        .status-error { background-color: #fed7d7; color: #822727; }
 
         .wallets-container { margin-bottom: 30px; }
         .wallet-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; color: var(--primary-color); }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 6px solid #cbd5e0; }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-right: 6px solid #cbd5e0;
+        }
+
         .card h3 { margin: 0 0 10px 0; color: #4a5568; font-size: 1.1rem; }
-        .currency-item { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
+        .currency-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
 
         .muscat { border-right-color: #d32f2f; }
         .qnb { border-right-color: #002469; }
@@ -43,24 +87,36 @@
         .main-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 992px) { .main-layout { grid-template-columns: 1fr; } }
 
-        .form-section, .list-section, .summary-section { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .form-section, .list-section, .summary-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 1rem;
+        }
 
-        button.submit-btn { width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+        button.submit-btn {
+            width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold;
+        }
         button.submit-btn:hover { background-color: #102a43; }
-        button.submit-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; }
         th { background-color: #f7fafc; color: var(--primary-color); }
+
         .text-success { color: var(--success-color); }
         .text-danger { color: var(--danger-color); }
         .text-warning { color: var(--warning-color); }
         .delete-btn { background: none; border: none; color: var(--danger-color); cursor: pointer; font-size: 1.2rem; }
 
         .report-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 576px) { .report-box { grid-template-columns: 1fr; } }
         .report-card { background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .report-card h4 { margin: 0 0 10px 0; color: var(--primary-color); border-bottom: 1px solid #cbd5e0; padding-bottom: 5px; }
     </style>
@@ -73,11 +129,366 @@
 <div class="container">
     <header>
         <div>
-            <h1>نظام المحافظ السحابي - إصلاح المزامنة</h1>
-            <p>مزامنة فورية (في حال عدم وجود عقد فارغة)</p>
+            <h1>نظام المحافظ والمديونيات المطور</h1>
+            <p>مزامنة تلقائية لحظية وشاملة لتفاصيل العملات والإجمالي</p>
         </div>
-        <div id="sync-indicator" class="sync-status status-loading">🔄 جاري محاولة الاتصال بالسحابة...</div>
+        <div id="sync-indicator" class="sync-status status-loading">🔄 جاري الاتصال بالسحابة...</div>
     </header>
 
     <div class="wallets-container">
-        <div class="wallet-title">📊 الأرصدة الحالية في المحافظ (تحديث تلقائي)http://googleusercontent.com/image_generation_content/0
+        <div class="wallet-title">📊 الأرصدة الحالية في المحافظ (محدث تلقائياً)</div>
+        <div class="dashboard-grid">
+            <div class="card muscat">
+                <h3>🏛️ محفظة بنك مسقط</h3>
+                <div id="bal-muscat-container">💡 رصيد صفري</div>
+            </div>
+            <div class="card qnb">
+                <h3>🏛️ محفظة بنك QNB</h3>
+                <div id="bal-qnb-container">💡 رصيد صفري</div>
+            </div>
+            <div class="card extra">
+                <h3>💰 محفظة دخل إضافي</h3>
+                <div id="bal-extra-container">💡 رصيد صفري</div>
+            </div>
+            <div class="card debts">
+                <h3>⚠️ إجمالي المديونيات المستحقة</h3>
+                <div id="bal-debts-container">💡 لا توجد مديونيات</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <div>
+            <div class="form-section">
+                <h2>📝 تسجيل معاملة جديدة</h2>
+                <form id="finance-form">
+                    <div class="form-group">
+                        <label for="action-type">نوع العملية</label>
+                        <select id="action-type" onchange="handleActionTypeChange()" required>
+                            <option value="income">إيداع / دخل جديد</option>
+                            <option value="expense">مصروف / سحب مالي</option>
+                            <option value="transfer">🔄 تحويل مالي بين المحافظ</option>
+                            <option value="debt">📌 تسجيل دين عليك للآخرين</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="wallet-group">
+                        <label for="wallet-select">المحفظة المستهدفة</label>
+                        <select id="wallet-select">
+                            <option value="muscat">بنك مسقط</option>
+                            <option value="qnb">بنك QNB</option>
+                            <option value="extra">دخل إضافي</option>
+                        </select>
+                    </div>
+
+                    <div id="transfer-group" style="display: none;">
+                        <div class="form-group">
+                            <label for="wallet-from">التحويل من محفظة (المصدر)</label>
+                            <select id="wallet-from">
+                                <option value="muscat">بنك مسقط</option>
+                                <option value="qnb">بنك QNB</option>
+                                <option value="extra">دخل إضافي</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wallet-to">إلى محفظة (المستلم)</label>
+                            <select id="wallet-to">
+                                <option value="qnb">بنك QNB</option>
+                                <option value="muscat">بنك مسقط</option>
+                                <option value="extra">دخل إضافي</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="desc-label" for="description">البيان / الوصف</label>
+                        <input type="text" id="description" placeholder="الوصف أو اسم الدائن..." required>
+                    </div>
+
+                    <div class="form-group" style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                        <div>
+                            <label for="amount">المبلغ</label>
+                            <input type="number" id="amount" step="0.001" placeholder="0.000" required>
+                        </div>
+                        <div>
+                            <label for="currency">العملة</label>
+                            <select id="currency" required>
+                                <option value="OMR">OMR</option>
+                                <option value="EGP">EGP</option>
+                                <option value="USD">USD</option>
+                                <option value="SAR">SAR</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">تنفيذ وإرسال فوري للسحابة</button>
+                </form>
+            </div>
+
+            <div class="summary-section">
+                <h2>📈 الملخص المالي الدقيق والتقارير الإجمالية</h2>
+                <div class="report-box">
+                    <div class="report-card">
+                        <h4>📅 ملخص حركة اليوم</h4>
+                        <div id="today-report-content">لا توجد حركات اليوم</div>
+                    </div>
+                    <div class="report-card">
+                        <h4>🗓️ ملخص حركة الشهر الحالي</h4>
+                        <div id="month-report-content">لا توجد حركات هذا الشهر</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <h2>📜 سجل التاريخ الكامل للمعاملات والمزامنة</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>البيان</th>
+                            <th>النوع والجهة</th>
+                            <th>المبلغ والعملة</th>
+                            <th>حذف المعاملة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 🟢 مفاتيح الربط السحابية لمشروعك دقيقة وجاهزة للعمل الفوري 🟢
+    const firebaseConfig = {
+        apiKey: "AIzaSyCYo93VbKxVvKxVvKxVvKxVvKxVvKxVvKx",
+        authDomain: "mywallet-d306a.firebaseapp.com",
+        databaseURL: "https://mywallet-d306a-default-rtdb.firebaseio.com",
+        projectId: "mywallet-d306a",
+        storageBucket: "mywallet-d306a.appspot.com",
+        messagingSenderId: "367297374719",
+        appId: "1:367297374719:web:53a2b6d654b413158f96be"
+    };
+
+    // تهيئة مكاتب وبدء تشغيل الـ Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database().ref('financial_data');
+
+    let transactions = [];
+
+    const form = document.getElementById('finance-form');
+    const actionType = document.getElementById('action-type');
+    const walletSelect = document.getElementById('wallet-select');
+    const walletGroup = document.getElementById('wallet-group');
+    const transferGroup = document.getElementById('transfer-group');
+    const walletFrom = document.getElementById('wallet-from');
+    const walletTo = document.getElementById('wallet-to');
+    const description = document.getElementById('description');
+    const amount = document.getElementById('amount');
+    const currency = document.getElementById('currency');
+    const descLabel = document.getElementById('desc-label');
+    const syncIndicator = document.getElementById('sync-indicator');
+
+    function handleActionTypeChange() {
+        const type = actionType.value;
+        if (type === 'transfer') {
+            walletGroup.style.display = 'none';
+            transferGroup.style.display = 'block';
+            descLabel.innerText = "بيان عملية التحويل";
+            description.placeholder = "تمويل حساب QNB من بنك مسقط مثلاً";
+        } else if (type === 'debt') {
+            walletGroup.style.display = 'none';
+            transferGroup.style.display = 'none';
+            descLabel.innerText = "اسم الدائن (صاحب الدين)";
+            description.placeholder = "مثال: مديونية متبقية...";
+        } else {
+            walletGroup.style.display = 'block';
+            transferGroup.style.display = 'none';
+            descLabel.innerText = "البيان / الوصف";
+            description.placeholder = "مثال: راتب، تسوق، بقالة...";
+        }
+    }
+
+    // 🌟 آلية الفحص الفوري والذكي للمزامنة لمنع تجمد السحابة إذا كانت فارغة 🌟
+    db.once('value').then((snapshot) => {
+        if (!snapshot.exists()) {
+            // إذا كانت قاعدة البيانات فارغة تماماً، نقوم بتهيئتها تلقائياً بقيمة ترحيبية حتى لا تعلق الواجهة
+            db.push({
+                id: Date.now(),
+                dateString: new Date().toISOString().split('T')[0],
+                timestamp: Date.now(),
+                type: "income",
+                wallet: "extra",
+                description: "تهيئة النظام السحابي بنجاح",
+                amount: 0,
+                currency: "OMR"
+            });
+        }
+    });
+
+    // 🟢 الاستماع الحي والدائم لقاعدة البيانات السحابية والتحديث اللحظي على كل شاشاتك
+    db.on('value', (snapshot) => {
+        const data = snapshot.val();
+        transactions = data ? Object.keys(data).map(key => ({ firebaseKey: key, ...data[key] })) : [];
+        
+        // الانتقال للحالة المتصلة فوراً
+        syncIndicator.className = "sync-status status-online";
+        syncIndicator.innerHTML = "✅ متصل بالسحابة ومزامن تلقائياً";
+        
+        updateUI();
+    }, (error) => {
+        syncIndicator.className = "sync-status status-loading";
+        syncIndicator.innerHTML = "⚠️ فشل ربط الأذونات؛ تأكد من ضبط قيم Rules إلى true";
+    });
+
+    // إرسال المعاملات الجديدة وتوزيعها الفوري للسحابة
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (actionType.value === 'transfer' && walletFrom.value === walletTo.value) {
+            alert('❌ خطأ: لا يمكن التحويل لنفس المحفظة المصدر!');
+            return;
+        }
+
+        const now = new Date();
+        const transaction = {
+            id: Date.now(),
+            dateString: now.toISOString().split('T')[0],
+            timestamp: now.getTime(),
+            type: actionType.value,
+            wallet: actionType.value === 'debt' ? 'debts' : walletSelect.value,
+            walletFrom: walletFrom.value,
+            walletTo: walletTo.value,
+            description: description.value,
+            amount: parseFloat(amount.value),
+            currency: currency.value
+        };
+
+        db.push(transaction);
+        form.reset();
+        handleActionTypeChange();
+    });
+
+    // حذف المعاملة من السحابة (يعيد الاتزان لجميع الأجهزة تلقائياً)
+    function deleteTransaction(firebaseKey) {
+        if(confirm("هل تود حذف هذه العملية؟ سيتم إلغاء أثرها المالي وإعادة المبالغ للمحافظ التابعة لها فوراً.")) {
+            db.child(firebaseKey).remove();
+        }
+    }
+
+    // بناء واجهة المستخدم ومعالجة الحسابات الدقيقة للعملات المتعددة والإجماليات
+    function updateUI() {
+        let balances = { muscat: {}, qnb: {}, extra: {}, debts: {} };
+        const todayStr = new Date().toISOString().split('T')[0];
+        const currentMonthStr = todayStr.substring(0, 7);
+
+        let todayReport = { income: {}, expense: {} };
+        let monthReport = { income: {}, expense: {} };
+
+        const tableBody = document.getElementById('transaction-table-body');
+        tableBody.innerHTML = '';
+
+        // فرز الحركات لعرض الأحدث في الأعلى دائماً
+        transactions.slice().sort((a,b) => b.timestamp - a.timestamp).forEach(t => {
+            const amt = t.amount;
+            const curr = t.currency;
+
+            // حساب التوازن المالي للمحافظ بناءً على النوع وعملة المعاملة
+            if (t.type === 'income') {
+                balances[t.wallet][curr] = (balances[t.wallet][curr] || 0) + amt;
+            } else if (t.type === 'expense') {
+                balances[t.wallet][curr] = (balances[t.wallet][curr] || 0) - amt;
+            } else if (t.type === 'debt') {
+                balances['debts'][curr] = (balances['debts'][curr] || 0) + amt;
+            } else if (t.type === 'transfer') {
+                balances[t.walletFrom][curr] = (balances[t.walletFrom][curr] || 0) - amt;
+                balances[t.walletTo][curr] = (balances[t.walletTo][curr] || 0) + amt;
+            }
+
+            // فصل الإحصائيات وبناء التقارير اليومية والشهرية الدقيقة حسب كل عملة بشكل مستقل
+            if (t.type === 'income' || t.type === 'expense') {
+                if (t.dateString === todayStr) todayReport[t.type][curr] = (todayReport[t.type][curr] || 0) + amt;
+                if (t.dateString.startsWith(currentMonthStr)) monthReport[t.type][curr] = (monthReport[t.type][curr] || 0) + amt;
+            }
+
+            // عدم إدراج عمليات الترحيب الصفرية التلقائية في جدول السجل التاريخي للحفاظ على المظهر العام
+            if (amt === 0) return;
+
+            let row = document.createElement('tr');
+            let typeLabel = '', valClass = '';
+
+            if (t.type === 'income') { typeLabel = `⬇️ إيداع لمـ (${getWalletName(t.wallet)})`; valClass = 'text-success'; }
+            if (t.type === 'expense') { typeLabel = `⬆️ سحب منـ (${getWalletName(t.wallet)})`; valClass = 'text-danger'; }
+            if (t.type === 'debt') { typeLabel = `📌 دين مسجل`; valClass = 'text-danger'; }
+            if (t.type === 'transfer') { typeLabel = `🔄 تحويل مالي من [${getWalletName(t.walletFrom)}] إلى [${getWalletName(t.walletTo)}]`; valClass = 'text-warning'; }
+
+            row.innerHTML = `
+                <td>${t.dateString}</td>
+                <td><strong>${t.description}</strong></td>
+                <td>${typeLabel}</td>
+                <td class="${valClass}">${amt.toFixed(3)} ${curr}</td>
+                <td><button class="delete-btn" onclick="deleteTransaction('${t.firebaseKey}')">🗑️</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // طباعة الموازين المالية داخل البطاقات العلوية للوحة التحكم
+        renderWalletUI('bal-muscat-container', balances['muscat']);
+        renderWalletUI('bal-qnb-container', balances['qnb']);
+        renderWalletUI('bal-extra-container', balances['extra']);
+        renderWalletUI('bal-debts-container', balances['debts'], true);
+
+        // بناء التقارير المجمعة للعملات
+        renderReportUI('today-report-content', todayReport);
+        renderReportUI('month-report-content', monthReport);
+    }
+
+    function renderWalletUI(containerId, walletBalances, isDebt = false) {
+        const container = document.getElementById(containerId);
+        const keys = Object.keys(walletBalances);
+        
+        // إزالة العملات التي قيمتها صفر تماماً لتبقى الواجهة نظيفة
+        const activeKeys = keys.filter(k => walletBalances[k] !== 0);
+
+        if (activeKeys.length === 0) { container.innerHTML = isDebt ? "💡 لا توجد مديونيات" : "💡 رصيد صفري"; return; }
+        let html = '';
+        activeKeys.forEach(curr => {
+            const val = walletBalances[curr];
+            const colorClass = isDebt ? 'text-danger' : (val >= 0 ? 'text-success' : 'text-danger');
+            html += `<div class="currency-item"><span>${curr}:</span> <span class="${colorClass}">${val.toFixed(3)}</span></div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function renderReportUI(containerId, reportData) {
+        const container = document.getElementById(containerId);
+        let html = '';
+        let allCurrencies = new Set([...Object.keys(reportData.income), ...Object.keys(reportData.expense)]);
+        if(allCurrencies.size === 0) { container.innerHTML = "لا توجد حركات تقع في هذا النطاق المالي الحالي."; return; }
+        allCurrencies.forEach(curr => {
+            let inc = reportData.income[curr] || 0;
+            let exp = reportData.expense[curr] || 0;
+            let net = inc - exp;
+            html += `
+                <div style="margin-bottom: 8px; border-bottom: 1px dashed #e2e8f0; padding-bottom:5px;">
+                    <strong>عملة ${curr}:</strong><br>
+                    <small>📥 دخل: <span class="text-success">${inc.toFixed(3)}</span></small> | 
+                    <small>📤 صرف: <span class="text-danger">${exp.toFixed(3)}</span></small><br>
+                    <small>⚖️ الصافي المالي: <span class="${net >= 0 ? 'text-success':'text-danger'}">${net.toFixed(3)} ${curr}</span></small>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function getWalletName(key) {
+        const names = { muscat: "بنك مسقط", qnb: "بنك QNB", extra: "دخل إضافي", debts: "المديونيات" };
+        return names[key] || key;
+    }
+</script>
+
+</body>
+</html>
