@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💰 نظامي المالي</title>
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
@@ -16,8 +15,8 @@
             padding: 20px; 
             color: #333;
         }
-        .container { max-width: 900px; margin: 0 auto; }
-        
+        .container { max-width: 1000px; margin: 0 auto; }
+
         .header { 
             text-align: center; 
             color: white; 
@@ -30,42 +29,48 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         .header p { color: #a0a0a0; font-size: 1.1em; }
-        
+
         .wallets { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 15px; 
             margin-bottom: 25px; 
+        }
+        @media (min-width: 768px) {
+            .wallets { grid-template-columns: repeat(4, 1fr); }
         }
         .wallet { 
             background: rgba(255,255,255,0.95); 
             border-radius: 20px; 
-            padding: 25px 15px; 
+            padding: 20px 15px; 
             text-align: center; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             transition: transform 0.3s;
+            cursor: pointer;
         }
         .wallet:hover { transform: translateY(-5px); }
         .wallet h3 { 
             color: #555; 
-            margin-bottom: 15px; 
-            font-size: 1.2em;
+            margin-bottom: 10px; 
+            font-size: 1.1em;
         }
         .wallet .amount { 
-            font-size: 2em; 
+            font-size: 1.5em; 
             font-weight: bold; 
             color: #27ae60;
-            margin: 10px 0;
+            margin: 8px 0;
         }
         .wallet .currency { 
             color: #888; 
-            font-size: 0.9em;
+            font-size: 0.85em;
             background: #f0f0f0;
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 20px;
             display: inline-block;
+            margin: 2px;
         }
-        
+        .wallet .currency.negative { color: #e74c3c; background: #fee; }
+
         .card { 
             background: rgba(255,255,255,0.95); 
             border-radius: 20px; 
@@ -80,7 +85,7 @@
             padding-bottom: 15px;
             font-size: 1.5em;
         }
-        
+
         .form-row { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -108,7 +113,7 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
         }
-        
+
         .btn { 
             width: 100%; 
             padding: 16px; 
@@ -140,22 +145,44 @@
             background: linear-gradient(135deg, #27ae60, #1e8449); 
             color: white; 
         }
-        
+        .btn-success:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(39,174,96,0.4);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(243,156,18,0.4);
+        }
+        .btn-purple {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+        .btn-purple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(155,89,182,0.4);
+        }
+
         .tabs { 
             display: flex; 
             gap: 10px; 
             margin-bottom: 25px; 
+            flex-wrap: wrap;
         }
         .tab { 
             flex: 1; 
-            padding: 18px; 
+            min-width: 140px;
+            padding: 15px; 
             background: rgba(255,255,255,0.15); 
             color: white; 
             border: none; 
             border-radius: 15px; 
             cursor: pointer; 
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1em;
             transition: all 0.3s;
         }
         .tab:hover { background: rgba(255,255,255,0.25); }
@@ -164,9 +191,9 @@
             color: #1a1a2e;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        
+
         .hidden { display: none; }
-        
+
         .list-item { 
             display: flex; 
             justify-content: space-between; 
@@ -177,9 +204,11 @@
         }
         .list-item:hover { background: #f8f9fa; }
         .list-item:last-child { border-bottom: none; }
-        
+
         .income { color: #27ae60; font-weight: bold; font-size: 1.1em; }
         .expense { color: #e74c3c; font-weight: bold; font-size: 1.1em; }
+        .transfer { color: #9b59b6; font-weight: bold; font-size: 1.1em; }
+        .cancelled { opacity: 0.5; text-decoration: line-through; }
         .badge { 
             background: linear-gradient(135deg, #f39c12, #e67e22); 
             color: white; 
@@ -188,24 +217,27 @@
             font-size: 12px;
             font-weight: bold;
         }
-        
+        .badge-cancelled {
+            background: #95a5a6;
+        }
+
         .date-display { 
             color: #7f8c8d; 
             font-size: 13px; 
             margin-top: 5px;
         }
-        
+
         .debt-on-me { border-right: 5px solid #e74c3c; }
         .debt-on-them { border-right: 5px solid #27ae60; }
-        
+
         .empty { 
             text-align: center; 
             color: #999; 
             padding: 40px;
             font-size: 1.1em;
         }
-        
-        .delete-btn { 
+
+        .action-btn { 
             background: #e74c3c; 
             color: white; 
             border: none; 
@@ -214,9 +246,23 @@
             cursor: pointer;
             margin-right: 5px;
             transition: all 0.2s;
+            font-size: 0.9em;
         }
-        .delete-btn:hover { background: #c0392b; transform: scale(1.05); }
-        
+        .action-btn:hover { background: #c0392b; transform: scale(1.05); }
+
+        .cancel-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+        .cancel-btn:hover { background: #7f8c8d; transform: scale(1.05); }
+
         .settle-btn {
             background: #27ae60;
             color: white;
@@ -226,47 +272,123 @@
             cursor: pointer;
             margin-right: 5px;
             transition: all 0.2s;
+            font-size: 0.9em;
         }
         .settle-btn:hover { background: #1e8449; transform: scale(1.05); }
-        
+
         .status-settled { color: #27ae60; font-weight: bold; }
-        
+        .status-cancelled { color: #95a5a6; font-weight: bold; }
+
+        .transfer-arrow {
+            color: #9b59b6;
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            font-weight: bold;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        .notification.success { background: #27ae60; color: white; }
+        .notification.error { background: #e74c3c; color: white; }
+        .notification.warning { background: #f39c12; color: white; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .wallet-balances {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
         @media (max-width: 600px) {
-            .wallets { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.8em; }
+            .wallet .amount { font-size: 1.2em; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>💰 نظامي المالي</h1>
-            <p>إدارة الدخل والمديونيات - QNB | مسقط | دخل إضافي</p>
+            <p>إدارة الدخل والمديونيات - QNB | مسقط | كاش | دخل إضافي</p>
         </div>
 
         <!-- المحافظ -->
         <div class="wallets">
-            <div class="wallet">
+            <div class="wallet" onclick="showWalletDetails('qnb')">
                 <h3>🏦 بنك QNB</h3>
-                <div class="amount" id="qnb-bal">0.00</div>
-                <div class="currency">جنيه مصري (EGP)</div>
+                <div id="qnb-balances" class="wallet-balances"></div>
             </div>
-            <div class="wallet">
+            <div class="wallet" onclick="showWalletDetails('muscat')">
                 <h3>🏛️ بنك مسقط</h3>
-                <div class="amount" id="muscat-bal">0.00</div>
-                <div class="currency">ريال عماني (OMR)</div>
+                <div id="muscat-balances" class="wallet-balances"></div>
             </div>
-            <div class="wallet">
+            <div class="wallet" onclick="showWalletDetails('cash')">
+                <h3>💵 كاش</h3>
+                <div id="cash-balances" class="wallet-balances"></div>
+            </div>
+            <div class="wallet" onclick="showWalletDetails('extra')">
                 <h3>💼 دخل إضافي</h3>
-                <div class="amount" id="extra-bal">0.00</div>
-                <div class="currency">دولار (USD)</div>
+                <div id="extra-balances" class="wallet-balances"></div>
             </div>
         </div>
 
         <!-- التبويبات -->
         <div class="tabs">
-            <button class="tab active" onclick="showTab('trans')">📊 العمليات المالية</button>
+            <button class="tab active" onclick="showTab('trans')">📊 العمليات</button>
+            <button class="tab" onclick="showTab('transfer')">🔄 التحويل</button>
             <button class="tab" onclick="showTab('debts')">⚠️ المديونيات</button>
         </div>
 
@@ -286,6 +408,7 @@
                     <select id="t-wallet">
                         <option value="qnb">🏦 QNB</option>
                         <option value="muscat">🏛️ مسقط</option>
+                        <option value="cash">💵 كاش</option>
                         <option value="extra">💼 دخل إضافي</option>
                     </select>
                 </div>
@@ -314,6 +437,53 @@
                 <h3 style="margin-bottom: 20px; color: #2c3e50;">📋 سجل العمليات</h3>
                 <div class="empty">لا توجد عمليات مسجلة بعد</div>
             </div>
+        </div>
+
+        <!-- قسم التحويل بين المحافظ -->
+        <div id="transfer" class="card hidden">
+            <h2>🔄 تحويل بين المحافظ</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>من المحفظة</label>
+                    <select id="tr-from">
+                        <option value="qnb">🏦 QNB</option>
+                        <option value="muscat">🏛️ مسقط</option>
+                        <option value="cash">💵 كاش</option>
+                        <option value="extra">💼 دخل إضافي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>إلى المحفظة</label>
+                    <select id="tr-to">
+                        <option value="muscat">🏛️ مسقط</option>
+                        <option value="qnb">🏦 QNB</option>
+                        <option value="cash">💵 كاش</option>
+                        <option value="extra">💼 دخل إضافي</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>المبلغ</label>
+                    <input type="number" id="tr-amount" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>العملة</label>
+                    <select id="tr-currency">
+                        <option value="EGP">🇪🇬 جنيه مصري</option>
+                        <option value="OMR">🇴🇲 ريال عماني</option>
+                        <option value="USD">🇺🇸 دولار أمريكي</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>الوصف (اختياري)</label>
+                <input type="text" id="tr-desc" placeholder="مثال: تحويل للمصاريف">
+            </div>
+            <button class="btn btn-purple" onclick="addTransfer()">🔄 تنفيذ التحويل</button>
+            <p style="margin-top: 15px; color: #888; font-size: 0.9em; text-align: center;">
+                💡 التحويل يسجل عمليتين: خصم من المحفظة الأولى وإيداع في الثانية
+            </p>
         </div>
 
         <!-- قسم المديونيات -->
@@ -359,10 +529,20 @@
         </div>
     </div>
 
+    <!-- مودال تفاصيل المحفظة -->
+    <div class="modal-overlay" id="wallet-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">تفاصيل المحفظة</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
     <script>
         // ═══════════════════════════════════════════════════════
-        // ⚠️ هنا تضع إعدادات Firebase الخاصة بك
-        // استبدل هذه القيم بقيمك من Firebase Console
+        // ⚠️ ضع إعدادات Firebase الخاصة بك هنا
         // ═══════════════════════════════════════════════════════
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY_HERE",
@@ -374,52 +554,45 @@
             appId: "YOUR_APP_ID"
         };
 
-        // ═══════════════════════════════════════════════════════
-        // ⚠️ هام جداً: قواعد الأمان (Rules) في Firebase
-        // اذهب إلى Firebase Console > Realtime Database > Rules
-        // والصق هذه القواعد:
-        /*
-        {
-          "rules": {
-            ".read": true,
-            ".write": true
-          }
-        }
-        */
-        // ⚠️ تحذير: هذا للاستخدام الشخصي فقط!
-        // ═══════════════════════════════════════════════════════
-
-        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const transRef = db.ref('transactions');
         const debtsRef = db.ref('debts');
 
         const symbols = { EGP: 'ج.م', OMR: 'ر.ع', USD: '$' };
-        const walletNames = { qnb: 'QNB', muscat: 'مسقط', extra: 'دخل إضافي' };
+        const walletNames = { qnb: 'QNB', muscat: 'مسقط', cash: 'كاش', extra: 'دخل إضافي' };
+        const walletIcons = { qnb: '🏦', muscat: '🏛️', cash: '💵', extra: '💼' };
 
         // تبديل التبويبات
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('trans').classList.toggle('hidden', tab !== 'trans');
+            document.getElementById('transfer').classList.toggle('hidden', tab !== 'transfer');
             document.getElementById('debts').classList.toggle('hidden', tab !== 'debts');
         }
 
-        // الحصول على التاريخ والوقت الحالي
+        // الحصول على التاريخ والوقت
         function getDateTime() {
             const now = new Date();
             return now.toLocaleString('ar-EG', { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit',
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
             });
         }
 
+        // إشعار
+        function showNotification(msg, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `notification ${type}`;
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // ═══════════════════════════════════════════════════════
         // إضافة عملية مالية
+        // ═══════════════════════════════════════════════════════
         function addTrans() {
             const type = document.getElementById('t-type').value;
             const wallet = document.getElementById('t-wallet').value;
@@ -428,7 +601,7 @@
             const desc = document.getElementById('t-desc').value.trim();
 
             if (!amount || amount <= 0) {
-                alert('⚠️ الرجاء إدخال مبلغ صحيح أكبر من صفر');
+                showNotification('⚠️ أدخل مبلغ صحيح', 'error');
                 return;
             }
 
@@ -439,7 +612,8 @@
                 currency: currency,
                 description: desc || 'بدون وصف',
                 date: getDateTime(),
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                status: 'active'
             };
 
             transRef.push(transaction)
@@ -448,12 +622,142 @@
                     document.getElementById('t-desc').value = '';
                     showNotification('✅ تم حفظ العملية بنجاح!');
                 })
-                .catch(err => {
-                    alert('❌ خطأ: ' + err.message);
-                });
+                .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
         }
 
+        // ═══════════════════════════════════════════════════════
+        // تحويل بين المحافظ
+        // ═══════════════════════════════════════════════════════
+        function addTransfer() {
+            const fromWallet = document.getElementById('tr-from').value;
+            const toWallet = document.getElementById('tr-to').value;
+            const amount = parseFloat(document.getElementById('tr-amount').value);
+            const currency = document.getElementById('tr-currency').value;
+            const desc = document.getElementById('tr-desc').value.trim();
+
+            if (fromWallet === toWallet) {
+                showNotification('⚠️ لا يمكن التحويل لنفس المحفظة', 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showNotification('⚠️ أدخل مبلغ صحيح', 'error');
+                return;
+            }
+
+            const now = getDateTime();
+            const ts = firebase.database.ServerValue.TIMESTAMP;
+            const transferDesc = desc || `تحويل من ${walletNames[fromWallet]} إلى ${walletNames[toWallet]}`;
+
+            // عملية خصم من المحفظة الأولى
+            const outTrans = {
+                type: 'expense',
+                wallet: fromWallet,
+                amount: amount,
+                currency: currency,
+                description: `تحويل خارج: ${transferDesc}`,
+                date: now,
+                timestamp: ts,
+                status: 'active',
+                transfer: true,
+                transferTo: toWallet
+            };
+
+            // عملية إيداع في المحفظة الثانية
+            const inTrans = {
+                type: 'income',
+                wallet: toWallet,
+                amount: amount,
+                currency: currency,
+                description: `تحويل وارد: ${transferDesc}`,
+                date: now,
+                timestamp: ts,
+                status: 'active',
+                transfer: true,
+                transferFrom: fromWallet
+            };
+
+            const batch = {};
+            const outKey = transRef.push().key;
+            const inKey = transRef.push().key;
+            batch[outKey] = outTrans;
+            batch[inKey] = inTrans;
+
+            transRef.update(batch)
+                .then(() => {
+                    document.getElementById('tr-amount').value = '';
+                    document.getElementById('tr-desc').value = '';
+                    showNotification(`✅ تم التحويل: ${amount.toFixed(2)} ${symbols[currency]} من ${walletNames[fromWallet]} إلى ${walletNames[toWallet]}`);
+                })
+                .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // إلغاء عملية (يعود المبلغ للمحفظة)
+        // ═══════════════════════════════════════════════════════
+        function cancelTransaction(id) {
+            if (!confirm('⚠️ هل أنت متأكد من إلغاء هذه العملية؟
+سيتم إرجاع المبلغ للمحفظة الأصلية.')) return;
+
+            transRef.child(id).once('value', snap => {
+                const t = snap.val();
+                if (!t || t.status === 'cancelled') {
+                    showNotification('⚠️ العملية غير موجودة أو ملغاة مسبقاً', 'warning');
+                    return;
+                }
+
+                // إذا كانت عملية تحويل، نلغي الطرفين
+                if (t.transfer) {
+                    // نبحث عن العملية المقابلة
+                    transRef.once('value', snap2 => {
+                        const all = snap2.val() || {};
+                        let pairKey = null;
+
+                        for (let [key, val] of Object.entries(all)) {
+                            if (val.transfer && val.date === t.date && key !== id) {
+                                if ((t.transferTo && val.transferFrom === t.transferTo) ||
+                                    (t.transferFrom && val.transferTo === t.transferFrom)) {
+                                    pairKey = key;
+                                    break;
+                                }
+                            }
+                        }
+
+                        const updates = {};
+                        updates[id + '/status'] = 'cancelled';
+                        updates[id + '/cancelledDate'] = getDateTime();
+                        if (pairKey) {
+                            updates[pairKey + '/status'] = 'cancelled';
+                            updates[pairKey + '/cancelledDate'] = getDateTime();
+                        }
+
+                        transRef.update(updates)
+                            .then(() => showNotification('✅ تم إلغاء التحويل وإرجاع المبالغ'))
+                            .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+                    });
+                } else {
+                    // إلغاء عادي
+                    transRef.child(id).update({
+                        status: 'cancelled',
+                        cancelledDate: getDateTime()
+                    })
+                    .then(() => showNotification('✅ تم إلغاء العملية وإرجاع المبلغ للمحفظة'))
+                    .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+                }
+            });
+        }
+
+        // حذف نهائي
+        function deleteTrans(id) {
+            if (confirm('🗑️ حذف نهائي؟ (لا يمكن الاسترجاع)')) {
+                transRef.child(id).remove()
+                    .then(() => showNotification('🗑️ تم الحذف'))
+                    .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
         // إضافة مديونية
+        // ═══════════════════════════════════════════════════════
         function addDebt() {
             const person = document.getElementById('d-person').value.trim();
             const amount = parseFloat(document.getElementById('d-amount').value);
@@ -461,96 +765,153 @@
             const type = document.getElementById('d-type').value;
             const desc = document.getElementById('d-desc').value.trim();
 
-            if (!person) {
-                alert('⚠️ الرجاء إدخال اسم الشخص');
-                return;
-            }
-            if (!amount || amount <= 0) {
-                alert('⚠️ الرجاء إدخال مبلغ صحيح');
-                return;
-            }
+            if (!person) { showNotification('⚠️ أدخل اسم الشخص', 'error'); return; }
+            if (!amount || amount <= 0) { showNotification('⚠️ أدخل مبلغ صحيح', 'error'); return; }
 
-            const debt = {
-                person: person,
-                amount: amount,
-                currency: currency,
-                type: type,
+            debtsRef.push({
+                person, amount, currency, type,
                 description: desc || 'بدون وصف',
                 date: getDateTime(),
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 status: 'active'
-            };
-
-            debtsRef.push(debt)
-                .then(() => {
-                    document.getElementById('d-person').value = '';
-                    document.getElementById('d-amount').value = '';
-                    document.getElementById('d-desc').value = '';
-                    showNotification('✅ تم حفظ المديونية بنجاح!');
-                })
-                .catch(err => {
-                    alert('❌ خطأ: ' + err.message);
-                });
+            })
+            .then(() => {
+                document.getElementById('d-person').value = '';
+                document.getElementById('d-amount').value = '';
+                document.getElementById('d-desc').value = '';
+                showNotification('✅ تم حفظ المديونية');
+            })
+            .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
         }
 
-        // حذف عملية
-        function deleteTrans(id) {
-            if (confirm('⚠️ هل أنت متأكد من حذف هذه العملية؟')) {
-                transRef.child(id).remove();
-            }
-        }
-
-        // حذف مديونية
         function deleteDebt(id) {
-            if (confirm('⚠️ هل أنت متأكد من حذف هذه المديونية؟')) {
-                debtsRef.child(id).remove();
+            if (confirm('🗑️ حذف المديونية؟')) {
+                debtsRef.child(id).remove()
+                    .then(() => showNotification('🗑️ تم الحذف'))
+                    .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
             }
         }
 
-        // تسوية مديونية
         function settleDebt(id) {
-            if (confirm('✓ تأكيد تسوية هذه المديونية؟')) {
+            if (confirm('✓ تأكيد التسوية؟')) {
                 debtsRef.child(id).update({ 
                     status: 'settled',
                     settledDate: getDateTime()
-                });
+                })
+                .then(() => showNotification('✅ تم التسوية'))
+                .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
             }
         }
 
-        // إشعار مؤقت
-        function showNotification(msg) {
-            const div = document.createElement('div');
-            div.style.cssText = `
-                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-                background: #27ae60; color: white; padding: 15px 30px;
-                border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-                z-index: 1000; font-weight: bold;
-            `;
-            div.textContent = msg;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
+        // ═══════════════════════════════════════════════════════
+        // عرض الأرصدة (مُصلح - يحسب كل عملة بمحفظتها)
+        // ═══════════════════════════════════════════════════════
+        function updateBalances(data) {
+            const balances = {
+                qnb: {}, muscat: {}, cash: {}, extra: {}
+            };
 
-        // تحديث الأرصدة والقائمة
-        transRef.on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            
-            // حساب الأرصدة
-            const balances = { qnb: 0, muscat: 0, extra: 0 };
-            
-            Object.values(data).forEach(t => {
-                const val = t.type === 'income' ? t.amount : -t.amount;
-                balances[t.wallet] += val;
+            if (data) {
+                Object.values(data).forEach(t => {
+                    if (t.status === 'cancelled') return; // لا تحسب الملغاة
+
+                    const curr = t.currency;
+                    if (!balances[t.wallet][curr]) balances[t.wallet][curr] = 0;
+
+                    if (t.type === 'income') {
+                        balances[t.wallet][curr] += t.amount;
+                    } else {
+                        balances[t.wallet][curr] -= t.amount;
+                    }
+                });
+            }
+
+            // عرض الأرصدة لكل محفظة
+            ['qnb', 'muscat', 'cash', 'extra'].forEach(wallet => {
+                const container = document.getElementById(wallet + '-balances');
+                const walletBalances = balances[wallet];
+
+                if (Object.keys(walletBalances).length === 0) {
+                    container.innerHTML = '<div class="currency">0.00</div>';
+                    return;
+                }
+
+                let html = '';
+                for (let [curr, amount] of Object.entries(walletBalances)) {
+                    const cls = amount < 0 ? 'currency negative' : 'currency';
+                    html += `<div class="${cls}">${amount.toFixed(2)} ${symbols[curr]}</div>`;
+                }
+                container.innerHTML = html;
             });
 
-            document.getElementById('qnb-bal').textContent = balances.qnb.toFixed(2);
-            document.getElementById('muscat-bal').textContent = balances.muscat.toFixed(2);
-            document.getElementById('extra-bal').textContent = balances.extra.toFixed(2);
+            return balances;
+        }
 
-            // عرض القائمة
+        // ═══════════════════════════════════════════════════════
+        // عرض تفاصيل المحفظة (Modal)
+        // ═══════════════════════════════════════════════════════
+        function showWalletDetails(wallet) {
+            transRef.once('value', snap => {
+                const all = snap.val() || {};
+                const walletTrans = Object.entries(all)
+                    .filter(([_, t]) => t.wallet === wallet && t.status !== 'cancelled')
+                    .sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+
+                document.getElementById('modal-title').textContent = 
+                    `${walletIcons[wallet]} تفاصيل محفظة ${walletNames[wallet]}`;
+
+                let html = '<div style="max-height: 400px; overflow-y: auto;">';
+
+                if (walletTrans.length === 0) {
+                    html += '<div class="empty">لا توجد عمليات في هذه المحفظة</div>';
+                } else {
+                    html += '<table style="width: 100%; border-collapse: collapse;">';
+                    html += '<tr style="background: #f0f0f0; font-weight: bold;">';
+                    html += '<td style="padding: 10px; border: 1px solid #ddd;">التاريخ</td>';
+                    html += '<td style="padding: 10px; border: 1px solid #ddd;">النوع</td>';
+                    html += '<td style="padding: 10px; border: 1px solid #ddd;">المبلغ</td>';
+                    html += '<td style="padding: 10px; border: 1px solid #ddd;">الوصف</td>';
+                    html += '</tr>';
+
+                    walletTrans.forEach(([id, t]) => {
+                        const color = t.type === 'income' ? '#27ae60' : '#e74c3c';
+                        const sign = t.type === 'income' ? '+' : '-';
+                        html += `<tr>`;
+                        html += `<td style="padding: 10px; border: 1px solid #eee; font-size: 0.85em;">${t.date}</td>`;
+                        html += `<td style="padding: 10px; border: 1px solid #eee; color: ${color}; font-weight: bold;">${t.type === 'income' ? 'دخل' : 'مصروف'}</td>`;
+                        html += `<td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">${sign}${t.amount.toFixed(2)} ${symbols[t.currency]}</td>`;
+                        html += `<td style="padding: 10px; border: 1px solid #eee; font-size: 0.9em;">${t.description}</td>`;
+                        html += `</tr>`;
+                    });
+                    html += '</table>';
+                }
+                html += '</div>';
+
+                document.getElementById('modal-body').innerHTML = html;
+                document.getElementById('wallet-modal').classList.add('active');
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('wallet-modal').classList.remove('active');
+        }
+
+        // إغلاق المودال بالنقر خارج المحتوى
+        document.getElementById('wallet-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // تحديث فوري - الاستماع للتغييرات
+        // ═══════════════════════════════════════════════════════
+        transRef.on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            const balances = updateBalances(data);
+
+            // عرض قائمة العمليات
             const list = document.getElementById('trans-list');
             const entries = Object.entries(data);
-            
+
             if (entries.length === 0) {
                 list.innerHTML = `
                     <h3 style="margin-bottom: 20px; color: #2c3e50;">📋 سجل العمليات</h3>
@@ -559,42 +920,59 @@
                 return;
             }
 
-            // ترتيب حسب التاريخ (الأحدث أولاً)
             entries.sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
             let html = '<h3 style="margin-bottom: 20px; color: #2c3e50;">📋 سجل العمليات</h3>';
-            
+
             entries.forEach(([id, t]) => {
-                const cls = t.type === 'income' ? 'income' : 'expense';
+                const isCancelled = t.status === 'cancelled';
+                const cls = isCancelled ? 'cancelled' : '';
+                const typeCls = t.transfer ? 'transfer' : (t.type === 'income' ? 'income' : 'expense');
                 const sign = t.type === 'income' ? '+' : '-';
-                const icon = t.type === 'income' ? '💵' : '💸';
-                
+                const icon = t.transfer ? '🔄' : (t.type === 'income' ? '💵' : '💸');
+                const badgeCls = isCancelled ? 'badge badge-cancelled' : 'badge';
+                const statusText = isCancelled ? '❌ ملغاة' : (t.transfer ? '🔄 تحويل' : t.currency);
+
+                let extraInfo = '';
+                if (t.transfer && t.transferTo) {
+                    extraInfo = `<span style="color: #9b59b6;">→ ${walletNames[t.transferTo]}</span>`;
+                } else if (t.transfer && t.transferFrom) {
+                    extraInfo = `<span style="color: #9b59b6;">← ${walletNames[t.transferFrom]}</span>`;
+                }
+
                 html += `
-                    <div class="list-item">
+                    <div class="list-item ${cls}">
                         <div style="flex: 1;">
                             <div style="font-size: 1.05em;">
-                                <strong>${icon} ${walletNames[t.wallet]}</strong> - ${t.description}
+                                <strong>${icon} ${walletNames[t.wallet]}</strong> ${extraInfo} - ${t.description}
                             </div>
-                            <div class="date-display">📅 ${t.date}</div>
+                            <div class="date-display">
+                                📅 ${t.date}
+                                ${isCancelled ? `<span style="color: #e74c3c;"> | ❌ تم الإلغاء: ${t.cancelledDate}</span>` : ''}
+                            </div>
                         </div>
-                        <div style="text-align: left; display: flex; align-items: center; gap: 10px;">
-                            <span class="${cls}">${sign}${t.amount.toFixed(2)} ${symbols[t.currency]}</span>
-                            <span class="badge">${t.currency}</span>
-                            <button class="delete-btn" onclick="deleteTrans('${id}')" title="حذف">🗑️</button>
+                        <div style="text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span class="${typeCls}">${sign}${t.amount.toFixed(2)} ${symbols[t.currency]}</span>
+                            <span class="${badgeCls}">${statusText}</span>
+                            ${!isCancelled ? 
+                                `<button class="cancel-btn" onclick="cancelTransaction('${id}')" title="إلغاء العملية">↩️ إلغاء</button>
+                                 <button class="action-btn" onclick="deleteTrans('${id}')" title="حذف">🗑️</button>`
+                                : `<button class="action-btn" onclick="deleteTrans('${id}')" title="حذف نهائي">🗑️</button>`
+                            }
                         </div>
                     </div>
                 `;
             });
-            
+
             list.innerHTML = html;
         });
 
-        // تحديث قائمة المديونيات
+        // تحديث المديونيات
         debtsRef.on('value', (snapshot) => {
             const data = snapshot.val() || {};
             const list = document.getElementById('debt-list');
             const entries = Object.entries(data);
-            
+
             if (entries.length === 0) {
                 list.innerHTML = `
                     <h3 style="margin-bottom: 20px; color: #2c3e50;">📋 سجل المديونيات</h3>
@@ -606,12 +984,12 @@
             entries.sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
 
             let html = '<h3 style="margin-bottom: 20px; color: #2c3e50;">📋 سجل المديونيات</h3>';
-            
+
             entries.forEach(([id, d]) => {
                 const cls = d.type === 'on-me' ? 'debt-on-me' : 'debt-on-them';
                 const txt = d.type === 'on-me' ? '🔴 عليا' : '🟢 ليا';
                 const color = d.type === 'on-me' ? '#e74c3c' : '#27ae60';
-                
+
                 html += `
                     <div class="list-item ${cls}">
                         <div style="flex: 1;">
@@ -621,21 +999,22 @@
                             <div style="font-size: 0.9em; color: #666; margin-top: 3px;">${d.description}</div>
                             <div class="date-display">📅 ${d.date}</div>
                         </div>
-                        <div style="text-align: left; display: flex; align-items: center; gap: 8px;">
+                        <div style="text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                             <span style="font-weight: bold; font-size: 1.1em;">
                                 ${d.amount.toFixed(2)} ${symbols[d.currency]}
                             </span>
                             <span class="badge">${d.currency}</span>
                             ${d.status === 'active' 
-                                ? `<button class="settle-btn" onclick="settleDebt('${id}')" title="تسوية">✓</button>
-                                   <button class="delete-btn" onclick="deleteDebt('${id}')" title="حذف">🗑️</button>`
-                                : '<span class="status-settled">✓ تم التسوية</span>'
+                                ? `<button class="settle-btn" onclick="settleDebt('${id}')" title="تسوية">✓ تسوية</button>
+                                   <button class="action-btn" onclick="deleteDebt('${id}')" title="حذف">🗑️</button>`
+                                : `<span class="status-settled">✓ تم التسوية</span>
+                                   <button class="action-btn" onclick="deleteDebt('${id}')" title="حذف">🗑️</button>`
                             }
                         </div>
                     </div>
                 `;
             });
-            
+
             list.innerHTML = html;
         });
     </script>
