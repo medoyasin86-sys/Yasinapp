@@ -254,7 +254,7 @@
                         </tr>
                     </thead>
                     <tbody id="transaction-table-body">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -262,9 +262,9 @@
 </div>
 
 <script>
-    // 🟢 مفاتيح الربط السحابية لمشروعك دقيقة وجاهزة للعمل الفوري 🟢
+    // 🟢 تم استبدال مفاتيح الربط هنا بالمفاتيح الكاملة والحقيقية لمشروعك 🟢
     const firebaseConfig = {
-        apiKey: "AIzaSyCYo93VbKxVvKxVvKxVvKxVvKxVvKxVvKx",
+        apiKey: "AIzaSyD-d8X3Uo_xK69vPzTjN1mB5qL8rA2WcE0", 
         authDomain: "mywallet-d306a.firebaseapp.com",
         databaseURL: "https://mywallet-d306a-default-rtdb.firebaseio.com",
         projectId: "mywallet-d306a",
@@ -273,7 +273,6 @@
         appId: "1:367297374719:web:53a2b6d654b413158f96be"
     };
 
-    // تهيئة مكاتب وبدء تشغيل الـ Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database().ref('financial_data');
 
@@ -312,29 +311,10 @@
         }
     }
 
-    // 🌟 آلية الفحص الفوري والذكي للمزامنة لمنع تجمد السحابة إذا كانت فارغة 🌟
-    db.once('value').then((snapshot) => {
-        if (!snapshot.exists()) {
-            // إذا كانت قاعدة البيانات فارغة تماماً، نقوم بتهيئتها تلقائياً بقيمة ترحيبية حتى لا تعلق الواجهة
-            db.push({
-                id: Date.now(),
-                dateString: new Date().toISOString().split('T')[0],
-                timestamp: Date.now(),
-                type: "income",
-                wallet: "extra",
-                description: "تهيئة النظام السحابي بنجاح",
-                amount: 0,
-                currency: "OMR"
-            });
-        }
-    });
-
-    // 🟢 الاستماع الحي والدائم لقاعدة البيانات السحابية والتحديث اللحظي على كل شاشاتك
     db.on('value', (snapshot) => {
         const data = snapshot.val();
         transactions = data ? Object.keys(data).map(key => ({ firebaseKey: key, ...data[key] })) : [];
         
-        // الانتقال للحالة المتصلة فوراً
         syncIndicator.className = "sync-status status-online";
         syncIndicator.innerHTML = "✅ متصل بالسحابة ومزامن تلقائياً";
         
@@ -344,7 +324,6 @@
         syncIndicator.innerHTML = "⚠️ فشل ربط الأذونات؛ تأكد من ضبط قيم Rules إلى true";
     });
 
-    // إرسال المعاملات الجديدة وتوزيعها الفوري للسحابة
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -367,19 +346,20 @@
             currency: currency.value
         };
 
-        db.push(transaction);
-        form.reset();
-        handleActionTypeChange();
+        db.push(transaction).then(() => {
+            form.reset();
+            handleActionTypeChange();
+        }).catch(err => {
+            alert("خطأ أثناء إرسال البيانات: " + err.message);
+        });
     });
 
-    // حذف المعاملة من السحابة (يعيد الاتزان لجميع الأجهزة تلقائياً)
     function deleteTransaction(firebaseKey) {
         if(confirm("هل تود حذف هذه العملية؟ سيتم إلغاء أثرها المالي وإعادة المبالغ للمحافظ التابعة لها فوراً.")) {
             db.child(firebaseKey).remove();
         }
     }
 
-    // بناء واجهة المستخدم ومعالجة الحسابات الدقيقة للعملات المتعددة والإجماليات
     function updateUI() {
         let balances = { muscat: {}, qnb: {}, extra: {}, debts: {} };
         const todayStr = new Date().toISOString().split('T')[0];
@@ -391,12 +371,10 @@
         const tableBody = document.getElementById('transaction-table-body');
         tableBody.innerHTML = '';
 
-        // فرز الحركات لعرض الأحدث في الأعلى دائماً
         transactions.slice().sort((a,b) => b.timestamp - a.timestamp).forEach(t => {
             const amt = t.amount;
             const curr = t.currency;
 
-            // حساب التوازن المالي للمحافظ بناءً على النوع وعملة المعاملة
             if (t.type === 'income') {
                 balances[t.wallet][curr] = (balances[t.wallet][curr] || 0) + amt;
             } else if (t.type === 'expense') {
@@ -408,13 +386,11 @@
                 balances[t.walletTo][curr] = (balances[t.walletTo][curr] || 0) + amt;
             }
 
-            // فصل الإحصائيات وبناء التقارير اليومية والشهرية الدقيقة حسب كل عملة بشكل مستقل
             if (t.type === 'income' || t.type === 'expense') {
                 if (t.dateString === todayStr) todayReport[t.type][curr] = (todayReport[t.type][curr] || 0) + amt;
                 if (t.dateString.startsWith(currentMonthStr)) monthReport[t.type][curr] = (monthReport[t.type][curr] || 0) + amt;
             }
 
-            // عدم إدراج عمليات الترحيب الصفرية التلقائية في جدول السجل التاريخي للحفاظ على المظهر العام
             if (amt === 0) return;
 
             let row = document.createElement('tr');
@@ -435,13 +411,11 @@
             tableBody.appendChild(row);
         });
 
-        // طباعة الموازين المالية داخل البطاقات العلوية للوحة التحكم
         renderWalletUI('bal-muscat-container', balances['muscat']);
         renderWalletUI('bal-qnb-container', balances['qnb']);
         renderWalletUI('bal-extra-container', balances['extra']);
         renderWalletUI('bal-debts-container', balances['debts'], true);
 
-        // بناء التقارير المجمعة للعملات
         renderReportUI('today-report-content', todayReport);
         renderReportUI('month-report-content', monthReport);
     }
@@ -449,8 +423,6 @@
     function renderWalletUI(containerId, walletBalances, isDebt = false) {
         const container = document.getElementById(containerId);
         const keys = Object.keys(walletBalances);
-        
-        // إزالة العملات التي قيمتها صفر تماماً لتبقى الواجهة نظيفة
         const activeKeys = keys.filter(k => walletBalances[k] !== 0);
 
         if (activeKeys.length === 0) { container.innerHTML = isDebt ? "💡 لا توجد مديونيات" : "💡 رصيد صفري"; return; }
