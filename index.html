@@ -3,245 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المساعد المحاسبي الاحترافي</title>
+    <title>النظام المحاسبي الفاخر</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; }
-        /* ألوان مخصصة ومميزة جداً لكل عملة لسهولة التمييز البصري الخاطف */
-        .badge-egp { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-        .badge-usd { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
-        .badge-omr { background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #f8fafc;
+        }
+        /* تصميم فخم ومستقل للكروت والعملات */
+        .premium-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        .premium-card {
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: #ffffff;
+        }
+        .badge-egp { background: linear-gradient(135deg, #fff5f5, #fed7d7); color: #991b1b; border: 1px solid #fca5a5; }
+        .badge-usd { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #166534; border: 1px solid #86efac; }
+        .badge-omr { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); color: #075985; border: 1px solid #7dd3fc; }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen">
+<body class="text-slate-800 antialiased min-h-screen pb-12">
 
-    <header class="bg-gradient-to-r from-teal-800 via-teal-700 to-cyan-800 text-white shadow-xl sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <h1 class="text-2xl font-black tracking-wide flex items-center gap-2">
-                <span>💼</span> النظام المحاسبي الرقمي الموحد
-            </h1>
-            <div id="live-clock" class="text-md bg-teal-900/60 shadow-inner px-4 py-1.5 rounded-full font-mono font-bold tracking-wider border border-teal-500/30"></div>
+    <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-amber-500 to-emerald-500 p-2.5 rounded-xl shadow-md">
+                    <span class="text-xl">🏛️</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">المنصة المحاسبية الاستراتيجية</h1>
+                    <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5">الجيل القادم • إدارة الأرصدة المحلية</p>
+                </div>
+            </div>
+            <div id="live-clock" class="text-sm bg-slate-800/80 shadow-inner px-5 py-2 rounded-xl font-mono font-bold tracking-wider border border-slate-700 text-amber-400"></div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 space-y-10">
+    <main class="container mx-auto px-4 mt-10 space-y-12 max-w-7xl">
 
-        <section>
-            <h2 class="text-xl font-black text-slate-700 mb-5 border-r-4 border-teal-600 pr-3 flex items-center gap-2">
-                <span>📊</span> أرصدة الحسابات الحالية (محدثة لحظياً)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60 transform transition hover:scale-[1.01]">
-                    <h3 class="text-md font-black text-blue-700 mb-4 pb-2 border-b border-blue-100 flex items-center gap-2 text-lg">
+        <section class="premium-card premium-shadow rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 pointer-events-none opacity-50"></div>
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 relative z-10">
+                <span class="text-2xl">📊</span>
+                <div>
+                    <h2 class="text-xl font-black text-slate-800">الموقف المالي الموحد</h2>
+                    <p class="text-xs text-slate-400 font-bold">استعراض الأرصدة الحالية الفورية مقسمة حسب طبيعة الحساب</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+                <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
+                    <h3 class="text-sm font-black text-blue-800 mb-4 flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 w-max">
                         🏦 الحسابات البنكية (Banks)
                     </h3>
-                    <div class="space-y-4" id="wallets-bank">
-                        </div>
+                    <div class="space-y-4" id="wallets-bank"></div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60 transform transition hover:scale-[1.01]">
-                    <h3 class="text-md font-black text-emerald-700 mb-4 pb-2 border-b border-emerald-100 flex items-center gap-2 text-lg">
+                <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
+                    <h3 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 w-max">
                         💵 النقدي والكاش (Cash)
                     </h3>
-                    <div class="space-y-4" id="wallets-cash">
-                        </div>
+                    <div class="space-y-4" id="wallets-cash"></div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60 transform transition hover:scale-[1.01]">
-                    <h3 class="text-md font-black text-purple-700 mb-4 pb-2 border-b border-purple-100 flex items-center gap-2 text-lg">
+                <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
+                    <h3 class="text-sm font-black text-purple-800 mb-4 flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-100 w-max">
                         🤝 التزامات، مستحقات وجمعيات
                     </h3>
-                    <div class="space-y-4" id="wallets-others">
-                        </div>
+                    <div class="space-y-4" id="wallets-others"></div>
                 </div>
-
             </div>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-lg font-black text-slate-700 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
-                        <span>📝</span> تسجيل عملية جديدة (إيداع / سحب)
-                    </h2>
-                    <form id="transaction-form" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">نوع العملية</label>
-                                <select id="tx-type" class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50 focus:ring-2 focus:ring-teal-500 outline-none transition-all">
-                                    <option value="deposit" class="text-emerald-600 font-bold">إيداع (+)</option>
-                                    <option value="withdraw" class="text-rose-600 font-bold">سحب (-)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">المحفظة المستهدفة</label>
-                                <select id="tx-wallet" class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50 focus:ring-2 focus:ring-teal-500 outline-none transition-all"></select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ المطلوب</label>
-                                <input type="number" id="tx-amount" step="0.01" required class="w-full p-2.5 border border-slate-300 rounded-xl font-black text-lg bg-slate-50 focus:ring-2 focus:ring-teal-500 outline-none transition-all placeholder-slate-400" placeholder="0.00">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">العملة المعتمدة</label>
-                                <select id="tx-currency" class="w-full p-2.5 border border-slate-300 rounded-xl font-black bg-slate-50 focus:ring-2 focus:ring-teal-500 outline-none transition-all">
-                                    <option value="EGP">جنيه مصري (EGP)</option>
-                                    <option value="USD">دولار أمريكي (USD)</option>
-                                    <option value="OMR">ريال عماني (OMR)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">التاريخ والوقت</label>
-                                <input type="datetime-local" id="tx-date" required class="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 font-bold text-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">البيان / الوصف</label>
-                                <input type="text" id="tx-desc" required class="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 focus:ring-2 focus:ring-teal-500 outline-none transition-all placeholder-slate-400" placeholder="مثال: الراتب الأساسي، دفع الفواتير...">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-black py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wide">
-                            💾 حفظ العملية وتحديث الحسابات
-                        </button>
-                    </form>
+            <div class="premium-card premium-shadow rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <span class="text-2xl">📝</span>
+                    <div>
+                        <h2 class="text-lg font-black text-slate-800">الحركات التشغيلية</h2>
+                        <p class="text-xs text-slate-400 font-bold">تسجيل عمليات الإيداع والسحب المباشرة في ثوانٍ</p>
+                    </div>
                 </div>
+                <form id="transaction-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">نوع الحركة</label>
+                            <select id="tx-type" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all">
+                                <option value="deposit" class="text-emerald-600 font-bold">إيداع نقد (+)</option>
+                                <option value="withdraw" class="text-rose-600 font-bold">سحب نقد (-)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">الحساب المستهدف</label>
+                            <select id="tx-wallet" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">المبلغ المالي</label>
+                            <input type="number" id="tx-amount" step="0.01" required class="w-full p-3 border border-slate-200 rounded-xl font-black text-xl bg-slate-50 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">العملة</label>
+                            <select id="tx-currency" class="w-full p-3 border border-slate-200 rounded-xl font-black bg-slate-50 text-slate-700 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all">
+                                <option value="EGP">EGP - جنيه مصري</option>
+                                <option value="USD">USD - دولار أمريكي</option>
+                                <option value="OMR">OMR - ريال عماني</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">التوقيت</label>
+                            <input type="datetime-local" id="tx-date" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold text-slate-700 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">البيان الاستدلالي</label>
+                            <input type="text" id="tx-desc" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all placeholder-slate-400" placeholder="الوصف أو الغرض من العملية">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-xl active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wider text-sm">
+                        🔱 إدراج الحركة وتحديث النظام
+                    </button>
+                </form>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60 flex flex-col justify-between">
+            <div class="premium-card premium-shadow rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
                 <div>
-                    <h2 class="text-lg font-black text-slate-700 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
-                        <span>🔄</span> تحويل ومناقلة مالية بين المحافظ
-                    </h2>
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                        <span class="text-2xl">🔄</span>
+                        <div>
+                            <h2 class="text-lg font-black text-slate-800">التسويات والمناقلات بين المحافظ</h2>
+                            <p class="text-xs text-slate-400 font-bold">نقل السيولة بين الحسابات المختلفة بنفس العملة بشكل آمن</p>
+                        </div>
+                    </div>
                     <form id="transfer-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">من محفظة (المصدر)</label>
-                                <select id="tf-from" class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"></select>
+                                <label class="block text-xs font-black text-slate-500 mb-1.5">من وعاء (المصدر)</label>
+                                <select id="tf-from" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all"></select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">إلى محفظة (الوجهة)</label>
-                                <select id="tf-to" class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"></select>
+                                <label class="block text-xs font-black text-slate-500 mb-1.5">إلى وعاء (الوجهة)</label>
+                                <select id="tf-to" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all"></select>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ المراد تحويله</label>
-                                <input type="number" id="tf-amount" step="0.01" required class="w-full p-2.5 border border-slate-300 rounded-xl font-black text-lg bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder-slate-400" placeholder="0.00">
+                                <label class="block text-xs font-black text-slate-500 mb-1.5">حجم المبلغ المحول</label>
+                                <input type="number" id="tf-amount" step="0.01" required class="w-full p-3 border border-slate-200 rounded-xl font-black text-xl bg-slate-50 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all" placeholder="0.00">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-1">العملة</label>
-                                <select id="tf-currency" class="w-full p-2.5 border border-slate-300 rounded-xl font-black bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                                    <option value="EGP">جنيه مصري (EGP)</option>
-                                    <option value="USD">دولار أمريكي (USD)</option>
-                                    <option value="OMR">ريال عماني (OMR)</option>
+                                <label class="block text-xs font-black text-slate-500 mb-1.5">العملة المستخدمة</label>
+                                <select id="tf-currency" class="w-full p-3 border border-slate-200 rounded-xl font-black bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all">
+                                    <option value="EGP">EGP - جنيه مصري</option>
+                                    <option value="USD">USD - دولار أمريكي</option>
+                                    <option value="OMR">OMR - ريال عماني</option>
                                 </select>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">تاريخ ووقت التحويل</label>
-                            <input type="datetime-local" id="tf-date" required class="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <label class="block text-xs font-black text-slate-500 mb-1.5">تاريخ المعاملة</label>
+                            <input type="datetime-local" id="tf-date" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all">
                         </div>
 
-                        <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-black py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wide">
-                            🚀 تأكيد عملية النقل والتحويل فوراُ
+                        <button type="submit" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-xl active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wider text-sm">
+                            🚀 تفعيل المناقلة الفورية للسيولة
                         </button>
                     </form>
                 </div>
             </div>
         </section>
 
-        <section class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/60">
+        <section class="premium-card premium-shadow rounded-3xl p-6 sm:p-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                <h2 class="text-xl font-black text-slate-700 flex items-center gap-2">
-                    <span>📈</span> تقارير وملخصات الإيرادات والمصروفات
-                </h2>
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📈</span>
+                    <div>
+                        <h2 class="text-xl font-black text-slate-800">مركز التقارير والتدفقات المالية</h2>
+                        <p class="text-xs text-slate-400 font-bold">مراقبة صافي المدخلات والمخرجات لليوم وللشهر الحالي بدقة</p>
+                    </div>
+                </div>
                 <div class="flex gap-2 w-full sm:w-auto">
-                    <input type="date" id="summary-date" class="p-2 border border-slate-300 rounded-xl font-bold bg-slate-50 text-sm outline-none focus:ring-2 focus:ring-slate-400">
-                    <button onclick="calculatePeriodSummaries()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2 rounded-xl border border-slate-300 transition-colors active:scale-[0.97] cursor-pointer">
-                        🔄 تحديث الفلترة
+                    <input type="date" id="summary-date" class="p-2.5 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 text-sm outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white">
+                    <button onclick="calculatePeriodSummaries()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-[0.97] cursor-pointer">
+                        🔄 تحديث النطاق
                     </button>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 shadow-inner">
-                    <h3 class="text-md font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
-                        <span class="flex items-center gap-1">📅 ملخص اليوم المحدد</span>
-                        <span id="label-day" class="text-xs bg-teal-100 text-teal-800 px-3 py-1 rounded-full font-bold"></span>
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/60 shadow-inner">
+                    <h3 class="text-sm font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
+                        <span class="flex items-center gap-1">📅 ملخص اليوم المستهدف</span>
+                        <span id="label-day" class="text-xs bg-slate-200 text-slate-800 px-3 py-1 rounded-full font-black"></span>
                     </h3>
                     <div class="space-y-3" id="day-summary-results"></div>
                 </div>
 
-                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 shadow-inner">
-                    <h3 class="text-md font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
-                        <span class="flex items-center gap-1">🗓️ ملخص الشهر الحالي كاملاً</span>
-                        <span id="label-month" class="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-bold"></span>
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/60 shadow-inner">
+                    <h3 class="text-sm font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
+                        <span class="flex items-center gap-1">🗓️ التدفق التراكمي للشهر الحالي</span>
+                        <span id="label-month" class="text-xs bg-slate-200 text-slate-800 px-3 py-1 rounded-full font-black"></span>
                     </h3>
                     <div class="space-y-3" id="month-summary-results"></div>
                 </div>
             </div>
         </section>
 
-        <section class="bg-white rounded-2xl shadow-md border border-slate-200/60 overflow-hidden">
-            <div class="p-6 border-b border-slate-100">
-                <h2 class="text-xl font-black text-slate-700 flex items-center gap-2">
-                    <span>📜</span> سجل العمليات التاريخي والتحكم الكامل
-                </h2>
+        <section class="premium-card premium-shadow rounded-3xl overflow-hidden">
+            <div class="p-6 sm:p-8 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+                <span class="text-2xl">📜</span>
+                <div>
+                    <h2 class="text-xl font-black text-slate-800">دفتر الأستاذ العام / سجل التدقيق المالي الكامل</h2>
+                    <p class="text-xs text-slate-400 font-bold">مراجعة تاريخية شاملة لجميع الحركات القييدية مع صلاحيات التعديل والحذف الجذري</p>
+                </div>
             </div>
             
             <div class="overflow-x-auto w-full">
-                <table class="w-full text-right border-collapse min-w-[900px]">
+                <table class="w-full text-right border-collapse min-w-[950px]">
                     <thead>
-                        <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs font-black uppercase tracking-wider">
-                            <th class="p-4">التاريخ والوقت</th>
-                            <th class="p-4">نوع الحركة</th>
-                            <th class="p-4">الحساب / المحفظة</th>
-                            <th class="p-4">البيان والوصف</th>
-                            <th class="p-4">المبلغ</th>
-                            <th class="p-4">العملة</th>
-                            <th class="p-4 text-center">إجراءات التحكم</th>
+                        <tr class="bg-slate-100/80 border-b border-slate-200 text-slate-500 text-xs font-black uppercase tracking-wider">
+                            <th class="p-4">طابع التوقيت</th>
+                            <th class="p-4">نوع العملية</th>
+                            <th class="p-4">الحساب القيادي</th>
+                            <th class="p-4">البيان التفصيلي</th>
+                            <th class="p-4">القيمة المالية</th>
+                            <th class="p-4">وحدة العملة</th>
+                            <th class="p-4 text-center">الإجراءات التعديلية</th>
                         </tr>
                     </thead>
-                    <tbody id="transactions-logs-tbody" class="text-sm divide-y divide-slate-100 font-medium">
+                    <tbody id="transactions-logs-tbody" class="text-sm divide-y divide-slate-100 font-semibold text-slate-700">
                         </tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl m-4 space-y-4 border border-slate-200 transform scale-95 transition-transform duration-300">
-            <h3 class="text-lg font-black text-slate-800 border-b pb-3 flex items-center gap-1">
-                <span>✏️</span> تعديل بيانات العملية ومعالجة الفوارق
-            </h3>
+    <div id="edit-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-2xl m-4 space-y-5 border border-slate-100 transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-2 border-b pb-3">
+                <span class="text-xl">✏️</span>
+                <div>
+                    <h3 class="text-lg font-black text-slate-800">تسوية وتعديل القيد المالي</h3>
+                    <p class="text-[10px] text-slate-400 font-bold">سيقوم النظام بإعادة ضبط الأرصدة المتأثرة تلقائياً</p>
+                </div>
+            </div>
             <form id="edit-form" class="space-y-4">
                 <input type="hidden" id="edit-tx-id">
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">المحفظة (الحساب)</label>
-                    <select id="edit-tx-wallet" class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50 outline-none focus:ring-2 focus:ring-teal-500"></select>
+                    <label class="block text-xs font-black text-slate-500 mb-1">المحفظة المستهدفة</label>
+                    <select id="edit-tx-wallet" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800"></select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ الجديد</label>
-                        <input type="number" id="edit-tx-amount" step="0.01" required class="w-full p-2.5 border border-slate-300 rounded-xl font-black text-lg bg-slate-50 outline-none focus:ring-2 focus:ring-teal-500">
+                        <label class="block text-xs font-black text-slate-500 mb-1">المبلغ المالي المحدث</label>
+                        <input type="number" id="edit-tx-amount" step="0.01" required class="w-full p-3 border border-slate-200 rounded-xl font-black text-xl bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">العملة</label>
-                        <select id="edit-tx-currency" class="w-full p-2.5 border border-slate-300 rounded-xl font-black bg-slate-50 outline-none focus:ring-2 focus:ring-teal-500">
+                        <label class="block text-xs font-black text-slate-500 mb-1">نوع العملة</label>
+                        <select id="edit-tx-currency" class="w-full p-3 border border-slate-200 rounded-xl font-black bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800">
                             <option value="EGP">EGP</option>
                             <option value="USD">USD</option>
                             <option value="OMR">OMR</option>
@@ -250,21 +283,21 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">التاريخ والوقت الجديد</label>
-                    <input type="datetime-local" id="edit-tx-date" required class="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-teal-500">
+                    <label class="block text-xs font-black text-slate-500 mb-1">التاريخ والوقت الجديد</label>
+                    <input type="datetime-local" id="edit-tx-date" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-slate-800">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">البيان الجديد</label>
-                    <input type="text" id="edit-tx-desc" required class="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-teal-500">
+                    <label class="block text-xs font-black text-slate-500 mb-1">البيان المعدل</label>
+                    <input type="text" id="edit-tx-desc" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800">
                 </div>
 
                 <div class="flex gap-3 pt-3 justify-end">
-                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 text-sm font-bold bg-slate-100 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer active:scale-[0.97]">
-                        إلغاء الأمر
+                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 text-xs font-bold bg-slate-100 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer active:scale-[0.97]">
+                        إلغاء التسوية
                     </button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-black bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white rounded-xl shadow-md transition-all cursor-pointer active:scale-[0.97]">
-                        حفظ وتحديث الفوارق
+                    <button type="submit" class="px-5 py-2.5 text-xs font-black bg-slate-900 text-white rounded-xl shadow-md hover:bg-slate-800 transition-all cursor-pointer active:scale-[0.97]">
+                        تطبيق التعديل وإرجاع الفوارق
                     </button>
                 </div>
             </form>
@@ -285,17 +318,12 @@
 
         const CURRENCIES = ['EGP', 'USD', 'OMR'];
 
-        let appState = {
-            balances: {},
-            transactions: []
-        };
+        let appState = { balances: {}, transactions: [] };
 
         function initializeDefaultBalances() {
             for (let walletKey in WALLET_CONFIG) {
                 appState.balances[walletKey] = {};
-                CURRENCIES.forEach(curr => {
-                    appState.balances[walletKey][curr] = 0;
-                });
+                CURRENCIES.forEach(curr => { appState.balances[walletKey][curr] = 0; });
             }
         }
 
@@ -305,21 +333,13 @@
                 try {
                     appState = JSON.parse(stored);
                     for (let walletKey in WALLET_CONFIG) {
-                        if (!appState.balances[walletKey]) {
-                            appState.balances[walletKey] = {};
-                        }
+                        if (!appState.balances[walletKey]) appState.balances[walletKey] = {};
                         CURRENCIES.forEach(curr => {
-                            if (appState.balances[walletKey][curr] === undefined) {
-                                appState.balances[walletKey][curr] = 0;
-                            }
+                            if (appState.balances[walletKey][curr] === undefined) appState.balances[walletKey][curr] = 0;
                         });
                     }
-                } catch (e) {
-                    initializeDefaultBalances();
-                }
-            } else {
-                initializeDefaultBalances();
-            }
+                } catch (e) { initializeDefaultBalances(); }
+            } else { initializeDefaultBalances(); }
         }
 
         function saveDataToStorage() {
@@ -332,20 +352,12 @@
 
             appState.transactions.forEach(tx => {
                 if (tx.type === 'deposit') {
-                    if (appState.balances[tx.wallet] && appState.balances[tx.wallet][tx.currency] !== undefined) {
-                        appState.balances[tx.wallet][tx.currency] += parseFloat(tx.amount);
-                    }
+                    if (appState.balances[tx.wallet]?.[tx.currency] !== undefined) appState.balances[tx.wallet][tx.currency] += parseFloat(tx.amount);
                 } else if (tx.type === 'withdraw') {
-                    if (appState.balances[tx.wallet] && appState.balances[tx.wallet][tx.currency] !== undefined) {
-                        appState.balances[tx.wallet][tx.currency] -= parseFloat(tx.amount);
-                    }
+                    if (appState.balances[tx.wallet]?.[tx.currency] !== undefined) appState.balances[tx.wallet][tx.currency] -= parseFloat(tx.amount);
                 } else if (tx.type === 'transfer') {
-                    if (appState.balances[tx.fromWallet] && appState.balances[tx.fromWallet][tx.currency] !== undefined) {
-                        appState.balances[tx.fromWallet][tx.currency] -= parseFloat(tx.amount);
-                    }
-                    if (appState.balances[tx.toWallet] && appState.balances[tx.toWallet][tx.currency] !== undefined) {
-                        appState.balances[tx.toWallet][tx.currency] += parseFloat(tx.amount);
-                    }
+                    if (appState.balances[tx.fromWallet]?.[tx.currency] !== undefined) appState.balances[tx.fromWallet][tx.currency] -= parseFloat(tx.amount);
+                    if (appState.balances[tx.toWallet]?.[tx.currency] !== undefined) appState.balances[tx.toWallet][tx.currency] += parseFloat(tx.amount);
                 }
             });
 
@@ -384,9 +396,9 @@
                     let colorClass = bal >= 0 ? 'text-slate-800' : 'text-rose-600 font-black';
                     let badgeClass = curr === 'EGP' ? 'badge-egp' : (curr === 'USD' ? 'badge-usd' : 'badge-omr');
                     return `
-                        <div class="flex items-center justify-between gap-2 p-1.5 rounded-lg ${badgeClass} shadow-sm px-3">
-                            <span class="text-xs font-black tracking-wider">${curr}</span>
-                            <span class="font-mono font-black text-md ${colorClass}">${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <div class="flex items-center justify-between p-2 rounded-xl ${badgeClass} shadow-sm">
+                            <span class="text-[10px] font-black tracking-wider uppercase">${curr}</span>
+                            <span class="font-mono font-black text-sm ${colorClass}">${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                     `;
                 }).join('');
@@ -394,8 +406,8 @@
                 const targetContainerId = config.group === 'bank' ? 'wallets-bank' : (config.group === 'cash' ? 'wallets-cash' : 'wallets-others');
                 
                 const elementHtml = `
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
-                        <span class="text-xs font-black text-slate-700 bg-slate-200/80 px-2.5 py-1 rounded-md w-max border border-slate-300/40">${config.name}</span>
+                    <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col gap-3">
+                        <span class="text-[11px] font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-lg w-max border border-slate-200">${config.name}</span>
                         <div class="grid grid-cols-1 gap-2">${balanceStrings}</div>
                     </div>
                 `;
@@ -413,32 +425,28 @@
             const displayList = [...appState.transactions].reverse();
 
             if (displayList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-xs font-bold text-slate-400">لا توجد حركات مالية مسجلة حالياً في النظام.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-xs font-bold text-slate-400">لا توجد سجلات قييدية معالجة حالياً.</td></tr>`;
                 return;
             }
 
             displayList.forEach(tx => {
-                let typeBadge = '';
-                let detailsText = tx.desc;
-                let directionSign = '';
-                let rowBg = '';
-                let amountColor = '';
+                let typeBadge = '', detailsText = tx.desc, directionSign = '', rowBg = '', amountColor = '';
 
                 if (tx.type === 'deposit') {
-                    typeBadge = `<span class="bg-emerald-100 border border-emerald-300 text-emerald-800 px-3 py-1 rounded-full text-xs font-black shadow-sm">إيداع (+)</span>`;
+                    typeBadge = `<span class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-lg text-[11px] font-black">قيد إيداع (+)</span>`;
                     directionSign = '+';
-                    rowBg = 'hover:bg-emerald-50/40';
+                    rowBg = 'hover:bg-slate-50';
                     amountColor = 'text-emerald-600 font-black';
                 } else if (tx.type === 'withdraw') {
-                    typeBadge = `<span class="bg-rose-100 border border-rose-300 text-rose-800 px-3 py-1 rounded-full text-xs font-black shadow-sm">سحب (-)</span>`;
+                    typeBadge = `<span class="bg-rose-50 border border-rose-200 text-rose-800 px-2.5 py-1 rounded-lg text-[11px] font-black">قيد سحب (-)</span>`;
                     directionSign = '-';
-                    rowBg = 'hover:bg-rose-50/40';
+                    rowBg = 'hover:bg-slate-50';
                     amountColor = 'text-rose-600 font-black';
                 } else if (tx.type === 'transfer') {
-                    typeBadge = `<span class="bg-indigo-100 border border-indigo-300 text-indigo-800 px-3 py-1 rounded-full text-xs font-black shadow-sm">مناقلة 🔄</span>`;
+                    typeBadge = `<span class="bg-indigo-50 border border-indigo-200 text-indigo-800 px-2.5 py-1 rounded-lg text-[11px] font-black">تحويل وعاء 🔄</span>`;
                     detailsText = `من [${WALLET_CONFIG[tx.fromWallet]?.name}] ⬅️ إلى [${WALLET_CONFIG[tx.toWallet]?.name}] | ${tx.desc}`;
                     directionSign = '🔄';
-                    rowBg = 'hover:bg-indigo-50/40';
+                    rowBg = 'hover:bg-slate-50';
                     amountColor = 'text-indigo-600 font-black';
                 }
 
@@ -447,15 +455,15 @@
 
                 const trHtml = `
                     <tr class="${rowBg} transition-colors border-b border-slate-100">
-                        <td class="p-4 text-xs font-bold text-slate-500 font-mono">${formattedDate}</td>
+                        <td class="p-4 text-xs font-bold text-slate-400 font-mono">${formattedDate}</td>
                         <td class="p-4">${typeBadge}</td>
-                        <td class="p-4 text-xs font-black text-slate-700">${tx.type === 'transfer' ? 'تحويل أوعية' : (WALLET_CONFIG[tx.wallet]?.name || 'غير معروف')}</td>
-                        <td class="p-4 text-xs font-bold text-slate-600 max-w-sm truncate" title="${detailsText}">${detailsText}</td>
-                        <td class="p-4 font-mono text-lg ${amountColor}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-black ${currBadgeClass}">${tx.currency}</span></td>
-                        <td class="p-4 text-center space-x-1 space-x-reverse flex items-center justify-center gap-1">
-                            ${tx.type !== 'transfer' ? `<button onclick="openEditModal('${tx.id}')" class="text-teal-700 hover:text-white bg-teal-50 border border-teal-300 hover:bg-teal-600 px-3 py-1.5 rounded-lg text-xs font-black transition-all shadow-sm active:scale-95 cursor-pointer">تعديل</button>` : '<span class="text-xs text-slate-400 font-bold">-</span>'}
-                            <button onclick="deleteTransaction('${tx.id}')" class="text-rose-700 hover:text-white bg-rose-50 border border-rose-300 hover:bg-rose-600 px-3 py-1.5 rounded-lg text-xs font-black transition-all shadow-sm active:scale-95 cursor-pointer">حذف</button>
+                        <td class="p-4 text-xs font-black text-slate-800">${tx.type === 'transfer' ? 'تسوية بين المحافظ' : (WALLET_CONFIG[tx.wallet]?.name || 'غير معروف')}</td>
+                        <td class="p-4 text-xs font-bold text-slate-500 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
+                        <td class="p-4 font-mono text-base ${amountColor}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded text-[11px] font-black ${currBadgeClass}">${tx.currency}</span></td>
+                        <td class="p-4 text-center flex items-center justify-center gap-2">
+                            ${tx.type !== 'transfer' ? `<button onclick="openEditModal('${tx.id}')" class="text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-300 bg-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer">تعديل</button>` : '<span class="text-slate-400 font-bold text-xs">-</span>'}
+                            <button onclick="deleteTransaction('${tx.id}')" class="text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200 bg-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer">حذف</button>
                         </td>
                     </tr>
                 `;
@@ -467,16 +475,10 @@
             const filterDateVal = document.getElementById('summary-date').value;
             const targetDate = filterDateVal ? new Date(filterDateVal) : new Date();
 
-            const targetYear = targetDate.getFullYear();
-            const targetMonth = targetDate.getMonth();
-            const targetDay = targetDate.getDate();
-
             document.getElementById('label-day').innerText = targetDate.toLocaleDateString('ar-EG', { year:'numeric', month:'short', day:'numeric' });
             document.getElementById('label-month').innerText = targetDate.toLocaleDateString('ar-EG', { year:'numeric', month:'long' });
 
-            let daySummary = { deposit: {}, withdraw: {} };
-            let monthSummary = { deposit: {}, withdraw: {} };
-
+            let daySummary = { deposit: {}, withdraw: {} }, monthSummary = { deposit: {}, withdraw: {} };
             CURRENCIES.forEach(c => {
                 daySummary.deposit[c] = 0; daySummary.withdraw[c] = 0;
                 monthSummary.deposit[c] = 0; monthSummary.withdraw[c] = 0;
@@ -484,54 +486,45 @@
 
             appState.transactions.forEach(tx => {
                 const txDate = new Date(tx.date);
-                const isSameYear = txDate.getFullYear() === targetYear;
-                const isSameMonth = txDate.getMonth() === targetMonth;
-                const isSameDay = txDate.getDate() === targetDay;
-
-                if (isSameYear && isSameMonth && isSameDay) {
-                    if (tx.type === 'deposit') daySummary.deposit[tx.currency] += tx.amount;
-                    if (tx.type === 'withdraw') daySummary.withdraw[tx.currency] += tx.amount;
-                }
-
-                if (isSameYear && isSameMonth) {
+                if (txDate.getFullYear() === targetDate.getFullYear() && txDate.getMonth() === targetDate.getMonth()) {
+                    if (txDate.getDate() === targetDate.getDate()) {
+                        if (tx.type === 'deposit') daySummary.deposit[tx.currency] += tx.amount;
+                        if (tx.type === 'withdraw') daySummary.withdraw[tx.currency] += tx.amount;
+                    }
                     if (tx.type === 'deposit') monthSummary.deposit[tx.currency] += tx.amount;
                     if (tx.type === 'withdraw') monthSummary.withdraw[tx.currency] += tx.amount;
                 }
             });
 
-            // ملخص يومي منسق وبأرقام واضحة
             let dayHtml = '';
             CURRENCIES.forEach(c => {
                 if(daySummary.deposit[c] > 0 || daySummary.withdraw[c] > 0) {
-                    let cClass = c === 'EGP' ? 'badge-egp' : (c === 'USD' ? 'badge-usd' : 'badge-omr');
                     dayHtml += `
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-white border border-slate-200 rounded-xl gap-2 shadow-sm">
-                            <span class="px-2.5 py-0.5 rounded text-xs font-black ${cClass}">${c}</span>
-                            <div class="flex gap-4 font-mono font-black text-md">
-                                <span class="text-emerald-600">📈 +${daySummary.deposit[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
-                                <span class="text-rose-600">📉 -${daySummary.withdraw[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <div class="flex justify-between items-center p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
+                            <span class="px-2.5 py-0.5 rounded text-[11px] font-black ${c==='EGP'?'badge-egp':(c==='USD'?'badge-usd':'badge-omr')}">${c}</span>
+                            <div class="flex gap-4 font-mono font-black text-sm">
+                                <span class="text-emerald-600">📥 +${daySummary.deposit[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                                <span class="text-rose-600">📤 -${daySummary.withdraw[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
                             </div>
                         </div>`;
                 }
             });
-            document.getElementById('day-summary-results').innerHTML = dayHtml || '<p class="text-xs font-bold text-slate-400 text-center py-4">لا توجد حركات مالية في هذا اليوم.</p>';
+            document.getElementById('day-summary-results').innerHTML = dayHtml || '<p class="text-xs font-bold text-slate-400 text-center py-4">لا توجد حركات تدفق في هذا التاريخ.</p>';
 
-            // ملخص شهري منسق وبأرقام واضحة
             let monthHtml = '';
             CURRENCIES.forEach(c => {
                 if(monthSummary.deposit[c] > 0 || monthSummary.withdraw[c] > 0) {
-                    let cClass = c === 'EGP' ? 'badge-egp' : (c === 'USD' ? 'badge-usd' : 'badge-omr');
                     monthHtml += `
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-white border border-slate-200 rounded-xl gap-2 shadow-sm">
-                            <span class="px-2.5 py-0.5 rounded text-xs font-black ${cClass}">${c}</span>
-                            <div class="flex gap-4 font-mono font-black text-md">
-                                <span class="text-emerald-600">📈 +${monthSummary.deposit[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
-                                <span class="text-rose-600">📉 -${monthSummary.withdraw[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <div class="flex justify-between items-center p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
+                            <span class="px-2.5 py-0.5 rounded text-[11px] font-black ${c==='EGP'?'badge-egp':(c==='USD'?'badge-usd':'badge-omr')}">${c}</span>
+                            <div class="flex gap-4 font-mono font-black text-sm">
+                                <span class="text-emerald-600">📥 +${monthSummary.deposit[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                                <span class="text-rose-600">📤 -${monthSummary.withdraw[c].toLocaleString('en-US', {minimumFractionDigits:2})}</span>
                             </div>
                         </div>`;
                 }
             });
-            document.getElementById('month-summary-results').innerHTML = monthHtml || '<p class="text-xs font-bold text-slate-400 text-center py-4">لا توجد حركات مالية في هذا الشهر.</p>';
+            document.getElementById('month-summary-results').innerHTML = monthHtml || '<p class="text-xs font-bold text-slate-400 text-center py-4">لا توجد حركات تدفق تراكمية مسجلة.</p>';
         }
 
         document.getElementById('transaction-form').addEventListener('submit', function(e) {
@@ -546,7 +539,6 @@
 
             appState.transactions.push({ id, type, wallet, amount, currency, date, desc });
             recalculateAllBalances();
-            
             document.getElementById('tx-amount').value = '';
             document.getElementById('tx-desc').value = '';
             setNowDateTimeInputs();
@@ -561,29 +553,18 @@
             const date = document.getElementById('tf-date').value;
 
             if (fromWallet === toWallet) {
-                alert('⚠️ خطأ: لا يمكن إتمام عملية النقل لنفس الحساب أو المحفظة المصدر!');
+                alert('⚠️ لا يمكن تفعيل المناقلة لنفس المحفظة المصدر والمستهدفة!');
                 return;
             }
 
-            const id = 'transfer-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
-            appState.transactions.push({
-                id,
-                type: 'transfer',
-                fromWallet,
-                toWallet,
-                amount,
-                currency,
-                date,
-                desc: `مناقلة مالية مباشرة`
-            });
-
+            appState.transactions.push({ id: 'transfer-' + Date.now(), type: 'transfer', fromWallet, toWallet, amount, currency, date, desc: `مناقلة مالية مباشرة` });
             recalculateAllBalances();
             document.getElementById('tf-amount').value = '';
             setNowDateTimeInputs();
         });
 
         function deleteTransaction(id) {
-            if (confirm('🚨 تنبيه هام: هل أنت متأكد من حذف العملية؟ سيتم تعديل الحسابات بأثر رجعي وإعادة الحسابات لأصلها قبل العملية.')) {
+            if (confirm('🚨 إجراء جذري: هل ترغب بحذف هذا القيد المالي؟ ستقوم المنصة بإلغاء مفعوله الحسابي بالكامل وإعادة جدولة الأرصدة التراكمية فوراً.')) {
                 appState.transactions = appState.transactions.filter(tx => tx.id !== id);
                 recalculateAllBalances();
             }
@@ -612,9 +593,7 @@
             const modal = document.getElementById('edit-modal');
             modal.classList.add('opacity-0');
             modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
         document.getElementById('edit-form').addEventListener('submit', function(e) {
@@ -638,10 +617,8 @@
             const now = new Date();
             const offset = now.getTimezoneOffset() * 60000;
             const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
-            
             document.getElementById('tx-date').value = localISOTime;
             document.getElementById('tf-date').value = localISOTime;
-            
             if (!document.getElementById('summary-date').value) {
                 document.getElementById('summary-date').value = now.toISOString().slice(0, 10);
             }
@@ -649,8 +626,7 @@
 
         function startLiveClock() {
             setInterval(() => {
-                const now = new Date();
-                document.getElementById('live-clock').innerText = now.toLocaleString('ar-EG', { hour12: true });
+                document.getElementById('live-clock').innerText = new Date().toLocaleString('ar-EG', { hour12: true });
             }, 1000);
         }
 
