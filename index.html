@@ -3,47 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>النظام المحاسبي الفاخر</title>
+    <title>المنصة المحاسبية الاستراتيجية المزامنة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: #f8fafc;
-        }
-        /* تصميم فخم ومستقل للكروت والعملات */
-        .premium-shadow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
-        .premium-card {
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            background: #ffffff;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+        .premium-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+        .premium-card { border: 1px solid rgba(226, 232, 240, 0.8); background: #ffffff; }
         .badge-egp { background: linear-gradient(135deg, #fff5f5, #fed7d7); color: #991b1b; border: 1px solid #fca5a5; }
         .badge-usd { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #166534; border: 1px solid #86efac; }
         .badge-omr { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); color: #075985; border: 1px solid #7dd3fc; }
+        @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .animate-pulse-sync { animation: pulse-green 2s infinite; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-12">
 
     <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 border-b border-slate-800">
-        <div class="container mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="container mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-gradient-to-tr from-amber-500 to-emerald-500 p-2.5 rounded-xl shadow-md">
                     <span class="text-xl">🏛️</span>
                 </div>
                 <div>
                     <h1 class="text-2xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">المنصة المحاسبية الاستراتيجية</h1>
-                    <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5">الجيل القادم • إدارة الأرصدة المحلية</p>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">الجيل القادم • التزامن السحابي الآمن</span>
+                        <div id="sync-status-indicator" class="flex items-center gap-1.5 bg-slate-800 px-2 py-0.5 rounded-md text-[9px] font-black border border-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-rose-500 block"></span>
+                            <span id="sync-status-text" class="text-rose-400">سحابي محلي غير مرتبط</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="live-clock" class="text-sm bg-slate-800/80 shadow-inner px-5 py-2 rounded-xl font-mono font-bold tracking-wider border border-slate-700 text-amber-400"></div>
+            
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+                <button onclick="toggleSyncPanel()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-4 py-2 rounded-xl border border-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer">
+                    ⚙️ إعدادات السحابة
+                </button>
+                <div id="live-clock" class="text-sm bg-slate-800/80 shadow-inner px-5 py-2 rounded-xl font-mono font-bold tracking-wider border border-slate-700 text-amber-400"></div>
+            </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 mt-10 space-y-12 max-w-7xl">
+
+        <section id="sync-settings-panel" class="premium-card premium-shadow rounded-3xl p-6 border-amber-200 bg-amber-50/20 hidden">
+            <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-200">
+                <span class="text-xl">☁️</span>
+                <div>
+                    <h3 class="text-md font-black text-slate-800">إعدادات ربط الخادم الشخصي (GitHub Gist)</h3>
+                    <p class="text-xs text-slate-400 font-bold">أدخل رموز حسابك لمرة واحدة لتفعيل قنوات البث الفوري والتزامن الذكي</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-black text-slate-600 mb-1">رمز الوصول الشخصي (GitHub Token)</label>
+                    <input type="password" id="sync-token" class="w-full p-2.5 border border-slate-200 rounded-xl font-mono text-sm bg-white outline-none focus:ring-2 focus:ring-slate-800" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-slate-600 mb-1">معرف المستودع السحابي (Gist ID)</label>
+                    <input type="text" id="sync-gist-id" class="w-full p-2.5 border border-slate-200 rounded-xl font-mono text-sm bg-white outline-none focus:ring-2 focus:ring-slate-800" placeholder="أتركه فارغاً لإنشاء مخزن جديد تلقائياً">
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4 justify-end">
+                <button onclick="saveSyncSettings()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all cursor-pointer">
+                    🔒 حفظ وتفعيل الربط الفوري
+                </button>
+            </div>
+        </section>
 
         <section class="premium-card premium-shadow rounded-3xl p-6 sm:p-8 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 pointer-events-none opacity-50"></div>
@@ -57,30 +87,21 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
                 <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
-                    <h3 class="text-sm font-black text-blue-800 mb-4 flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 w-max">
-                        🏦 الحسابات البنكية (Banks)
-                    </h3>
+                    <h3 class="text-sm font-black text-blue-800 mb-4 flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 w-max">🏦 الحسابات البنكية (Banks)</h3>
                     <div class="space-y-4" id="wallets-bank"></div>
                 </div>
-
                 <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
-                    <h3 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 w-max">
-                        💵 النقدي والكاش (Cash)
-                    </h3>
+                    <h3 class="text-sm font-black text-emerald-800 mb-4 flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 w-max">💵 النقدي والكاش (Cash)</h3>
                     <div class="space-y-4" id="wallets-cash"></div>
                 </div>
-
                 <div class="bg-slate-50/60 p-5 rounded-2xl border border-slate-200/50">
-                    <h3 class="text-sm font-black text-purple-800 mb-4 flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-100 w-max">
-                        🤝 التزامات، مستحقات وجمعيات
-                    </h3>
+                    <h3 class="text-sm font-black text-purple-800 mb-4 flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-100 w-max">🤝 التزامات، مستحقات وجمعيات</h3>
                     <div class="space-y-4" id="wallets-others"></div>
                 </div>
             </div>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
             <div class="premium-card premium-shadow rounded-3xl p-6 sm:p-8">
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
                     <span class="text-2xl">📝</span>
@@ -103,7 +124,6 @@
                             <select id="tx-wallet" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all"></select>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-black text-slate-500 mb-1.5">المبلغ المالي</label>
@@ -118,7 +138,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-black text-slate-500 mb-1.5">التوقيت</label>
@@ -129,7 +148,6 @@
                             <input type="text" id="tx-desc" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-slate-800 focus:bg-white outline-none transition-all placeholder-slate-400" placeholder="الوصف أو الغرض من العملية">
                         </div>
                     </div>
-
                     <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-xl active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wider text-sm">
                         🔱 إدراج الحركة وتحديث النظام
                     </button>
@@ -156,7 +174,6 @@
                                 <select id="tf-to" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all"></select>
                             </div>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-black text-slate-500 mb-1.5">حجم المبلغ المحول</label>
@@ -171,12 +188,10 @@
                                 </select>
                             </div>
                         </div>
-
                         <div>
                             <label class="block text-xs font-black text-slate-500 mb-1.5">تاريخ المعاملة</label>
                             <input type="datetime-local" id="tf-date" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold text-slate-700 focus:ring-2 focus:ring-indigo-600 focus:bg-white outline-none transition-all">
                         </div>
-
                         <button type="submit" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-xl active:scale-[0.99] text-center mt-2 cursor-pointer tracking-wider text-sm">
                             🚀 تفعيل المناقلة الفورية للسيولة
                         </button>
@@ -201,7 +216,6 @@
                     </button>
                 </div>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/60 shadow-inner">
                     <h3 class="text-sm font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
@@ -210,7 +224,6 @@
                     </h3>
                     <div class="space-y-3" id="day-summary-results"></div>
                 </div>
-
                 <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/60 shadow-inner">
                     <h3 class="text-sm font-black text-slate-700 mb-4 flex items-center justify-between border-b border-slate-200 pb-2">
                         <span class="flex items-center gap-1">🗓️ التدفق التراكمي للشهر الحالي</span>
@@ -229,7 +242,6 @@
                     <p class="text-xs text-slate-400 font-bold">مراجعة تاريخية شاملة لجميع الحركات القييدية مع صلاحيات التعديل والحذف الجذري</p>
                 </div>
             </div>
-            
             <div class="overflow-x-auto w-full">
                 <table class="w-full text-right border-collapse min-w-[950px]">
                     <thead>
@@ -243,8 +255,7 @@
                             <th class="p-4 text-center">الإجراءات التعديلية</th>
                         </tr>
                     </thead>
-                    <tbody id="transactions-logs-tbody" class="text-sm divide-y divide-slate-100 font-semibold text-slate-700">
-                        </tbody>
+                    <tbody id="transactions-logs-tbody" class="text-sm divide-y divide-slate-100 font-semibold text-slate-700"></tbody>
                 </table>
             </div>
         </section>
@@ -261,12 +272,10 @@
             </div>
             <form id="edit-form" class="space-y-4">
                 <input type="hidden" id="edit-tx-id">
-                
                 <div>
                     <label class="block text-xs font-black text-slate-500 mb-1">المحفظة المستهدفة</label>
                     <select id="edit-tx-wallet" class="w-full p-3 border border-slate-200 rounded-xl font-bold bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800"></select>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-black text-slate-500 mb-1">المبلغ المالي المحدث</label>
@@ -281,24 +290,17 @@
                         </select>
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-black text-slate-500 mb-1">التاريخ والوقت الجديد</label>
                     <input type="datetime-local" id="edit-tx-date" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-slate-800">
                 </div>
-
                 <div>
                     <label class="block text-xs font-black text-slate-500 mb-1">البيان المعدل</label>
                     <input type="text" id="edit-tx-desc" required class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-slate-800">
                 </div>
-
                 <div class="flex gap-3 pt-3 justify-end">
-                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 text-xs font-bold bg-slate-100 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer active:scale-[0.97]">
-                        إلغاء التسوية
-                    </button>
-                    <button type="submit" class="px-5 py-2.5 text-xs font-black bg-slate-900 text-white rounded-xl shadow-md hover:bg-slate-800 transition-all cursor-pointer active:scale-[0.97]">
-                        تطبيق التعديل وإرجاع الفوارق
-                    </button>
+                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 text-xs font-bold bg-slate-100 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer">إلغاء التسوية</button>
+                    <button type="submit" class="px-5 py-2.5 text-xs font-black bg-slate-900 text-white rounded-xl shadow-md hover:bg-slate-800 transition-all cursor-pointer">تطبيق التعديل وإرجاع الفوارق</button>
                 </div>
             </form>
         </div>
@@ -317,8 +319,9 @@
         };
 
         const CURRENCIES = ['EGP', 'USD', 'OMR'];
-
         let appState = { balances: {}, transactions: [] };
+        
+        let syncConfig = { token: '', gistId: '' };
 
         function initializeDefaultBalances() {
             for (let walletKey in WALLET_CONFIG) {
@@ -340,10 +343,151 @@
                     }
                 } catch (e) { initializeDefaultBalances(); }
             } else { initializeDefaultBalances(); }
+
+            // تحميل بيانات الربط السحابي
+            const storedSync = localStorage.getItem('accounting_sync_config');
+            if (storedSync) {
+                syncConfig = JSON.parse(storedSync);
+                document.getElementById('sync-token').value = syncConfig.token || '';
+                document.getElementById('sync-gist-id').value = syncConfig.gistId || '';
+                if(syncConfig.token && syncConfig.gistId) {
+                    updateSyncStatusIndicator('connected', 'متصل بالسحابة الشخصية');
+                    fetchDataFromCloud(); // سحب البيانات فور تشغيل التطبيق
+                }
+            }
         }
 
         function saveDataToStorage() {
             localStorage.setItem('accounting_app_data', JSON.stringify(appState));
+        }
+
+        function toggleSyncPanel() {
+            const panel = document.getElementById('sync-settings-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function updateSyncStatusIndicator(state, text) {
+            const ind = document.getElementById('sync-status-indicator');
+            const txt = document.getElementById('sync-status-text');
+            txt.innerText = text;
+            
+            ind.className = "flex items-center gap-1.5 bg-slate-800 px-2 py-0.5 rounded-md text-[9px] font-black border border-slate-700";
+            
+            if (state === 'connected') {
+                ind.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-sync block"></span><span id="sync-status-text" class="text-emerald-400">${text}</span>`;
+            } else if (state === 'syncing') {
+                ind.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-spin block border border-dashed border-amber-800"></span><span id="sync-status-text" class="text-amber-400">${text}</span>`;
+            } else {
+                ind.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 block"></span><span id="sync-status-text" class="text-rose-400">${text}</span>`;
+            }
+        }
+
+        async function saveSyncSettings() {
+            const token = document.getElementById('sync-token').value.trim();
+            let gistId = document.getElementById('sync-gist-id').value.trim();
+
+            if (!token) {
+                alert('⚠️ من فضلك أدخل الـ GitHub Token أولاً لتتمكن من تفعيل الربط السحابي.');
+                return;
+            }
+
+            updateSyncStatusIndicator('syncing', 'جاري إنشاء/ربط مخزن البيانات...');
+
+            if (!gistId) {
+                // إنشاء Gist سري جديد تلقائياً إذا كان الحقل فارغاً
+                try {
+                    const response = await fetch('https://api.github.com/gists', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            description: "المخزن السحابي الموحد للنظام المحاسبي",
+                            public: false,
+                            files: {
+                                "accounting_backup.json": {
+                                    content: JSON.stringify(appState)
+                                }
+                            }
+                        })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        gistId = data.id;
+                        document.getElementById('sync-gist-id').value = gistId;
+                        alert('🟢 تم إنشاء مخزن سحابي سري جديد لك بنجاح وتم ربطه بالمنصة!');
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch(err) {
+                    alert('❌ فشل الاتصال بالسحابة: تأكد من صحة الـ Token وصلاحياته.');
+                    updateSyncStatusIndicator('error', 'فشل ربط السحابة');
+                    return;
+                }
+            }
+
+            syncConfig = { token, gistId };
+            localStorage.setItem('accounting_sync_config', JSON.stringify(syncConfig));
+            updateSyncStatusIndicator('connected', 'متصل بالسحابة الشخصية');
+            document.getElementById('sync-settings-panel').classList.add('hidden');
+            pushDataToCloud();
+        }
+
+        async function pushDataToCloud() {
+            if (!syncConfig.token || !syncConfig.gistId) return;
+            updateSyncStatusIndicator('syncing', 'جاري المزامنة السحابية الحالية...');
+
+            try {
+                const response = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${syncConfig.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        files: {
+                            "accounting_backup.json": {
+                                content: JSON.stringify(appState)
+                            }
+                        }
+                    })
+                });
+                if (response.ok) {
+                    updateSyncStatusIndicator('connected', 'تزامن سحابي فوري محمي');
+                } else {
+                    updateSyncStatusIndicator('error', 'خطأ في رفع التعديلات');
+                }
+            } catch (e) {
+                updateSyncStatusIndicator('error', 'السحابة غير مستجيبة');
+            }
+        }
+
+        async function fetchDataFromCloud() {
+            if (!syncConfig.token || !syncConfig.gistId) return;
+            updateSyncStatusIndicator('syncing', 'جاري جلب آخر البيانات...');
+
+            try {
+                const response = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+                    headers: { 'Authorization': `token ${syncConfig.token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const cloudContent = data.files["accounting_backup.json"]?.content;
+                    if (cloudContent) {
+                        const parsedCloud = JSON.parse(cloudContent);
+                        // مقارنة السجلات وجلب الأحدث إذا وجد فارق
+                        if (parsedCloud.transactions && parsedCloud.transactions.length >= appState.transactions.length) {
+                            appState = parsedCloud;
+                            saveDataToStorage();
+                            recalculateAllBalances();
+                        }
+                    }
+                    updateSyncStatusIndicator('connected', 'تزامن سحابي فوري محمي');
+                }
+            } catch (e) {
+                updateSyncStatusIndicator('connected', 'تعذر الجلب الفوري (أوفلاين)');
+            }
         }
 
         function recalculateAllBalances() {
@@ -539,6 +683,7 @@
 
             appState.transactions.push({ id, type, wallet, amount, currency, date, desc });
             recalculateAllBalances();
+            pushDataToCloud(); // مزامنة فورية عند الإضافة
             document.getElementById('tx-amount').value = '';
             document.getElementById('tx-desc').value = '';
             setNowDateTimeInputs();
@@ -559,6 +704,7 @@
 
             appState.transactions.push({ id: 'transfer-' + Date.now(), type: 'transfer', fromWallet, toWallet, amount, currency, date, desc: `مناقلة مالية مباشرة` });
             recalculateAllBalances();
+            pushDataToCloud(); // مزامنة فورية عند التحويل
             document.getElementById('tf-amount').value = '';
             setNowDateTimeInputs();
         });
@@ -567,6 +713,7 @@
             if (confirm('🚨 إجراء جذري: هل ترغب بحذف هذا القيد المالي؟ ستقوم المنصة بإلغاء مفعوله الحسابي بالكامل وإعادة جدولة الأرصدة التراكمية فوراً.')) {
                 appState.transactions = appState.transactions.filter(tx => tx.id !== id);
                 recalculateAllBalances();
+                pushDataToCloud(); // مزامنة فورية عند الحذف
             }
         }
 
@@ -610,6 +757,7 @@
 
                 recalculateAllBalances();
                 closeEditModal();
+                pushDataToCloud(); // مزامنة فورية عند تعديل أي عملية
             }
         });
 
