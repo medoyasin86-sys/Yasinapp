@@ -1,1065 +1,623 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1e3a8a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>محاسبي - نظام المصروفات الذكي</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary:#1e3a8a; --primary-light:#3b82f6; --primary-dark:#172554; --primary-glow:rgba(59,130,246,0.15);
-  --qnb:#1e3a8a; --msct:#dc2626; --cash:#16a34a; --extra:#f59e0b;
-  --bg:#f8fafc; --surface:#ffffff; --surface-elevated:#ffffff;
-  --text:#0f172a; --text-secondary:#475569; --text-muted:#94a3b8;
-  --border:#e2e8f0; --border-light:#f1f5f9;
-  --income:#10b981; --income-soft:#d1fae5; --income-glow:rgba(16,185,129,0.1);
-  --expense:#ef4444; --expense-soft:#fee2e2; --expense-glow:rgba(239,68,68,0.1);
-  --transfer:#8b5cf6; --transfer-soft:#ede9fe; --transfer-glow:rgba(139,92,246,0.1);
-  --radius-xl:24px; --radius-lg:16px; --radius-md:12px; --radius-sm:8px;
-  --shadow-sm:0 1px 2px rgba(0,0,0,0.04); --shadow:0 4px 6px -1px rgba(0,0,0,0.08),0 2px 4px -2px rgba(0,0,0,0.04);
-  --shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -4px rgba(0,0,0,0.05);
-  --shadow-xl:0 20px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.04);
-  --transition-fast:0.15s ease; --transition:0.3s cubic-bezier(0.4,0,0.2,1); --transition-slow:0.5s cubic-bezier(0.4,0,0.2,1);
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;min-height:100vh;padding-bottom:90px}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeInScale{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-
-.fade-in{animation:fadeIn 0.5s var(--transition) forwards}
-.fade-in-delay-1{animation:fadeIn 0.5s var(--transition) 0.1s both}
-.fade-in-delay-2{animation:fadeIn 0.5s var(--transition) 0.2s both}
-.fade-in-delay-3{animation:fadeIn 0.5s var(--transition) 0.3s both}
-.fade-in-delay-4{animation:fadeIn 0.5s var(--transition) 0.4s both}
-
-.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:0.875rem 1.25rem;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-lg);backdrop-filter:blur(12px)}
-.logo{display:flex;align-items:center;gap:0.625rem;font-size:1.35rem;font-weight:800;letter-spacing:-0.02em}
-.logo-icon{font-size:1.7rem;animation:float 4s ease-in-out infinite;display:inline-block}
-.nav-actions{display:flex;gap:0.625rem;align-items:center}
-.btn-icon{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.15rem;display:flex;align-items:center;justify-content:center;transition:var(--transition-fast);position:relative;backdrop-filter:blur(8px)}
-.btn-icon:hover{background:rgba(255,255,255,0.25);transform:scale(1.08)}
-.btn-icon:active{transform:scale(0.95)}
-.btn-icon.syncing{animation:spin 1s linear infinite}
-.btn-icon.offline{background:rgba(239,68,68,0.25);border-color:rgba(239,68,68,0.4)}
-.btn-icon .badge{position:absolute;top:-3px;right:-3px;width:14px;height:14px;background:#ef4444;border-radius:50%;border:2px solid var(--primary);display:none;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
-.btn-icon .badge.active{display:block;animation:pulse 2s infinite}
-
-.main-content{margin-top:76px;padding:1.25rem;max-width:960px;margin-left:auto;margin-right:auto}
-
-.hero-card{background:linear-gradient(135deg,var(--primary) 0%,#2563eb 50%,#3b82f6 100%);color:#fff;padding:2rem 1.5rem;border-radius:var(--radius-xl);text-align:center;margin-bottom:1.5rem;box-shadow:var(--shadow-xl),0 0 60px rgba(59,130,246,0.2);position:relative;overflow:hidden;animation:fadeIn 0.6s var(--transition)}
-.hero-card::before{content:'';position:absolute;top:-60%;right:-40%;width:180%;height:180%;background:radial-gradient(circle,rgba(255,255,255,0.08) 0%,transparent 60%);animation:float 8s ease-in-out infinite}
-.hero-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(0,0,0,0.08),transparent);pointer-events:none}
-.hero-label{font-size:0.875rem;font-weight:500;opacity:0.85;position:relative;z-index:1;letter-spacing:0.5px;text-transform:uppercase}
-.hero-amount{font-size:3rem;font-weight:900;margin:0.5rem 0;position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,0.15);font-variant-numeric:tabular-nums;line-height:1.2}
-.hero-date{font-size:0.8rem;opacity:0.75;position:relative;z-index:1;font-weight:400}
-
-.wallets-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem}
-.wallet-card{background:var(--surface);padding:1.5rem 1rem;border-radius:var(--radius-lg);text-align:center;box-shadow:var(--shadow);border:2px solid transparent;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;animation:fadeIn 0.5s var(--transition) both}
-.wallet-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;border-radius:0 0 var(--radius-lg) var(--radius-lg);transition:var(--transition)}
-.wallet-card.qnb::after{background:var(--qnb)}.wallet-card.msct::after{background:var(--msct)}.wallet-card.cash::after{background:var(--cash)}.wallet-card.extra::after{background:var(--extra)}
-.wallet-card.qnb{border-color:rgba(30,58,138,0.08)}.wallet-card.msct{border-color:rgba(220,38,38,0.08)}.wallet-card.cash{border-color:rgba(22,163,74,0.08)}.wallet-card.extra{border-color:rgba(245,158,11,0.08)}
-.wallet-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-xl)}
-.wallet-card:active{transform:scale(0.97)}
-.wallet-icon{font-size:2.4rem;margin-bottom:0.5rem;display:block;transition:var(--transition-fast)}
-.wallet-card:hover .wallet-icon{transform:scale(1.15) rotate(-5deg)}
-.wallet-name{font-weight:700;color:var(--text-muted);font-size:0.8rem;margin-bottom:0.25rem;letter-spacing:0.5px;text-transform:uppercase}
-.wallet-balance{font-size:1.5rem;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.3}
-.wallet-card.qnb .wallet-balance{color:var(--qnb)}.wallet-card.msct .wallet-balance{color:var(--msct)}.wallet-card.cash .wallet-balance{color:var(--cash)}.wallet-card.extra .wallet-balance{color:var(--extra)}
-
-.quick-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--surface);padding:1.25rem;border-radius:var(--radius-lg);box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden;border:1px solid var(--border-light)}
-.stat-card::before{content:'';position:absolute;top:0;right:0;width:100%;height:3px;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
-.stat-card.income::before{background:var(--income)}.stat-card.expense::before{background:var(--expense)}
-.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.stat-label{font-size:0.75rem;color:var(--text-muted);font-weight:600;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem}
-.stat-value{font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
-.stat-card.income .stat-value{color:var(--income)}.stat-card.expense .stat-value{color:var(--expense)}
-
-.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:0.875rem;margin-bottom:1.5rem}
-.quick-btn{background:var(--surface);border:2px solid var(--border);padding:0.875rem;border-radius:var(--radius-md);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;font-weight:700;font-size:0.9rem;transition:var(--transition);color:var(--text);position:relative;overflow:hidden}
-.quick-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-.quick-btn:active{transform:scale(0.96)}
-.quick-btn.income-btn{border-color:var(--income);color:var(--income);background:var(--income-soft)}
-.quick-btn.expense-btn{border-color:var(--expense);color:var(--expense);background:var(--expense-soft)}
-.quick-btn.transfer-btn{border-color:var(--transfer);color:var(--transfer);background:var(--transfer-soft)}
-.quick-btn.debt-btn{border-color:var(--primary);color:var(--primary);background:#dbeafe}
-.quick-btn.assoc-btn{border-color:var(--extra);color:#b45309;background:#fef3c7}
-
-.section{display:none;animation:fadeIn 0.4s var(--transition)}
-.section.active{display:block}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;padding:0 0.25rem}
-.section-header h2{font-size:1.25rem;font-weight:800;color:var(--text);letter-spacing:-0.01em}
-
-.btn-primary{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:700;font-size:0.9rem;display:flex;align-items:center;gap:0.5rem;transition:var(--transition-fast);box-shadow:0 4px 12px rgba(30,58,138,0.25);flex:1;position:relative;overflow:hidden}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,58,138,0.35)}
-.btn-primary:active{transform:scale(0.97)}
-.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,0.15) 100%);opacity:0;transition:var(--transition-fast)}
-.btn-primary:hover::after{opacity:1}
-
-.filters{display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;background:var(--surface);padding:1rem;border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border-light)}
-.filters select,.filters input{padding:0.625rem 0.875rem;border:1.5px solid var(--border);border-radius:var(--radius-md);background:#fff;font-size:0.9rem;color:var(--text);flex:1;min-width:120px;font-family:'Cairo',sans-serif;transition:var(--transition-fast)}
-.filters select:focus,.filters input:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 3px var(--primary-glow)}
-.filter-btn{background:var(--primary);color:#fff;border:none;padding:0.625rem 1.25rem;border-radius:var(--radius-md);cursor:pointer;font-weight:700;font-size:0.85rem;transition:var(--transition-fast);display:flex;align-items:center;gap:0.4rem}
-.filter-btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
-.filter-btn.secondary{background:var(--text-muted)}.filter-btn.secondary:hover{background:var(--text-secondary)}
-
-.list-container{display:flex;flex-direction:column;gap:0.75rem}
-.item-card{background:var(--surface);padding:1.25rem;border-radius:var(--radius-lg);box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;transition:var(--transition);border-right:4px solid transparent;animation:fadeIn 0.3s var(--transition);position:relative;overflow:hidden;border:1px solid var(--border-light)}
-.item-card:hover{transform:translateX(-4px);box-shadow:var(--shadow-lg)}
-.item-card.income{border-right-color:var(--income);background:linear-gradient(to left,#fff 95%,var(--income-glow))}
-.item-card.expense{border-right-color:var(--expense);background:linear-gradient(to left,#fff 95%,var(--expense-glow))}
-.item-card.transfer{border-right-color:var(--transfer);background:linear-gradient(to left,#fff 95%,var(--transfer-glow))}
-.item-card.debt-owed{border-right-color:var(--income)}.item-card.debt-owe{border-right-color:var(--expense)}
-.item-info{flex:1;min-width:0}
-.item-title{font-weight:700;font-size:0.95rem;color:var(--text);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.item-meta{font-size:0.78rem;color:var(--text-muted);display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap}
-.item-badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.625rem;border-radius:20px;font-size:0.72rem;font-weight:600;background:var(--border-light)}
-.badge-qnb{background:#dbeafe;color:var(--qnb)}.badge-msct{background:#fee2e2;color:var(--msct)}.badge-cash{background:#dcfce7;color:var(--cash)}.badge-extra{background:#fef3c7;color:#b45309}
-.badge-income{background:var(--income-soft);color:var(--income)}.badge-expense{background:var(--expense-soft);color:var(--expense)}.badge-transfer{background:var(--transfer-soft);color:var(--transfer)}
-.badge-active{background:#dbeafe;color:var(--primary)}.badge-paid{background:var(--income-soft);color:var(--income)}.badge-overdue{background:var(--expense-soft);color:var(--expense)}
-.item-amount{font-weight:800;font-size:1.1rem;font-variant-numeric:tabular-nums;text-align:left;white-space:nowrap}
-.item-amount.income{color:var(--income)}.item-amount.expense{color:var(--expense)}.item-amount.transfer{color:var(--transfer)}
-.item-amount.owed{color:var(--income)}.item-amount.owe{color:var(--expense)}
-.item-actions{display:flex;gap:0.5rem;margin-right:0.75rem;opacity:0;transition:var(--transition-fast)}
-.item-card:hover .item-actions{opacity:1}
-.action-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.95rem;transition:var(--transition-fast);background:var(--border-light);color:var(--text-secondary)}
-.action-btn:hover{transform:scale(1.1)}
-.action-btn.edit:hover{background:#dbeafe;color:var(--primary)}.action-btn.delete:hover{background:var(--expense-soft);color:var(--expense)}.action-btn.pay:hover{background:var(--income-soft);color:var(--income)}.action-btn.transfer:hover{background:var(--transfer-soft);color:var(--transfer)}
-
-.empty-state{text-align:center;padding:3rem 1.5rem;color:var(--text-muted)}
-.empty-state-icon{font-size:4rem;margin-bottom:1rem;opacity:0.4;display:block}
-.empty-state h3{font-size:1.1rem;margin-bottom:0.5rem;color:var(--text-secondary);font-weight:700}
-.empty-state p{font-size:0.9rem;max-width:280px;margin:0 auto}
-
-.debts-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.25rem}
-.debt-summary-card{padding:1.5rem;border-radius:var(--radius-lg);text-align:center;color:#fff;box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden}
-.debt-summary-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,0.1) 100%)}
-.debt-summary-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.debt-summary-card.owed-to-me{background:linear-gradient(135deg,#059669 0%,#10b981 100%)}.debt-summary-card.i-owe{background:linear-gradient(135deg,#dc2626 0%,#ef4444 100%)}
-.debt-summary-label{font-size:0.85rem;opacity:0.9;font-weight:600;position:relative;z-index:1}
-.debt-summary-amount{font-size:1.7rem;font-weight:900;margin-top:0.5rem;font-variant-numeric:tabular-nums;position:relative;z-index:1;line-height:1.2}
-
-.assoc-card{background:var(--surface);padding:1.5rem;border-radius:var(--radius-lg);box-shadow:var(--shadow);margin-bottom:1rem;border-top:4px solid var(--extra);transition:var(--transition);position:relative;overflow:hidden;border:1px solid var(--border-light)}
-.assoc-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.assoc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.assoc-name{font-weight:800;font-size:1.1rem;color:var(--text)}
-.assoc-status{padding:0.3rem 0.875rem;border-radius:20px;font-size:0.78rem;font-weight:700}
-.assoc-status.active{background:#fef3c7;color:#b45309}.assoc-status.completed{background:var(--income-soft);color:var(--income)}
-.assoc-details{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
-.assoc-detail{text-align:center}
-.assoc-detail-label{font-size:0.72rem;color:var(--text-muted);margin-bottom:0.25rem;font-weight:500}
-.assoc-detail-value{font-weight:700;font-size:1rem;color:var(--text)}
-.assoc-payments{display:flex;flex-wrap:wrap;gap:0.5rem}
-.payment-tag{padding:0.4rem 0.75rem;border-radius:var(--radius-sm);font-size:0.8rem;font-weight:600;display:flex;align-items:center;gap:0.35rem;transition:var(--transition-fast);cursor:pointer;}
-.payment-tag.paid{background:var(--income-soft);color:var(--income)}.payment-tag.pending{background:var(--bg);color:var(--text-muted);border:1px dashed var(--border)}
-
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);display:flex;justify-content:space-around;padding:0.625rem 0;box-shadow:0 -4px 24px rgba(0,0,0,0.08);z-index:1000;backdrop-filter:blur(12px);border-top:1px solid var(--border-light)}
-.nav-item{background:none;border:none;padding:0.5rem 0.75rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.2rem;color:var(--text-muted);transition:var(--transition-fast);position:relative;min-width:64px}
-.nav-item.active{color:var(--primary)}
-.nav-item.active::before{content:'';position:absolute;top:-0.625rem;width:32px;height:3px;background:var(--primary);border-radius:2px;transition:var(--transition-fast)}
-.nav-icon{font-size:1.4rem;transition:var(--transition-fast);display:block}
-.nav-item:hover .nav-icon{transform:translateY(-3px)}
-.nav-label{font-size:0.65rem;font-weight:700;letter-spacing:0.02em}
-
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:2000;justify-content:center;align-items:flex-end;backdrop-filter:blur(6px);transition:opacity 0.3s}
-.modal-overlay.active{display:flex;opacity:1}
-.modal-overlay.centered{align-items:center}
-.modal-content{background:var(--surface);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:1.5rem;animation:slideUp 0.4s var(--transition);box-shadow:var(--shadow-xl);position:relative}
-.modal-overlay.centered .modal-content{border-radius:var(--radius-xl);animation:fadeInScale 0.3s var(--transition);max-height:88vh}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--border-light)}
-.modal-header h3{font-size:1.2rem;font-weight:800;color:var(--text)}
-.modal-close{background:var(--bg);border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.5rem;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:var(--transition-fast);font-weight:300}
-.modal-close:hover{background:var(--expense-soft);color:var(--expense);transform:rotate(90deg) scale(1.05)}
-
-.form-group{margin-bottom:1.25rem}
-.form-group label{display:block;margin-bottom:0.5rem;font-weight:700;font-size:0.88rem;color:var(--text-secondary)}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.875rem 1rem;border:2px solid var(--border);border-radius:var(--radius-md);font-size:1rem;color:var(--text);transition:var(--transition-fast);font-family:'Cairo',sans-serif;background:#fff}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 4px var(--primary-glow)}
-.form-group input.error,.form-group select.error{border-color:var(--expense);animation:shake 0.5s}
-.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-muted);opacity:0.7}
-
-.radio-group{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem}
-.radio-label{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.875rem;border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition-fast);font-weight:600;background:#fff;position:relative;overflow:hidden}
-.radio-label:hover {border-color:var(--primary-light);transform:translateY(-1px)}
-.radio-label input[type="radio"]{display:none}
-.radio-label:has(input:checked){border-color:var(--primary);background:#eff6ff;color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
-.radio-label.income-radio:has(input:checked){border-color:var(--income);background:var(--income-soft);color:var(--income);box-shadow:0 0 0 1px var(--income)}
-.radio-label.expense-radio:has(input:checked){border-color:var(--expense);background:var(--expense-soft);color:var(--expense);box-shadow:0 0 0 1px var(--expense)}
-.radio-label.transfer-radio:has(input:checked){border-color:var(--transfer);background:var(--transfer-soft);color:var(--transfer);box-shadow:0 0 0 1px var(--transfer)}
-
-.wallet-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem}
-.wallet-option{padding:1.125rem;border:2px solid var(--border);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:var(--transition-fast);background:#fff;position:relative}
-.wallet-option:hover{transform:translateY(-2px);border-color:var(--primary-light)}
-.wallet-option input{display:none}
-.wallet-option:has(input:checked){border-width:3px;box-shadow:var(--shadow)}
-.wallet-option:has(input[value="qnb"]:checked){border-color:var(--qnb);background:#dbeafe}
-.wallet-option:has(input[value="msct"]:checked){border-color:var(--msct);background:#fee2e2}
-.wallet-option:has(input[value="cash"]:checked){border-color:var(--cash);background:#dcfce7}
-.wallet-option:has(input[value="extra"]:checked){border-color:var(--extra);background:#fef3c7}
-.wallet-option-icon{font-size:1.6rem;margin-bottom:0.3rem;display:block}
-.wallet-option-name{font-weight:700;font-size:0.85rem}
-
-.transfer-arrow{display:flex;align-items:center;justify-content:center;padding:0.5rem;color:var(--transfer);font-size:1.5rem;animation:float 2s ease-in-out infinite}
-
-.form-actions{display:flex;gap:0.875rem;margin-top:2rem;padding-top:1rem;border-top:2px solid var(--border-light)}
-.btn-secondary{background:var(--bg);color:var(--text);border:2px solid var(--border);padding:0.875rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:700;font-size:0.95rem;flex:1;transition:var(--transition-fast)}
-.btn-secondary:hover{background:var(--border);transform:translateY(-1px)}
-.btn-secondary:active{transform:scale(0.97)}
-.btn-danger{background:var(--expense-soft);color:var(--expense);border:2px solid var(--expense);padding:0.875rem 1.5rem;border-radius:var(--radius-md);cursor:pointer;font-weight:700;font-size:0.95rem;flex:1;transition:var(--transition-fast)}
-.btn-danger:hover{background:var(--expense);color:#fff;transform:translateY(-1px)}
-.btn-danger:active{transform:scale(0.97)}
-
-.toast-container{position:fixed;top:90px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:0.625rem;width:92%;max-width:420px;pointer-events:none}
-.toast{background:var(--surface);padding:1rem 1.25rem;border-radius:var(--radius-md);box-shadow:var(--shadow-xl);display:flex;align-items:center;gap:0.75rem;font-weight:600;font-size:0.9rem;animation:slideDown 0.3s var(--transition);pointer-events:auto;border-right:4px solid;backdrop-filter:blur(8px)}
-.toast.success{border-right-color:var(--income);color:var(--income)}.toast.error{border-right-color:var(--expense);color:var(--expense)}.toast.info{border-right-color:var(--primary);color:var(--primary)}.toast.warning{border-right-color:var(--extra);color:#b45309}
-
-.settings-grid{display:grid;gap:0.875rem}
-.setting-item{background:var(--surface);padding:1.25rem;border-radius:var(--radius-lg);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);border:1px solid var(--border-light);transition:var(--transition-fast)}
-.setting-item:hover{box-shadow:var(--shadow-lg);transform:translateX(-2px)}
-.setting-info h4{font-weight:700;margin-bottom:0.25rem;color:var(--text);font-size:0.95rem}
-.setting-info p{font-size:0.85rem;color:var(--text-muted);max-width:240px}
-.toggle-switch{width:52px;height:28px;background:var(--border);border-radius:14px;position:relative;cursor:pointer;transition:var(--transition-fast);flex-shrink:0}
-.toggle-switch.active{background:var(--primary)}
-.toggle-switch::after{content:'';position:absolute;width:24px;height:24px;background:#fff;border-radius:50%;top:2px;right:2px;transition:var(--transition-fast);box-shadow:0 2px 4px rgba(0,0,0,0.15)}
-.toggle-switch.active::after{right:26px}
-
-.sync-status-bar{position:fixed;top:76px;left:0;right:0;color:#fff;padding:0.5rem 1rem;text-align:center;font-size:0.85rem;font-weight:600;z-index:999;display:none;animation:fadeIn 0.3s var(--transition);backdrop-filter:blur(8px)}
-.sync-status-bar.syncing{display:block;background:linear-gradient(90deg,var(--primary),var(--primary-light))}
-.sync-status-bar.offline{display:block;background:linear-gradient(90deg,#b45309,#d97706)}
-.sync-status-bar.error{display:block;background:linear-gradient(90deg,#dc2626,#ef4444)}
-
-@media(min-width:768px){
-  .wallets-grid{grid-template-columns:repeat(4,1fr)}
-  .quick-actions{grid-template-columns:repeat(3,1fr)}
-  .bottom-nav{display:none}
-  .main-content{margin-bottom:0;padding-bottom:2rem}
-  body{padding-bottom:0}
-  .modal-overlay{align-items:center}
-  .modal-content{border-radius:var(--radius-xl);max-height:85vh}
-  .item-actions{opacity:1}
-}
-@media(max-width:380px){
-  .wallet-balance{font-size:1.2rem}
-  .hero-amount{font-size:2.2rem}
-  .quick-actions{grid-template-columns:1fr}
-  .wallets-grid{gap:0.75rem}
-  .wallet-card{padding:1.25rem 0.75rem}
-}
-
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
-
-@media print{.navbar,.bottom-nav,.btn-primary,.action-btn{display:none}.main-content{margin:0;padding:0}.item-card{break-inside:avoid;border:1px solid #ddd}}
-</style>
-<base target="_blank">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد المحاسبي الذكي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
 </head>
-<body>
-<div class="toast-container" id="toastContainer"></div>
-<div class="sync-status-bar" id="syncStatusBar"></div>
+<body class="bg-gray-50 text-gray-800 antialiased">
 
-<nav class="navbar">
-  <div class="logo"><span class="logo-icon">💰</span><span>محاسبي</span></div>
-  <div class="nav-actions">
-    <button class="btn-icon" id="syncBtn" title="مزامنة">🔄<span class="badge" id="syncBadge"></span></button>
-    <button class="btn-icon" id="settingsBtn" title="الإعدادات">⚙️</button>
-  </div>
-</nav>
-
-<main class="main-content" id="mainContent">
-  <section id="dashboard" class="section active">
-    <div class="hero-card">
-      <div class="hero-label">الرصيد الكلي</div>
-      <div class="hero-amount" id="totalBalance">0.00 ج.م</div>
-      <div class="hero-date" id="currentDate"></div>
-    </div>
-    <div class="wallets-grid">
-      <div class="wallet-card qnb fade-in-delay-1" onclick="app.filterByWallet('qnb')">
-        <div class="wallet-icon">🏦</div><div class="wallet-name">QNB</div><div class="wallet-balance" id="qnbBalance">0.00</div>
-      </div>
-      <div class="wallet-card msct fade-in-delay-2" onclick="app.filterByWallet('msct')">
-        <div class="wallet-icon">💳</div><div class="wallet-name">MSCT</div><div class="wallet-balance" id="msctBalance">0.00</div>
-      </div>
-      <div class="wallet-card cash fade-in-delay-3" onclick="app.filterByWallet('cash')">
-        <div class="wallet-icon">💵</div><div class="wallet-name">كاش</div><div class="wallet-balance" id="cashBalance">0.00</div>
-      </div>
-      <div class="wallet-card extra fade-in-delay-4" onclick="app.filterByWallet('extra')">
-        <div class="wallet-icon">✨</div><div class="wallet-name">Extra</div><div class="wallet-balance" id="extraBalance">0.00</div>
-      </div>
-    </div>
-    <div class="quick-stats">
-      <div class="stat-card income">
-        <div class="stat-label">📈 الدخل هذا الشهر</div>
-        <div class="stat-value" id="monthIncome">0.00</div>
-      </div>
-      <div class="stat-card expense">
-        <div class="stat-label">📉 المصروفات</div>
-        <div class="stat-value" id="monthExpense">0.00</div>
-      </div>
-    </div>
-    <div class="quick-actions">
-      <button class="quick-btn income-btn" onclick="app.openModal('transactionModal',{type:'income'})"><span>📥</span> إضافة دخل</button>
-      <button class="quick-btn expense-btn" onclick="app.openModal('transactionModal',{type:'expense'})"><span>📤</span> إضافة مصروف</button>
-      <button class="quick-btn transfer-btn" onclick="app.openModal('transferModal')"><span>🔄</span> تحويل مبلغ</button>
-      <button class="quick-btn debt-btn" onclick="app.openModal('debtModal')"><span>🏦</span> مديونية</button>
-      <button class="quick-btn assoc-btn" onclick="app.openModal('associationModal')"><span>🤝</span> جمعية</button>
-    </div>
-    <div class="section-header" style="margin-top:1.5rem">
-      <h2>🕐 آخر المعاملات</h2>
-      <button class="btn-primary" onclick="app.switchSection('transactions')">عرض الكل</button>
-    </div>
-    <div id="recentTransactions" class="list-container"></div>
-  </section>
-
-  <section id="transactions" class="section">
-    <div class="section-header">
-      <h2>📋 المعاملات</h2>
-      <button class="btn-primary" onclick="app.openModal('transactionModal')">+ معاملة جديدة</button>
-    </div>
-    <div class="filters">
-      <select id="filterWallet"><option value="">كل المحافظ</option><option value="qnb">🏦 QNB</option><option value="msct">💳 MSCT</option><option value="cash">💵 كاش</option><option value="extra">✨ Extra</option></select>
-      <select id="filterType"><option value="">كل الأنواع</option><option value="income">📥 دخل</option><option value="expense">📤 مصروف</option><option value="transfer">🔄 تحويل</option></select>
-      <input type="date" id="filterDateFrom"><input type="date" id="filterDateTo">
-      <button class="filter-btn" onclick="app.applyFilters()">🔍 تطبيق</button>
-      <button class="filter-btn secondary" onclick="app.resetFilters()">إعادة</button>
-    </div>
-    <div id="transactionsList" class="list-container"></div>
-  </section>
-
-  <section id="debts" class="section">
-    <div class="section-header">
-      <h2>🏦 المديونيات</h2>
-      <button class="btn-primary" onclick="app.openModal('debtModal')">+ مديونية جديدة</button>
-    </div>
-    <div class="debts-summary">
-      <div class="debt-summary-card owed-to-me">
-        <div class="debt-summary-label">💰 لـي (عليهم)</div>
-        <div class="debt-summary-amount" id="owedToMe">0.00</div>
-      </div>
-      <div class="debt-summary-card i-owe">
-        <div class="debt-summary-label">💸 علـيّ (لهم)</div>
-        <div class="debt-summary-amount" id="iOwe">0.00</div>
-      </div>
-    </div>
-    <div id="debtsList" class="list-container"></div>
-  </section>
-
-  <section id="associations" class="section">
-    <div class="section-header">
-      <h2>🤝 الجمعيات</h2>
-      <button class="btn-primary" onclick="app.openModal('associationModal')">+ جمعية جديدة</button>
-    </div>
-    <div id="associationsList" class="list-container"></div>
-  </section>
-
-  <section id="settings" class="section">
-    <div class="section-header">
-      <h2>⚙️ الإعدادات وإدارة البيانات</h2>
-    </div>
-    <div class="settings-grid">
-      <div class="setting-item">
-        <div class="setting-info">
-          <h4>التخزين المحلي الآمن</h4>
-          <p>يتم حفظ جميع معاملاتك المالية مشفرة محلياً على جهازك لخصوصية مطلقة.</p>
+    <header class="bg-teal-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">💼 النظام المحاسبي الشخصي الموحد</h1>
+            <div id="live-clock" class="text-sm bg-teal-800 px-3 py-1 rounded-md font-mono"></div>
         </div>
-        <div class="toggle-switch active" id="localStoreToggle"></div>
-      </div>
-      <div class="setting-item" style="border-right: 4px solid var(--expense)">
-        <div class="setting-info">
-          <h4>حذف كافة البيانات</h4>
-          <p>تنبيه: سيقوم هذا الخيار بمسح جميع القيود والمعاملات بشكل نهائي ولا يمكن التراجع.</p>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 space-y-8">
+
+        <section>
+            <h2 class="text-lg font-bold text-gray-700 mb-4 border-r-4 border-teal-600 pr-2">📊 أرصدة المحافظ والحسابات الحالية</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-md font-bold text-blue-600 mb-3 flex items-center gap-2">🏦 الحسابات البنكية (Banks)</h3>
+                    <div class="space-y-3" id="wallets-bank">
+                        </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-md font-bold text-green-600 mb-3 flex items-center gap-2">💵 النقدي والكاش (Cash)</h3>
+                    <div class="space-y-3" id="wallets-cash">
+                        </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-md font-bold text-purple-600 mb-3 flex items-center gap-2">🤝 التزامات، مستحقات وجمعيات</h3>
+                    <div class="space-y-3" id="wallets-others">
+                        </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b">📝 تسجيل عملية جديدة (إيداع / سحب)</h2>
+                <form id="transaction-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">نوع العملية</label>
+                            <select id="tx-type" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none">
+                                <option value="deposit">إيداع (+)</option>
+                                <option value="withdraw">سحب (-)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">المحفظة المستهدفة</label>
+                            <select id="tx-wallet" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">المبلغ</label>
+                            <input type="number" id="tx-amount" step="0.01" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">العملة</label>
+                            <select id="tx-currency" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none">
+                                <option value="EGP">جنيه مصري (EGP)</option>
+                                <option value="USD">دولار أمريكي (USD)</option>
+                                <option value="OMR">ريال عماني (OMR)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">التاريخ والوقت</label>
+                            <input type="datetime-local" id="tx-date" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">البيان / الوصف</label>
+                            <input type="text" id="tx-desc" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-teal-500 outline-none" placeholder="مثال: راتب، قسط الجمعية...">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 rounded-md transition-colors shadow-sm">حفظ العملية</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b">🔄 مناقلة مالية بين المحافظ</h2>
+                    <form id="transfer-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">من محفظة (المصدر)</label>
+                                <select id="tf-from" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">إلى محفظة (الوجهة)</label>
+                                <select id="tf-to" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">المبلغ المراد تحويله</label>
+                                <input type="number" id="tf-amount" step="0.01" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0.00">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">العملة</label>
+                                <select id="tf-currency" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                                    <option value="EGP">جنيه مصري (EGP)</option>
+                                    <option value="USD">دولار أمريكي (USD)</option>
+                                    <option value="OMR">ريال عماني (OMR)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">تاريخ النقل</label>
+                            <input type="datetime-local" id="tf-date" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-md transition-colors shadow-sm">تأكيد عملية النقل</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-6 border-b pb-3">
+                <h2 class="text-lg font-bold text-gray-700">📈 تقارير وملخصات الحركات المالية</h2>
+                <div class="flex gap-2">
+                    <input type="date" id="summary-date" class="p-1 border rounded text-sm outline-none">
+                    <button onclick="calculatePeriodSummaries()" class="bg-gray-100 hover:bg-gray-200 text-xs font-semibold px-3 py-1 rounded border">تحديث الفلترة</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center justify-between">
+                        <span>📅 ملخص اليوم المحدد</span>
+                        <span id="label-day" class="text-xs font-normal text-teal-700"></span>
+                    </h3>
+                    <div class="space-y-2 text-sm" id="day-summary-results"></div>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center justify-between">
+                        <span>🗓️ ملخص الشهر الحالي للجهة المحددة</span>
+                        <span id="label-month" class="text-xs font-normal text-indigo-700"></span>
+                    </h3>
+                    <div class="space-y-2 text-sm" id="month-summary-results"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <h2 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b">📜 سجل العمليات المالي الكامل</h2>
+            
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-right border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wider">
+                            <th class="p-3">التاريخ والوقت</th>
+                            <th class="p-3">نوع الحركة</th>
+                            <th class="p-3">الحساب / المحفظة</th>
+                            <th class="p-3">البيان والوصف</th>
+                            <th class="p-3">المبلغ</th>
+                            <th class="p-3">العملة</th>
+                            <th class="p-3 text-center">إجراءات التحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-logs-tbody" class="text-sm divide-y divide-gray-100">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-md p-6 rounded-xl shadow-lg m-4 space-y-4">
+            <h3 class="text-md font-bold text-gray-700 border-b pb-2">✏️ تعديل بيانات العملية ومعالجة الفوارق</h3>
+            <form id="edit-form" class="space-y-3">
+                <input type="hidden" id="edit-tx-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">المحفظة (الحساب)</label>
+                    <select id="edit-tx-wallet" class="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-teal-500"></select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">المبلغ الجديد</label>
+                        <input type="number" id="edit-tx-amount" step="0.01" required class="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">العملة</label>
+                        <select id="edit-tx-currency" class="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="EGP">EGP</option>
+                            <option value="USD">USD</option>
+                            <option value="OMR">OMR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">التاريخ الجديد</label>
+                    <input type="datetime-local" id="edit-tx-date" required class="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">البيان الجديد</label>
+                    <input type="text" id="edit-tx-desc" required class="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div class="flex gap-2 pt-2 justify-end">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-sm font-semibold bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-semibold bg-teal-600 text-white rounded-md hover:bg-teal-700">حفظ وتعديل الفوارق</button>
+                </div>
+            </form>
         </div>
-        <button class="btn-danger" style="padding: 0.5rem 1rem; flex: none;" onclick="app.clearAllData()">⚠️ مسح الشامل</button>
-      </div>
     </div>
-  </section>
-</main>
 
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="app.switchSection('dashboard')">
-    <span class="nav-icon">📊</span><span class="nav-label">الرئيسية</span>
-  </button>
-  <button class="nav-item" onclick="app.switchSection('transactions')">
-    <span class="nav-icon">📋</span><span class="nav-label">المعاملات</span>
-  </button>
-  <button class="nav-item" onclick="app.switchSection('debts')">
-    <span class="nav-icon">🏦</span><span class="nav-label">الديون</span>
-  </button>
-  <button class="nav-item" onclick="app.switchSection('associations')">
-    <span class="nav-icon">🤝</span><span class="nav-label">الجمعيات</span>
-  </button>
-</nav>
+    <script>
+        // 1. هيكلة المحافظ والعملات المعتمدة داخل النظام
+        const WALLET_CONFIG = {
+            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank' },
+            'msct': { name: 'بنك مسقط Muscat', group: 'bank' },
+            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank' },
+            'cash-normal': { name: 'نقدي (أساسي)', group: 'cash' },
+            'cash-extra': { name: 'إضافي', group: 'cash' },
+            'debts': { name: 'المديونيات', group: 'others' },
+            'receivables': { name: 'المستحقات', group: 'others' },
+            'associations': { name: 'الجمعيات', group: 'others' }
+        };
 
-<div id="transactionModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 id="transactionModalTitle">إضافة معاملة جديدة</h3>
-      <button class="modal-close" onclick="app.closeModal('transactionModal')">&times;</button>
-    </div>
-    <form id="transactionForm" onsubmit="app.handleTransactionSubmit(event)">
-      <div class="form-group">
-        <label>نوع المعاملة</label>
-        <div class="radio-group">
-          <label class="radio-label expense-radio"><input type="radio" name="txType" value="expense" checked onchange="app.toggleCategoryField(this.value)"> 📤 مصروف</label>
-          <label class="radio-label income-radio"><input type="radio" name="txType" value="income" onchange="app.toggleCategoryField(this.value)"> 📥 دخل</label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>المبلغ (ج.م)</label>
-        <input type="number" id="txAmount" step="0.01" placeholder="0.00" required>
-      </div>
-      <div class="form-group">
-        <label>المحفظة / الحساب</label>
-        <div class="wallet-selector">
-          <label class="wallet-option"><input type="radio" name="txWallet" value="qnb" checked><span class="wallet-option-icon">🏦</span><span class="wallet-option-name">QNB</span></label>
-          <label class="wallet-option"><input type="radio" name="txWallet" value="msct"><span class="wallet-option-icon">💳</span><span class="wallet-option-name">MSCT</span></label>
-          <label class="wallet-option"><input type="radio" name="txWallet" value="cash"><span class="wallet-option-icon">💵</span><span class="wallet-option-name">كاش</span></label>
-          <label class="wallet-option"><input type="radio" name="txWallet" value="extra"><span class="wallet-option-icon">✨</span><span class="wallet-option-name">Extra</span></label>
-        </div>
-      </div>
-      <div class="form-group" id="categoryGroup">
-        <label>التصنيف</label>
-        <select id="txCategory">
-          <option value="عام">عام / أخرى</option>
-          <option value="طعام">طعام وشراب</option>
-          <option value="فواتير">إيجار وفواتير</option>
-          <option value="مشتريات">مشتريات هامة</option>
-          <option value="مواصلات">سيارة ومواصلات</option>
-          <option value="ترفيه">ترفيه ورحلات</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>الوصف / البيان</label>
-        <input type="text" id="txNotes" placeholder="مثال: شراء أدوات مكتبية، راتب الشهر..." required>
-      </div>
-      <div class="form-group">
-        <label>التاريخ</label>
-        <input type="date" id="txDate" required>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="app.closeModal('transactionModal')">إلغاء</button>
-        <button type="submit" class="btn-primary">حفظ المعاملة</button>
-      </div>
-    </form>
-  </div>
-</div>
+        const CURRENCIES = ['EGP', 'USD', 'OMR'];
 
-<div id="transferModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>🔄 تحويل نقدي بين المحافظ</h3>
-      <button class="modal-close" onclick="app.closeModal('transferModal')">&times;</button>
-    </div>
-    <form id="transferForm" onsubmit="app.handleTransferSubmit(event)">
-      <div class="form-group">
-        <label>المبلغ المراد تحويله</label>
-        <input type="number" id="transferAmount" step="0.01" placeholder="0.00" required>
-      </div>
-      <div class="form-group">
-        <label>من حساب</label>
-        <select id="transferFromWallet" required>
-          <option value="qnb">🏦 QNB</option>
-          <option value="msct">💳 MSCT</option>
-          <option value="cash" selected>💵 كاش</option>
-          <option value="extra">✨ Extra</option>
-        </select>
-      </div>
-      <div class="transfer-arrow">⬇️</div>
-      <div class="form-group">
-        <label>إلى حساب</label>
-        <select id="transferToWallet" required>
-          <option value="qnb" selected>🏦 QNB</option>
-          <option value="msct">💳 MSCT</option>
-          <option value="cash">💵 كاش</option>
-          <option value="extra">✨ Extra</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>التاريخ</label>
-        <input type="date" id="transferDate" required>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="app.closeModal('transferModal')">إلغاء</button>
-        <button type="submit" class="btn-primary">تأكيد التحويل</button>
-      </div>
-    </form>
-  </div>
-</div>
+        // الحالة الافتراضية للنظام في حال لم توجد بيانات مخزنة مسبقاً
+        let appState = {
+            balances: {}, // هيكلية الأرصدة لكل محفظة ولكل عملة
+            transactions: [] // سجل العمليات الكامل
+        };
 
-<div id="debtModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>🏦 تسجيل مديونية جديدة</h3>
-      <button class="modal-close" onclick="app.closeModal('debtModal')">&times;</button>
-    </div>
-    <form id="debtForm" onsubmit="app.handleDebtSubmit(event)">
-      <div class="form-group">
-        <label>حالة المديونية</label>
-        <div class="radio-group">
-          <label class="radio-label income-radio"><input type="radio" name="debtType" value="owed" checked> 💰 لي (دين للآخرين)</label>
-          <label class="radio-label expense-radio"><input type="radio" name="debtType" value="owe"> 💸 عليّ (للغير)</label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>الاسم / الشخص</label>
-        <input type="text" id="debtPerson" placeholder="اسم الشخص المدين أو الدائن" required>
-      </div>
-      <div class="form-group">
-        <label>المبلغ الإجمالي</label>
-        <input type="number" id="debtAmount" step="0.01" placeholder="0.00" required>
-      </div>
-      <div class="form-group">
-        <label>البيان / السبب</label>
-        <input type="text" id="debtNotes" placeholder="مثال: سلفة عمل، قسط جهاز...">
-      </div>
-      <div class="form-group">
-        <label>تاريخ الاستحقاق المتوقع</label>
-        <input type="date" id="debtDueDate">
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="app.closeModal('debtModal')">إلغاء</button>
-        <button type="submit" class="btn-primary">حفظ الدين</button>
-      </div>
-    </form>
-  </div>
-</div>
+        // تهيئة الأرصدة بصفر لكل عملة في كل محفظة
+        function initializeDefaultBalances() {
+            for (let walletKey in WALLET_CONFIG) {
+                appState.balances[walletKey] = {};
+                CURRENCIES.forEach(curr => {
+                    appState.balances[walletKey][curr] = 0;
+                });
+            }
+        }
 
-<div id="associationModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>🤝 إنشاء جمعية مالية جديدة</h3>
-      <button class="modal-close" onclick="app.closeModal('associationModal')">&times;</button>
-    </div>
-    <form id="associationForm" onsubmit="app.handleAssociationSubmit(event)">
-      <div class="form-group">
-        <label>اسم الجمعية</label>
-        <input type="text" id="assocName" placeholder="مثال: جمعية المعلمين، جمعية الأصدقاء" required>
-      </div>
-      <div class="form-group">
-        <label>القيمة السهم الشهرية</label>
-        <input type="number" id="assocAmount" step="0.01" placeholder="0.00" required>
-      </div>
-      <div class="form-group">
-        <label>عدد الشهور الإجمالية</label>
-        <input type="number" id="assocMonths" min="2" max="48" value="10" required>
-      </div>
-      <div class="form-group">
-        <label>رقم شهر قبضك للجمعية</label>
-        <input type="number" id="assocTakeMonth" min="1" placeholder="مثال: 5 (الشهر الخامس)" required>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="app.closeModal('associationModal')">إلغاء</button>
-        <button type="submit" class="btn-primary">بدء الجمعية</button>
-      </div>
-    </form>
-  </div>
-</div>
+        // 2. تحميل البيانات وحفظها في الـ LocalStorage الموضعي
+        function loadDataFromStorage() {
+            const stored = localStorage.getItem('accounting_app_data');
+            if (stored) {
+                try {
+                    appState = JSON.parse(stored);
+                    // التحقق من سلامة المحافظ بعد استرجاعها من الذاكرة المحلية
+                    for (let walletKey in WALLET_CONFIG) {
+                        if (!appState.balances[walletKey]) {
+                            appState.balances[walletKey] = {};
+                        }
+                        CURRENCIES.forEach(curr => {
+                            if (appState.balances[walletKey][curr] === undefined) {
+                                appState.balances[walletKey][curr] = 0;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    initializeDefaultBalances();
+                }
+            } else {
+                initializeDefaultBalances();
+            }
+        }
 
-<script>
-class SmartExpenseManager {
-  constructor() {
-    this.data = JSON.parse(localStorage.getItem('moh_accounting_db')) || {
-      transactions: [],
-      debts: [],
-      associations: []
-    };
-    
-    this.currentFilters = { wallet: '', type: '', from: '', to: '' };
-    this.init();
-  }
+        function saveDataToStorage() {
+            localStorage.setItem('accounting_app_data', JSON.stringify(appState));
+        }
 
-  init() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    if(document.getElementById('txDate')) document.getElementById('txDate').value = today;
-    if(document.getElementById('transferDate')) document.getElementById('transferDate').value = today;
-    
-    document.getElementById('syncBtn').addEventListener('click', () => this.triggerSyncSimulation());
-    document.getElementById('settingsBtn').addEventListener('click', () => this.switchSection('settings'));
+        // 3. إعادة بناء وحساب الأرصدة من الصفر بالاعتماد على سجل العمليات التراكمي
+        // وذلك لضمان عدم حدوث أي اختلالات عند تعديل العمليات أو حذفها وإرجاع الفوارق بدقة
+        function recalculateAllBalances() {
+            initializeDefaultBalances();
 
-    this.renderAll();
-  }
+            // ترتيب العمليات تصاعدياً حسب التاريخ لضمان تسلسل الإدخال الصحيح
+            appState.transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  save() {
-    localStorage.setItem('moh_accounting_db', JSON.stringify(this.data));
-    this.renderAll();
-  }
+            appState.transactions.forEach(tx => {
+                if (tx.type === 'deposit') {
+                    if (appState.balances[tx.wallet] && appState.balances[tx.wallet][tx.currency] !== undefined) {
+                        appState.balances[tx.wallet][tx.currency] += parseFloat(tx.amount);
+                    }
+                } else if (tx.type === 'withdraw') {
+                    if (appState.balances[tx.wallet] && appState.balances[tx.wallet][tx.currency] !== undefined) {
+                        appState.balances[tx.wallet][tx.currency] -= parseFloat(tx.amount);
+                    }
+                } else if (tx.type === 'transfer') {
+                    // عملية النقل تتضمن سحب من المصدر وإيداع في الوجهة بنفس العملة والمبلغ
+                    if (appState.balances[tx.fromWallet] && appState.balances[tx.fromWallet][tx.currency] !== undefined) {
+                        appState.balances[tx.fromWallet][tx.currency] -= parseFloat(tx.amount);
+                    }
+                    if (appState.balances[tx.toWallet] && appState.balances[tx.toWallet][tx.currency] !== undefined) {
+                        appState.balances[tx.toWallet][tx.currency] += parseFloat(tx.amount);
+                    }
+                }
+            });
 
-  switchSection(sectionId) {
-    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    
-    const targetSection = document.getElementById(sectionId);
-    if(targetSection) targetSection.classList.add('active');
-    
-    const navButtons = Array.from(document.querySelectorAll('.nav-item'));
-    const matchedBtn = navButtons.find(btn => btn.getAttribute('onclick').includes(sectionId));
-    if(matchedBtn) matchedBtn.classList.add('active');
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+            saveDataToStorage();
+            updateUI();
+        }
 
-  openModal(modalId, options = {}) {
-    const modal = document.getElementById(modalId);
-    if(!modal) return;
-    modal.classList.add('active');
-    
-    if(modalId === 'transactionModal' && options.type) {
-      const radio = modal.querySelector(`input[name="txType"][value="${options.type}"]`);
-      if(radio) {
-        radio.checked = true;
-        this.toggleCategoryField(options.type);
-      }
-    }
-  }
+        // 4. تحديث واجهات المستخدم وقوائم الاختيار والدوال الحسابية المرتبطة بها
+        function populateDropdowns() {
+            const txWalletSelect = document.getElementById('tx-wallet');
+            const tfFromSelect = document.getElementById('tf-from');
+            const tfToSelect = document.getElementById('tf-to');
+            const editWalletSelect = document.getElementById('edit-tx-wallet');
 
-  closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if(modal) modal.classList.remove('active');
-  }
+            let optionsHtml = '';
+            for (let key in WALLET_CONFIG) {
+                optionsHtml += `<option value="${key}">${WALLET_CONFIG[key].name}</option>`;
+            }
 
-  toggleCategoryField(type) {
-    const catGroup = document.getElementById('categoryGroup');
-    if(type === 'income') {
-      catGroup.style.display = 'none';
-    } else {
-      catGroup.style.display = 'block';
-    }
-  }
+            txWalletSelect.innerHTML = optionsHtml;
+            tfFromSelect.innerHTML = optionsHtml;
+            tfToSelect.innerHTML = optionsHtml;
+            editWalletSelect.innerHTML = optionsHtml;
+        }
 
-  showToast(message, type = 'success') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    
-    let icon = 'ℹ️';
-    if(type === 'success') icon = '✅';
-    if(type === 'error') icon = '❌';
-    if(type === 'warning') icon = '⚠️';
-    
-    toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
-  }
+        function updateUI() {
+            // تفريغ العناصر
+            document.getElementById('wallets-bank').innerHTML = '';
+            document.getElementById('wallets-cash').innerHTML = '';
+            document.getElementById('wallets-others').innerHTML = '';
 
-  calculateBalances() {
-    const balances = { qnb: 0, msct: 0, cash: 0, extra: 0 };
-    
-    this.data.transactions.forEach(tx => {
-      const amt = parseFloat(tx.amount);
-      if(tx.type === 'income') {
-        balances[tx.wallet] += amt;
-      } else if(tx.type === 'expense') {
-        balances[tx.wallet] -= amt;
-      } else if(tx.type === 'transfer') {
-        balances[tx.fromWallet] -= amt;
-        balances[tx.toWallet] += amt;
-      }
-    });
-    
-    return balances;
-  }
+            for (let key in WALLET_CONFIG) {
+                const config = WALLET_CONFIG[key];
+                const balances = appState.balances[key];
+                
+                let balanceStrings = CURRENCIES.map(curr => {
+                    const bal = balances[curr] || 0;
+                    let colorClass = bal >= 0 ? 'text-gray-700' : 'text-red-500 font-bold';
+                    return `<span class="inline-block bg-gray-100 px-2 py-0.5 rounded text-xs ${colorClass}">${bal.toFixed(2)} ${curr}</span>`;
+                }).join(' | ');
 
-  renderAll() {
-    const balances = this.calculateBalances();
-    const total = Object.values(balances).reduce((a, b) => a + b, 0);
-    
-    document.getElementById('totalBalance').innerText = `${total.toFixed(2)} ج.م`;
-    document.getElementById('qnbBalance').innerText = balances.qnb.toFixed(2);
-    document.getElementById('msctBalance').innerText = balances.msct.toFixed(2);
-    document.getElementById('cashBalance').innerText = balances.cash.toFixed(2);
-    document.getElementById('extraBalance').innerText = balances.extra.toFixed(2);
+                const targetContainerId = config.group === 'bank' ? 'wallets-bank' : (config.group === 'cash' ? 'wallets-cash' : 'wallets-others');
+                
+                const elementHtml = `
+                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-700">${config.name}</span>
+                        <div class="flex flex-wrap gap-1">${balanceStrings}</div>
+                    </div>
+                `;
+                document.getElementById(targetContainerId).insertAdjacentHTML('beforeend', elementHtml);
+            }
 
-    const now = new Date();
-    const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    
-    let mIncome = 0; let mExpense = 0;
-    this.data.transactions.forEach(tx => {
-      if(tx.date.startsWith(currentMonthStr)) {
-        if(tx.type === 'income') mIncome += tx.amount;
-        if(tx.type === 'expense') mExpense += tx.amount;
-      }
-    });
-    document.getElementById('monthIncome').innerText = mIncome.toFixed(2);
-    document.getElementById('monthExpense').innerText = mExpense.toFixed(2);
+            renderLogsTable();
+            calculatePeriodSummaries();
+        }
 
-    this.renderRecentTransactions();
-    this.renderTransactionsList();
-    this.renderDebts();
-    this.renderAssociations();
-  }
+        function renderLogsTable() {
+            const tbody = document.getElementById('transactions-logs-tbody');
+            tbody.innerHTML = '';
 
-  renderRecentTransactions() {
-    const container = document.getElementById('recentTransactions');
-    container.innerHTML = '';
-    
-    const sorted = [...this.data.transactions].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-    
-    if(sorted.length === 0) {
-      container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">📝</span><h3>لا توجد معاملات مؤخرًا</h3><p>ابدأ بإضافة أول معاملة مالية لك من الأزرار السريعة.</p></div>`;
-      return;
-    }
-    
-    sorted.forEach(tx => container.appendChild(this.createTransactionDOM(tx)));
-  }
+            // عرض العمليات بشكل تنازلي (الأحدث أولاً) في الواجهة الرئيسية للسجل
+            const displayList = [...appState.transactions].reverse();
 
-  renderTransactionsList() {
-    const container = document.getElementById('transactionsList');
-    container.innerHTML = '';
-    
-    let filtered = [...this.data.transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
-    
-    if(this.currentFilters.wallet) filtered = filtered.filter(t => t.wallet === this.currentFilters.wallet || t.fromWallet === this.currentFilters.wallet || t.toWallet === this.currentFilters.wallet);
-    if(this.currentFilters.type) filtered = filtered.filter(t => t.type === this.currentFilters.type);
-    if(this.currentFilters.from) filtered = filtered.filter(t => t.date >= this.currentFilters.from);
-    if(this.currentFilters.to) filtered = filtered.filter(t => t.date <= this.currentFilters.to);
+            if (displayList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-xs text-gray-400">لا توجد حركات مالية مسجلة حالياً.</td></tr>`;
+                return;
+            }
 
-    if(filtered.length === 0) {
-      container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">🔍</span><h3>لم نجد أي نتائج متطابقة</h3><p>يرجى تعديل خيارات الفلترة المحددة والمحاولة مجدداً.</p></div>`;
-      return;
-    }
+            displayList.forEach(tx => {
+                let typeBadge = '';
+                let detailsText = tx.desc;
+                let directionSign = '';
+                let rowBg = '';
 
-    filtered.forEach(tx => container.appendChild(this.createTransactionDOM(tx, true)));
-  }
+                if (tx.type === 'deposit') {
+                    typeBadge = `<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">إيداع</span>`;
+                    directionSign = '+';
+                    rowBg = 'hover:bg-green-50/40';
+                } else if (tx.type === 'withdraw') {
+                    typeBadge = `<span class="bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-xs font-medium">سحب</span>`;
+                    directionSign = '-';
+                    rowBg = 'hover:bg-red-50/40';
+                } else if (tx.type === 'transfer') {
+                    typeBadge = `<span class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs font-medium">مناقلة</span>`;
+                    detailsText = `من [${WALLET_CONFIG[tx.fromWallet]?.name}] إلى [${WALLET_CONFIG[tx.toWallet]?.name}] | ${tx.desc}`;
+                    directionSign = '🔄';
+                    rowBg = 'hover:bg-indigo-50/40';
+                }
 
-  createTransactionDOM(tx, showActions = false) {
-    const card = document.createElement('div');
-    card.className = `item-card ${tx.type}`;
-    
-    let title = tx.notes;
-    let typeBadge = '';
-    let walletBadge = `<span class="item-badge badge-${tx.wallet || tx.fromWallet}">${(tx.wallet || tx.fromWallet).toUpperCase()}</span>`;
-    let amountSign = '-';
-    
-    if(tx.type === 'income') {
-      typeBadge = `<span class="item-badge badge-income">دخل</span>`;
-      amountSign = '+';
-    } else if(tx.type === 'expense') {
-      typeBadge = `<span class="item-badge badge-expense">${tx.category || 'عام'}</span>`;
-    } else if(tx.type === 'transfer') {
-      title = `تحويل نقدي داخلي`;
-      typeBadge = `<span class="item-badge badge-transfer">تحويل</span>`;
-      walletBadge = `<span class="item-badge badge-${tx.fromWallet}">${tx.fromWallet.toUpperCase()} ➔ ${tx.toWallet.toUpperCase()}</span>`;
-      amountSign = '🔄';
-    }
+                const formattedDate = new Date(tx.date).toLocaleString('ar-EG', { hour12: true });
 
-    card.innerHTML = `
-      <div class="item-info">
-        <div class="item-title">${title}</div>
-        <div class="item-meta">
-          <span>📅 ${tx.date}</span>
-          ${walletBadge}
-          ${typeBadge}
-        </div>
-      </div>
-      <div style="display: flex; align-items: center;">
-        <div class="item-amount ${tx.type}">${amountSign} ${tx.amount.toFixed(2)}</div>
-        ${showActions ? `
-          <div class="item-actions">
-            <button class="action-btn delete" onclick="app.deleteTransaction('${tx.id}')" title="حذف">🗑️</button>
-          </div>
-        ` : ''}
-      </div>
-    `;
-    return card;
-  }
+                const trHtml = `
+                    <tr class="${rowBg} transition-colors">
+                        <td class="p-3 text-xs text-gray-500 font-mono">${formattedDate}</td>
+                        <td class="p-3">${typeBadge}</td>
+                        <td class="p-3 text-xs font-semibold text-gray-700">${tx.type === 'transfer' ? 'تحويل بين المحافظ' : (WALLET_CONFIG[tx.wallet]?.name || 'غير معروف')}</td>
+                        <td class="p-3 text-xs text-gray-600 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
+                        <td class="p-3 font-mono font-bold ${tx.type==='deposit'?'text-green-600':(tx.type==='withdraw'?'text-red-600':'text-indigo-600')}">${directionSign} ${parseFloat(tx.amount).toFixed(2)}</td>
+                        <td class="p-3 text-xs font-bold text-gray-500">${tx.currency}</td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            ${tx.type !== 'transfer' ? `<button onclick="openEditModal('${tx.id}')" class="text-teal-600 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-2 py-1 rounded text-xs transition-colors">تعديل</button>` : '<span class="text-xs text-gray-400">-</span>'}
+                            <button onclick="deleteTransaction('${tx.id}')" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs transition-colors">حذف</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
 
-  renderDebts() {
-    const list = document.getElementById('debtsList');
-    list.innerHTML = '';
-    
-    let owedToMe = 0; let iOwe = 0;
-    
-    this.data.debts.forEach(d => {
-      const amt = parseFloat(d.amount);
-      if(d.type === 'owed') owedToMe += amt;
-      else iOwe += amt;
-      
-      const card = document.createElement('div');
-      card.className = `item-card ${d.type === 'owed' ? 'debt-owed' : 'debt-owe'}`;
-      card.innerHTML = `
-        <div class="item-info">
-          <div class="item-title">👤 ${d.person}</div>
-          <div class="item-meta">
-            <span>${d.notes || 'لا يوجد بيان'}</span>
-            ${d.dueDate ? `<span class="item-badge badge-overdue">⏳ استحقاق: ${d.dueDate}</span>` : ''}
-            <span class="item-badge">${d.type === 'owed' ? 'أنا الدائن' : 'عليّ التزام'}</span>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="item-amount ${d.type === 'owed' ? 'owed' : 'owe'}">${d.amount.toFixed(2)} ج.م</div>
-          <div class="item-actions" style="opacity:1">
-            <button class="action-btn pay" onclick="app.settleDebt('${d.id}')" title="تسوية وإغلاق الدين">✅ تسوية</button>
-          </div>
-        </div>
-      `;
-      list.appendChild(card);
-    });
-    
-    document.getElementById('owedToMe').innerText = `${owedToMe.toFixed(2)} ج.م`;
-    document.getElementById('iOwe').innerText = `${iOwe.toFixed(2)} ج.م`;
-    
-    if(this.data.debts.length === 0) {
-      list.innerHTML = `<div class="empty-state"><span class="empty-state-icon">🕊️</span><h3>أنت خالٍ من المديونيات تماماً!</h3><p>السجلات نظيفة ولا يوجد التزامات مستحقة حالياً.</p></div>`;
-    }
-  }
+        // 5. محرك حساب الملخصات اليومية والشهرية التفصيلية
+        function calculatePeriodSummaries() {
+            const filterDateVal = document.getElementById('summary-date').value;
+            const targetDate = filterDateVal ? new Date(filterDateVal) : new Date();
 
-  renderAssociations() {
-    const container = document.getElementById('associationsList');
-    container.innerHTML = '';
-    
-    if(this.data.associations.length === 0) {
-      container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">🤝</span><h3>لا توجد جمعيات جارية</h3><p>خطط لمدخراتك المستقبلية وأنشئ جمعيتك الأولى الآن.</p></div>`;
-      return;
-    }
+            const targetYear = targetDate.getFullYear();
+            const targetMonth = targetDate.getMonth();
+            const targetDay = targetDate.getDate();
 
-    this.data.associations.forEach(assoc => {
-      const totalAmount = assoc.amount * assoc.totalMonths;
-      const card = document.createElement('div');
-      card.className = 'assoc-card';
-      
-      let tagsHTML = '';
-      for (let i = 1; i <= assoc.totalMonths; i++) {
-        const isPaid = assoc.paidMonths.includes(i);
-        tagsHTML += `<span class="payment-tag ${isPaid ? 'paid' : 'pending'}" onclick="app.toggleAssociationMonth('${assoc.id}', ${i})">ش ${i} ${isPaid ? '✓' : '◌'}</span>`;
-      }
+            document.getElementById('label-day').innerText = targetDate.toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
+            document.getElementById('label-month').innerText = targetDate.toLocaleDateString('ar-EG', { year:'numeric', month:'long' });
 
-      card.innerHTML = `
-        <div class="assoc-header">
-          <div class="assoc-name">✨ ${assoc.name}</div>
-          <span class="assoc-status active">شهر القبض المتوقع: ${assoc.takeMonth}</span>
-        </div>
-        <div class="assoc-details">
-          <div class="assoc-detail"><div class="assoc-detail-label">القسط الشهري</div><div class="assoc-detail-value">${assoc.amount} ج.م</div></div>
-          <div class="assoc-detail"><div class="assoc-detail-label">إجمالي المدفوع</div><div class="assoc-detail-value">${(assoc.paidMonths.length * assoc.amount)} ج.م</div></div>
-          <div class="assoc-detail"><div class="assoc-detail-label">المبلغ الكلي</div><div class="assoc-detail-value" style="color:var(--cash)">${totalAmount} ج.م</div></div>
-        </div>
-        <div class="assoc-payments">${tagsHTML}</div>
-        <button class="btn-danger" style="padding:4px 10px; font-size:0.75rem; margin-top:12px; border-radius:4px; flex:none; max-width: 120px;" onclick="app.deleteAssociation('${assoc.id}')">حذف الجمعية</button>
-      `;
-      container.appendChild(card);
-    });
-  }
+            // كائنات تجميع البيانات
+            let daySummary = { deposit: {}, withdraw: {} };
+            let monthSummary = { deposit: {}, withdraw: {} };
 
-  handleTransactionSubmit(e) {
-    e.preventDefault();
-    const tx = {
-      id: 'tx_' + Date.now(),
-      type: document.querySelector('input[name="txType"]:checked').value,
-      amount: parseFloat(document.getElementById('txAmount').value),
-      wallet: document.querySelector('input[name="txWallet"]:checked').value,
-      category: document.getElementById('txCategory').value,
-      notes: document.getElementById('txNotes').value,
-      date: document.getElementById('txDate').value
-    };
-    
-    this.data.transactions.push(tx);
-    this.save();
-    this.closeModal('transactionModal');
-    document.getElementById('transactionForm').reset();
-    this.showToast('تم حفظ المعاملة بنجاح!');
-  }
+            CURRENCIES.forEach(c => {
+                daySummary.deposit[c] = 0; daySummary.withdraw[c] = 0;
+                monthSummary.deposit[c] = 0; monthSummary.withdraw[c] = 0;
+            });
 
-  handleTransferSubmit(e) {
-    e.preventDefault();
-    const fromW = document.getElementById('transferFromWallet').value;
-    const toW = document.getElementById('transferToWallet').value;
-    const amt = parseFloat(document.getElementById('transferAmount').value);
-    
-    if(fromW === toW) {
-      this.showToast('لا يمكنك التحويل لنفس المحفظة!', 'error');
-      return;
-    }
-    
-    const tx = {
-      id: 'tx_' + Date.now(),
-      type: 'transfer',
-      amount: amt,
-      fromWallet: fromW,
-      toWallet: toW,
-      notes: 'تحويل نقدي داخلي',
-      date: document.getElementById('transferDate').value
-    };
-    
-    this.data.transactions.push(tx);
-    this.save();
-    this.closeModal('transferModal');
-    document.getElementById('transferForm').reset();
-    this.showToast('تمت عملية التحويل الداخلي بنجاح');
-  }
+            appState.transactions.forEach(tx => {
+                const txDate = new Date(tx.date);
+                const isSameYear = txDate.getFullYear() === targetYear;
+                const isSameMonth = txDate.getMonth() === targetMonth;
+                const isSameDay = txDate.getDate() === targetDay;
 
-  deleteTransaction(id) {
-    if(confirm('هل أنت متأكد من رغبتك في حذف هذه المعاملة نهائياً؟')) {
-      this.data.transactions = this.data.transactions.filter(t => t.id !== id);
-      this.save();
-      this.showToast('تم حذف القيد المالي المحدد', 'warning');
-    }
-  }
+                // التجميع اليومي
+                if (isSameYear && isSameMonth && isSameDay) {
+                    if (tx.type === 'deposit') daySummary.deposit[tx.currency] += tx.amount;
+                    if (tx.type === 'withdraw') daySummary.withdraw[tx.currency] += tx.amount;
+                }
 
-  handleDebtSubmit(e) {
-    e.preventDefault();
-    const debt = {
-      id: 'debt_' + Date.now(),
-      type: document.querySelector('input[name="debtType"]:checked').value,
-      person: document.getElementById('debtPerson').value,
-      amount: parseFloat(document.getElementById('debtAmount').value),
-      notes: document.getElementById('debtNotes').value,
-      dueDate: document.getElementById('debtDueDate').value
-    };
-    this.data.debts.push(debt);
-    this.save();
-    this.closeModal('debtModal');
-    document.getElementById('debtForm').reset();
-    this.showToast('تم تسجيل المديونية الجديدة بنجاح');
-  }
+                // التجميع الشهري
+                if (isSameYear && isSameMonth) {
+                    if (tx.type === 'deposit') monthSummary.deposit[tx.currency] += tx.amount;
+                    if (tx.type === 'withdraw') monthSummary.withdraw[tx.currency] += tx.amount;
+                }
+            });
 
-  settleDebt(id) {
-    const debt = this.data.debts.find(d => d.id === id);
-    if(!debt) return;
-    
-    if(confirm(`هل تريد تسوية دين (${debt.person}) وإدراجه تلقائياً كمعاملة حقيقية في الخزينة؟`)) {
-      const tx = {
-        id: 'tx_' + Date.now(),
-        type: debt.type === 'owed' ? 'income' : 'expense',
-        amount: debt.amount,
-        wallet: 'cash',
-        category: 'الديون',
-        notes: `تسوية دين: ${debt.person} (${debt.notes || ''})`,
-        date: new Date().toISOString().split('T')[0]
-      };
-      
-      this.data.transactions.push(tx);
-      this.data.debts = this.data.debts.filter(d => d.id !== id);
-      this.save();
-      this.showToast('تمت تسوية وإغلاق المديونية وتحويلها للأرشيف.');
-    }
-  }
+            // بناء مخرجات العرض لليوم
+            let dayHtml = '';
+            CURRENCIES.forEach(c => {
+                if(daySummary.deposit[c] > 0 || daySummary.withdraw[c] > 0) {
+                    dayHtml += `<div class="flex justify-between py-1 border-b border-gray-100">
+                        <span class="font-bold text-gray-600">${c}:</span>
+                        <span class="text-green-600">إيداع: +${daySummary.deposit[c].toFixed(2)}</span>
+                        <span class="text-red-600">سحب: -${daySummary.withdraw[c].toFixed(2)}</span>
+                    </div>`;
+                }
+            });
+            document.getElementById('day-summary-results').innerHTML = dayHtml || '<p class="text-xs text-gray-400 text-center">لا توجد حركات مالية في هذا اليوم.</p>';
 
-  handleAssociationSubmit(e) {
-    e.preventDefault();
-    const assoc = {
-      id: 'assoc_' + Date.now(),
-      name: document.getElementById('assocName').value,
-      amount: parseFloat(document.getElementById('assocAmount').value),
-      totalMonths: parseInt(document.getElementById('assocMonths').value),
-      takeMonth: parseInt(document.getElementById('assocTakeMonth').value),
-      paidMonths: []
-    };
-    this.data.associations.push(assoc);
-    this.save();
-    this.closeModal('associationModal');
-    document.getElementById('associationForm').reset();
-    this.showToast('تم إنشاء هيكل الجمعية بنجاح');
-  }
+            // بناء مخرجات العرض للشهر
+            let monthHtml = '';
+            CURRENCIES.forEach(c => {
+                if(monthSummary.deposit[c] > 0 || monthSummary.withdraw[c] > 0) {
+                    monthHtml += `<div class="flex justify-between py-1 border-b border-gray-100">
+                        <span class="font-bold text-gray-600">${c}:</span>
+                        <span class="text-green-600">إيداع: +${monthSummary.deposit[c].toFixed(2)}</span>
+                        <span class="text-red-600">سحب: -${monthSummary.withdraw[c].toFixed(2)}</span>
+                    </div>`;
+                }
+            });
+            document.getElementById('month-summary-results').innerHTML = monthHtml || '<p class="text-xs text-gray-400 text-center">لا توجد حركات مالية في هذا الشهر بعد.</p>';
+        }
 
-  toggleAssociationMonth(assocId, monthNum) {
-    const assoc = this.data.associations.find(a => a.id === assocId);
-    if(!assoc) return;
-    
-    const index = assoc.paidMonths.indexOf(monthNum);
-    if(index > -1) {
-      assoc.paidMonths.splice(index, 1);
-      this.showToast(`تم إلغاء دفع قسط الشهر ${monthNum}`, 'warning');
-    } else {
-      assoc.paidMonths.push(monthNum);
-      
-      if(confirm(`هل ترغب في تسجيل قسط الشهر ${monthNum} كمصروف مباشر من محفظة الكاش؟`)) {
-        this.data.transactions.push({
-          id: 'tx_' + Date.now(),
-          type: 'expense',
-          amount: assoc.amount,
-          wallet: 'cash',
-          category: 'عام',
-          notes: `دفع قسط: ${assoc.name} - شهر ${monthNum}`,
-          date: new Date().toISOString().split('T')[0]
+        // 6. التعامل مع النماذج البرمجية وإدخال البيانات الجديدة
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = 'tx-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+            const type = document.getElementById('tx-type').value;
+            const wallet = document.getElementById('tx-wallet').value;
+            const amount = parseFloat(document.getElementById('tx-amount').value);
+            const currency = document.getElementById('tx-currency').value;
+            const date = document.getElementById('tx-date').value;
+            const desc = document.getElementById('tx-desc').value;
+
+            appState.transactions.push({ id, type, wallet, amount, currency, date, desc });
+            recalculateAllBalances();
+            
+            // إعادة تعيين الحقول المحددة
+            document.getElementById('tx-amount').value = '';
+            document.getElementById('tx-desc').value = '';
+            setNowDateTimeInputs();
         });
-      }
-      this.showToast(`تم تسجيل دفع الشهر ${monthNum} بنجاح`);
-    }
-    this.save();
-  }
 
-  deleteAssociation(id) {
-    if(confirm('هل تود حقاً حذف هذه الجمعية بالكامل وإلغاء أرشيف تتبع أقساطها؟')) {
-      this.data.associations = this.data.associations.filter(a => a.id !== id);
-      this.save();
-      this.showToast('تم إزالة سجل الجمعية المحدد', 'warning');
-    }
-  }
+        document.getElementById('transfer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fromWallet = document.getElementById('tf-from').value;
+            const toWallet = document.getElementById('tf-to').value;
+            const amount = parseFloat(document.getElementById('tf-amount').value);
+            const currency = document.getElementById('tf-currency').value;
+            const date = document.getElementById('tf-date').value;
 
-  filterByWallet(walletCode) {
-    this.currentFilters.wallet = walletCode;
-    document.getElementById('filterWallet').value = walletCode;
-    this.switchSection('transactions');
-    this.renderTransactionsList();
-  }
+            if (fromWallet === toWallet) {
+                alert('عذراً، لا يمكن نقل الأموال إلى نفس المحفظة المصدر.');
+                return;
+            }
 
-  applyFilters() {
-    this.currentFilters.wallet = document.getElementById('filterWallet').value;
-    this.currentFilters.type = document.getElementById('filterType').value;
-    this.currentFilters.from = document.getElementById('filterDateFrom').value;
-    this.currentFilters.to = document.getElementById('filterDateTo').value;
-    this.renderTransactionsList();
-    this.showToast('تم تطبيق الفلاتر المحددة بنجاح', 'info');
-  }
+            const id = 'transfer-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+            appState.transactions.push({
+                id,
+                type: 'transfer',
+                fromWallet,
+                toWallet,
+                amount,
+                currency,
+                date,
+                desc: `مناقلة مالية مباشرة`
+            });
 
-  resetFilters() {
-    this.currentFilters = { wallet: '', type: '', from: '', to: '' };
-    document.getElementById('filterWallet').value = '';
-    document.getElementById('filterType').value = '';
-    document.getElementById('filterDateFrom').value = '';
-    document.getElementById('filterDateTo').value = '';
-    this.renderTransactionsList();
-  }
+            recalculateAllBalances();
+            document.getElementById('tf-amount').value = '';
+            setNowDateTimeInputs();
+        });
 
-  clearAllData() {
-    if(confirm('⚠️ خطر جداً: هل أنت متأكد من رغبتك في حذف كل السجلات؟ لن تستطيع استعادتها نهائياً.')) {
-      if(confirm('تأكيد أخير: هل أنت متأكد فعلاً؟')) {
-        localStorage.removeItem('moh_accounting_db');
-        this.data = { transactions: [], debts: [], associations: [] };
-        this.save();
-        this.switchSection('dashboard');
-        this.showToast('تم مسح كافة البيانات بنجاح', 'error');
-      }
-    }
-  }
+        // 7. حذف وإلغاء العمليات مع إرجاع الفوارق تلقائياً
+        function deleteTransaction(id) {
+            if (confirm('هل أنت متأكد تماماً من رغبتك في حذف هذه العملية؟ سيقوم النظام بإرجاع فوارق المبالغ وإعادة احتساب الأرصدة فوراً.')) {
+                appState.transactions = appState.transactions.filter(tx => tx.id !== id);
+                recalculateAllBalances();
+            }
+        }
 
-  triggerSyncSimulation() {
-    const bar = document.getElementById('syncStatusBar');
-    const badge = document.getElementById('syncBadge');
-    
-    bar.className = "sync-status-bar syncing";
-    bar.innerText = "جاري مزامنة وتأمين البيانات المالية احتياطياً...";
-    badge.classList.add('active');
-    
-    setTimeout(() => {
-      bar.className = "sync-status-bar";
-      badge.classList.remove('active');
-      this.showToast('اكتملت مزامنة البيانات بنجاح!', 'success');
-    }, 2000);
-  }
-}
+        // 8. ميكانيكية التعديل المتقدم (تحديث البيانات والمحافظ والعملات مع معالجة الفوارق)
+        function openEditModal(id) {
+            const tx = appState.transactions.find(t => t.id === id);
+            if (!tx) return;
 
-let app;
-document.addEventListener('DOMContentLoaded', () => {
-  app = new SmartExpenseManager();
-});
-</script>
+            document.getElementById('edit-tx-id').value = tx.id;
+            document.getElementById('edit-tx-wallet').value = tx.wallet;
+            document.getElementById('edit-tx-amount').value = tx.amount;
+            document.getElementById('edit-tx-currency').value = tx.currency;
+            document.getElementById('edit-tx-date').value = tx.date;
+            document.getElementById('edit-tx-desc').value = tx.desc;
+
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-tx-id').value;
+            const txIndex = appState.transactions.findIndex(t => t.id === id);
+
+            if (txIndex !== -1) {
+                // تعديل قيم العملية الأساسية مع تحديث الفوارق تلقائياً من خلال إعادة بناء شجرة الحسابات التراكمية
+                appState.transactions[txIndex].wallet = document.getElementById('edit-tx-wallet').value;
+                appState.transactions[txIndex].amount = parseFloat(document.getElementById('edit-tx-amount').value);
+                appState.transactions[txIndex].currency = document.getElementById('edit-tx-currency').value;
+                appState.transactions[txIndex].date = document.getElementById('edit-tx-date').value;
+                appState.transactions[txIndex].desc = document.getElementById('edit-tx-desc').value;
+
+                recalculateAllBalances();
+                closeEditModal();
+            }
+        });
+
+        // 9. وظائف مساعدة لتهيئة حقول الوقت والتاريخ
+        function setNowDateTimeInputs() {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            
+            document.getElementById('tx-date').value = localISOTime;
+            document.getElementById('tf-date').value = localISOTime;
+            
+            if (!document.getElementById('summary-date').value) {
+                document.getElementById('summary-date').value = now.toISOString().slice(0, 10);
+            }
+        }
+
+        function startLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('live-clock').innerText = now.toLocaleString('ar-EG', { hour12: true });
+            }, 1000);
+        }
+
+        // التشغيل الأولي للتطبيق عند اكتمال تحميل عناصر الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDataFromStorage();
+            populateDropdowns();
+            setNowDateTimeInputs();
+            recalculateAllBalances();
+            startLiveClock();
+        });
+    </script>
 </body>
 </html>
