@@ -23,11 +23,7 @@
             margin-bottom: 30px; 
             padding: 20px;
         }
-        .header h1 { 
-            font-size: 2.5em; 
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .header p { color: #a0a0a0; font-size: 1.1em; }
 
         .wallets { 
@@ -47,29 +43,24 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             transition: transform 0.3s;
             cursor: pointer;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .wallet:hover { transform: translateY(-5px); }
-        .wallet h3 { 
-            color: #555; 
-            margin-bottom: 10px; 
-            font-size: 1.1em;
-        }
-        .wallet .amount { 
-            font-size: 1.5em; 
+        .wallet h3 { color: #555; margin-bottom: 10px; font-size: 1.1em; }
+        .wallet .balance-item { 
+            font-size: 1.3em; 
             font-weight: bold; 
             color: #27ae60;
-            margin: 8px 0;
+            margin: 5px 0;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 10px;
         }
-        .wallet .currency { 
-            color: #888; 
-            font-size: 0.85em;
-            background: #f0f0f0;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 2px;
-        }
-        .wallet .currency.negative { color: #e74c3c; background: #fee; }
+        .wallet .balance-item.negative { color: #e74c3c; background: #fee; }
+        .wallet .empty-bal { color: #aaa; font-size: 1.1em; margin-top: 10px; }
 
         .card { 
             background: rgba(255,255,255,0.95); 
@@ -129,42 +120,22 @@
             background: linear-gradient(135deg, #3498db, #2980b9); 
             color: white; 
         }
-        .btn-primary:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(52,152,219,0.4);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(52,152,219,0.4); }
         .btn-danger { 
             background: linear-gradient(135deg, #e74c3c, #c0392b); 
             color: white; 
         }
-        .btn-danger:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(231,76,60,0.4);
-        }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(231,76,60,0.4); }
         .btn-success { 
             background: linear-gradient(135deg, #27ae60, #1e8449); 
             color: white; 
         }
-        .btn-success:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(39,174,96,0.4);
-        }
-        .btn-warning {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white;
-        }
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(243,156,18,0.4);
-        }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(39,174,96,0.4); }
         .btn-purple {
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
             color: white;
         }
-        .btn-purple:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(155,89,182,0.4);
-        }
+        .btn-purple:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(155,89,182,0.4); }
 
         .tabs { 
             display: flex; 
@@ -217,25 +188,14 @@
             font-size: 12px;
             font-weight: bold;
         }
-        .badge-cancelled {
-            background: #95a5a6;
-        }
+        .badge-cancelled { background: #95a5a6; }
 
-        .date-display { 
-            color: #7f8c8d; 
-            font-size: 13px; 
-            margin-top: 5px;
-        }
+        .date-display { color: #7f8c8d; font-size: 13px; margin-top: 5px; }
 
         .debt-on-me { border-right: 5px solid #e74c3c; }
         .debt-on-them { border-right: 5px solid #27ae60; }
 
-        .empty { 
-            text-align: center; 
-            color: #999; 
-            padding: 40px;
-            font-size: 1.1em;
-        }
+        .empty { text-align: center; color: #999; padding: 40px; font-size: 1.1em; }
 
         .action-btn { 
             background: #e74c3c; 
@@ -278,12 +238,6 @@
 
         .status-settled { color: #27ae60; font-weight: bold; }
         .status-cancelled { color: #95a5a6; font-weight: bold; }
-
-        .transfer-arrow {
-            color: #9b59b6;
-            font-size: 1.2em;
-            margin: 0 5px;
-        }
 
         .notification {
             position: fixed;
@@ -330,10 +284,7 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        .modal-header h3 {
-            color: #2c3e50;
-            font-size: 1.3em;
-        }
+        .modal-header h3 { color: #2c3e50; font-size: 1.3em; }
         .close-modal {
             background: none;
             border: none;
@@ -342,18 +293,20 @@
             color: #999;
         }
 
-        .wallet-balances {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            justify-content: center;
-            margin-top: 5px;
+        .debug-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
         }
 
         @media (max-width: 600px) {
             .form-row { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.8em; }
-            .wallet .amount { font-size: 1.2em; }
+            .wallet .balance-item { font-size: 1.1em; }
         }
     </style>
 <base target="_blank">
@@ -369,19 +322,19 @@
         <div class="wallets">
             <div class="wallet" onclick="showWalletDetails('qnb')">
                 <h3>🏦 بنك QNB</h3>
-                <div id="qnb-balances" class="wallet-balances"></div>
+                <div id="qnb-balances"><div class="empty-bal">جاري التحميل...</div></div>
             </div>
             <div class="wallet" onclick="showWalletDetails('muscat')">
                 <h3>🏛️ بنك مسقط</h3>
-                <div id="muscat-balances" class="wallet-balances"></div>
+                <div id="muscat-balances"><div class="empty-bal">جاري التحميل...</div></div>
             </div>
             <div class="wallet" onclick="showWalletDetails('cash')">
                 <h3>💵 كاش</h3>
-                <div id="cash-balances" class="wallet-balances"></div>
+                <div id="cash-balances"><div class="empty-bal">جاري التحميل...</div></div>
             </div>
             <div class="wallet" onclick="showWalletDetails('extra')">
                 <h3>💼 دخل إضافي</h3>
-                <div id="extra-balances" class="wallet-balances"></div>
+                <div id="extra-balances"><div class="empty-bal">جاري التحميل...</div></div>
             </div>
         </div>
 
@@ -439,7 +392,7 @@
             </div>
         </div>
 
-        <!-- قسم التحويل بين المحافظ -->
+        <!-- قسم التحويل -->
         <div id="transfer" class="card hidden">
             <h2>🔄 تحويل بين المحافظ</h2>
             <div class="form-row">
@@ -529,7 +482,7 @@
         </div>
     </div>
 
-    <!-- مودال تفاصيل المحفظة -->
+    <!-- مودال -->
     <div class="modal-overlay" id="wallet-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -542,7 +495,7 @@
 
     <script>
         // ═══════════════════════════════════════════════════════
-        // ⚠️ ضع إعدادات Firebase الخاصة بك هنا
+        // إعدادات Firebase - استبدل هذه القيم بقيمك
         // ═══════════════════════════════════════════════════════
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY_HERE",
@@ -554,6 +507,7 @@
             appId: "YOUR_APP_ID"
         };
 
+        // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const transRef = db.ref('transactions');
@@ -563,7 +517,9 @@
         const walletNames = { qnb: 'QNB', muscat: 'مسقط', cash: 'كاش', extra: 'دخل إضافي' };
         const walletIcons = { qnb: '🏦', muscat: '🏛️', cash: '💵', extra: '💼' };
 
-        // تبديل التبويبات
+        // ═══════════════════════════════════════════════════════
+        // دوال مساعدة
+        // ═══════════════════════════════════════════════════════
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
@@ -572,16 +528,14 @@
             document.getElementById('debts').classList.toggle('hidden', tab !== 'debts');
         }
 
-        // الحصول على التاريخ والوقت
         function getDateTime() {
             const now = new Date();
             return now.toLocaleString('ar-EG', { 
                 year: 'numeric', month: '2-digit', day: '2-digit',
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
+                hour: '2-digit', minute: '2-digit'
             });
         }
 
-        // إشعار
         function showNotification(msg, type = 'success') {
             const div = document.createElement('div');
             div.className = `notification ${type}`;
@@ -591,7 +545,7 @@
         }
 
         // ═══════════════════════════════════════════════════════
-        // إضافة عملية مالية
+        // إضافة عملية
         // ═══════════════════════════════════════════════════════
         function addTrans() {
             const type = document.getElementById('t-type').value;
@@ -600,8 +554,8 @@
             const currency = document.getElementById('t-currency').value;
             const desc = document.getElementById('t-desc').value.trim();
 
-            if (!amount || amount <= 0) {
-                showNotification('⚠️ أدخل مبلغ صحيح', 'error');
+            if (!amount || amount <= 0 || isNaN(amount)) {
+                showNotification('⚠️ أدخل مبلغ صحيح أكبر من صفر', 'error');
                 return;
             }
 
@@ -612,7 +566,7 @@
                 currency: currency,
                 description: desc || 'بدون وصف',
                 date: getDateTime(),
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                timestamp: Date.now(),
                 status: 'active'
             };
 
@@ -622,7 +576,10 @@
                     document.getElementById('t-desc').value = '';
                     showNotification('✅ تم حفظ العملية بنجاح!');
                 })
-                .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+                .catch(err => {
+                    console.error('Error:', err);
+                    showNotification('❌ خطأ: ' + err.message, 'error');
+                });
         }
 
         // ═══════════════════════════════════════════════════════
@@ -639,16 +596,15 @@
                 showNotification('⚠️ لا يمكن التحويل لنفس المحفظة', 'error');
                 return;
             }
-            if (!amount || amount <= 0) {
+            if (!amount || amount <= 0 || isNaN(amount)) {
                 showNotification('⚠️ أدخل مبلغ صحيح', 'error');
                 return;
             }
 
             const now = getDateTime();
-            const ts = firebase.database.ServerValue.TIMESTAMP;
+            const ts = Date.now();
             const transferDesc = desc || `تحويل من ${walletNames[fromWallet]} إلى ${walletNames[toWallet]}`;
 
-            // عملية خصم من المحفظة الأولى
             const outTrans = {
                 type: 'expense',
                 wallet: fromWallet,
@@ -662,7 +618,6 @@
                 transferTo: toWallet
             };
 
-            // عملية إيداع في المحفظة الثانية
             const inTrans = {
                 type: 'income',
                 wallet: toWallet,
@@ -670,44 +625,45 @@
                 currency: currency,
                 description: `تحويل وارد: ${transferDesc}`,
                 date: now,
-                timestamp: ts,
+                timestamp: ts + 1,
                 status: 'active',
                 transfer: true,
                 transferFrom: fromWallet
             };
 
-            const batch = {};
+            const updates = {};
             const outKey = transRef.push().key;
             const inKey = transRef.push().key;
-            batch[outKey] = outTrans;
-            batch[inKey] = inTrans;
+            updates[outKey] = outTrans;
+            updates[inKey] = inTrans;
 
-            transRef.update(batch)
+            transRef.update(updates)
                 .then(() => {
                     document.getElementById('tr-amount').value = '';
                     document.getElementById('tr-desc').value = '';
-                    showNotification(`✅ تم التحويل: ${amount.toFixed(2)} ${symbols[currency]} من ${walletNames[fromWallet]} إلى ${walletNames[toWallet]}`);
+                    showNotification(`✅ تم التحويل: ${amount.toFixed(2)} ${symbols[currency]}`);
                 })
-                .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
+                .catch(err => {
+                    console.error('Transfer error:', err);
+                    showNotification('❌ خطأ: ' + err.message, 'error');
+                });
         }
 
         // ═══════════════════════════════════════════════════════
-        // إلغاء عملية (يعود المبلغ للمحفظة)
+        // إلغاء عملية
         // ═══════════════════════════════════════════════════════
         function cancelTransaction(id) {
-            if (!confirm('⚠️ هل أنت متأكد من إلغاء هذه العملية؟
-سيتم إرجاع المبلغ للمحفظة الأصلية.')) return;
+            if (!confirm('⚠️ هل أنت متأكد من إلغاء هذه العملية؟')) return;
 
             transRef.child(id).once('value', snap => {
                 const t = snap.val();
                 if (!t || t.status === 'cancelled') {
-                    showNotification('⚠️ العملية غير موجودة أو ملغاة مسبقاً', 'warning');
+                    showNotification('⚠️ العملية غير موجودة أو ملغاة', 'warning');
                     return;
                 }
 
-                // إذا كانت عملية تحويل، نلغي الطرفين
+                // إذا كانت تحويل، نلغي الطرفين
                 if (t.transfer) {
-                    // نبحث عن العملية المقابلة
                     transRef.once('value', snap2 => {
                         const all = snap2.val() || {};
                         let pairKey = null;
@@ -731,16 +687,15 @@
                         }
 
                         transRef.update(updates)
-                            .then(() => showNotification('✅ تم إلغاء التحويل وإرجاع المبالغ'))
+                            .then(() => showNotification('✅ تم إلغاء التحويل'))
                             .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
                     });
                 } else {
-                    // إلغاء عادي
                     transRef.child(id).update({
                         status: 'cancelled',
                         cancelledDate: getDateTime()
                     })
-                    .then(() => showNotification('✅ تم إلغاء العملية وإرجاع المبلغ للمحفظة'))
+                    .then(() => showNotification('✅ تم إلغاء العملية'))
                     .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
                 }
             });
@@ -748,7 +703,7 @@
 
         // حذف نهائي
         function deleteTrans(id) {
-            if (confirm('🗑️ حذف نهائي؟ (لا يمكن الاسترجاع)')) {
+            if (confirm('🗑️ حذف نهائي؟')) {
                 transRef.child(id).remove()
                     .then(() => showNotification('🗑️ تم الحذف'))
                     .catch(err => showNotification('❌ خطأ: ' + err.message, 'error'));
@@ -756,7 +711,7 @@
         }
 
         // ═══════════════════════════════════════════════════════
-        // إضافة مديونية
+        // المديونيات
         // ═══════════════════════════════════════════════════════
         function addDebt() {
             const person = document.getElementById('d-person').value.trim();
@@ -766,13 +721,13 @@
             const desc = document.getElementById('d-desc').value.trim();
 
             if (!person) { showNotification('⚠️ أدخل اسم الشخص', 'error'); return; }
-            if (!amount || amount <= 0) { showNotification('⚠️ أدخل مبلغ صحيح', 'error'); return; }
+            if (!amount || amount <= 0 || isNaN(amount)) { showNotification('⚠️ أدخل مبلغ صحيح', 'error'); return; }
 
             debtsRef.push({
                 person, amount, currency, type,
                 description: desc || 'بدون وصف',
                 date: getDateTime(),
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                timestamp: Date.now(),
                 status: 'active'
             })
             .then(() => {
@@ -804,51 +759,62 @@
         }
 
         // ═══════════════════════════════════════════════════════
-        // عرض الأرصدة (مُصلح - يحسب كل عملة بمحفظتها)
+        // حساب وعرض الأرصدة (مُصلح بالكامل)
         // ═══════════════════════════════════════════════════════
-        function updateBalances(data) {
+        function calculateBalances(data) {
             const balances = {
                 qnb: {}, muscat: {}, cash: {}, extra: {}
             };
 
-            if (data) {
-                Object.values(data).forEach(t => {
-                    if (t.status === 'cancelled') return; // لا تحسب الملغاة
+            if (!data) return balances;
 
-                    const curr = t.currency;
-                    if (!balances[t.wallet][curr]) balances[t.wallet][curr] = 0;
+            Object.values(data).forEach(t => {
+                // تخطي الملغاة
+                if (t.status === 'cancelled') return;
 
-                    if (t.type === 'income') {
-                        balances[t.wallet][curr] += t.amount;
-                    } else {
-                        balances[t.wallet][curr] -= t.amount;
-                    }
-                });
-            }
+                const wallet = t.wallet;
+                const currency = t.currency;
+                const amount = parseFloat(t.amount) || 0;
 
-            // عرض الأرصدة لكل محفظة
-            ['qnb', 'muscat', 'cash', 'extra'].forEach(wallet => {
-                const container = document.getElementById(wallet + '-balances');
-                const walletBalances = balances[wallet];
+                if (!balances[wallet]) balances[wallet] = {};
+                if (!balances[wallet][currency]) balances[wallet][currency] = 0;
 
-                if (Object.keys(walletBalances).length === 0) {
-                    container.innerHTML = '<div class="currency">0.00</div>';
-                    return;
+                if (t.type === 'income') {
+                    balances[wallet][currency] += amount;
+                } else if (t.type === 'expense') {
+                    balances[wallet][currency] -= amount;
                 }
-
-                let html = '';
-                for (let [curr, amount] of Object.entries(walletBalances)) {
-                    const cls = amount < 0 ? 'currency negative' : 'currency';
-                    html += `<div class="${cls}">${amount.toFixed(2)} ${symbols[curr]}</div>`;
-                }
-                container.innerHTML = html;
             });
 
             return balances;
         }
 
+        function renderBalances(balances) {
+            const wallets = ['qnb', 'muscat', 'cash', 'extra'];
+
+            wallets.forEach(wallet => {
+                const container = document.getElementById(wallet + '-balances');
+                const walletBalances = balances[wallet] || {};
+                const currencies = Object.keys(walletBalances);
+
+                if (currencies.length === 0) {
+                    container.innerHTML = '<div class="empty-bal">0.00</div>';
+                    return;
+                }
+
+                let html = '';
+                currencies.forEach(curr => {
+                    const amount = walletBalances[curr];
+                    const cls = amount < 0 ? 'balance-item negative' : 'balance-item';
+                    html += `<div class="${cls}">${amount.toFixed(2)} ${symbols[curr]}</div>`;
+                });
+
+                container.innerHTML = html;
+            });
+        }
+
         // ═══════════════════════════════════════════════════════
-        // عرض تفاصيل المحفظة (Modal)
+        // مودال تفاصيل المحفظة
         // ═══════════════════════════════════════════════════════
         function showWalletDetails(wallet) {
             transRef.once('value', snap => {
@@ -896,21 +862,25 @@
             document.getElementById('wallet-modal').classList.remove('active');
         }
 
-        // إغلاق المودال بالنقر خارج المحتوى
         document.getElementById('wallet-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
         // ═══════════════════════════════════════════════════════
-        // تحديث فوري - الاستماع للتغييرات
+        // الاستماع للتغييرات (مُصلح)
         // ═══════════════════════════════════════════════════════
         transRef.on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            const balances = updateBalances(data);
+            const data = snapshot.val();
+
+            console.log('Firebase data received:', data);
+
+            // حساب وعرض الأرصدة
+            const balances = calculateBalances(data);
+            renderBalances(balances);
 
             // عرض قائمة العمليات
             const list = document.getElementById('trans-list');
-            const entries = Object.entries(data);
+            const entries = data ? Object.entries(data) : [];
 
             if (entries.length === 0) {
                 list.innerHTML = `
@@ -952,10 +922,10 @@
                             </div>
                         </div>
                         <div style="text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <span class="${typeCls}">${sign}${t.amount.toFixed(2)} ${symbols[t.currency]}</span>
+                            <span class="${typeCls}">${sign}${parseFloat(t.amount).toFixed(2)} ${symbols[t.currency]}</span>
                             <span class="${badgeCls}">${statusText}</span>
                             ${!isCancelled ? 
-                                `<button class="cancel-btn" onclick="cancelTransaction('${id}')" title="إلغاء العملية">↩️ إلغاء</button>
+                                `<button class="cancel-btn" onclick="cancelTransaction('${id}')" title="إلغاء">↩️ إلغاء</button>
                                  <button class="action-btn" onclick="deleteTrans('${id}')" title="حذف">🗑️</button>`
                                 : `<button class="action-btn" onclick="deleteTrans('${id}')" title="حذف نهائي">🗑️</button>`
                             }
@@ -965,13 +935,16 @@
             });
 
             list.innerHTML = html;
+        }, (error) => {
+            console.error('Firebase error:', error);
+            showNotification('❌ خطأ في الاتصال بقاعدة البيانات', 'error');
         });
 
         // تحديث المديونيات
         debtsRef.on('value', (snapshot) => {
-            const data = snapshot.val() || {};
+            const data = snapshot.val();
             const list = document.getElementById('debt-list');
-            const entries = Object.entries(data);
+            const entries = data ? Object.entries(data) : [];
 
             if (entries.length === 0) {
                 list.innerHTML = `
@@ -1001,7 +974,7 @@
                         </div>
                         <div style="text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                             <span style="font-weight: bold; font-size: 1.1em;">
-                                ${d.amount.toFixed(2)} ${symbols[d.currency]}
+                                ${parseFloat(d.amount).toFixed(2)} ${symbols[d.currency]}
                             </span>
                             <span class="badge">${d.currency}</span>
                             ${d.status === 'active' 
@@ -1016,7 +989,12 @@
             });
 
             list.innerHTML = html;
+        }, (error) => {
+            console.error('Debts error:', error);
         });
+
+        // تأكد من تهيئة Firebase
+        console.log('App initialized. Firebase config:', firebaseConfig.databaseURL);
     </script>
 </body>
 </html>
