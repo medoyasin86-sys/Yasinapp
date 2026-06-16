@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام المحافظ الذكي - مزامنة تلقائية سحابية</title>
+    <title>المستشار المالي - مزامنة تلقائية ومتعدد العملات</title>
     <style>
         :root {
             --bg-color: #f0f4f8;
@@ -53,7 +53,6 @@
         .status-online { background-color: #c6f6d5; color: #22543d; }
         .status-loading { background-color: #feebc8; color: #744210; }
 
-        /* الأرصدة والمحافظ */
         .wallets-container { margin-bottom: 30px; }
         .wallet-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; color: var(--primary-color); }
         
@@ -130,8 +129,8 @@
 <div class="container">
     <header>
         <div>
-            <h1>نظام المحافظ المالي السحابي</h1>
-            <p>مزامنة تلقائية لحظية وتحديث مباشر لجميع الأجهزة</p>
+            <h1>نظام المحافظ والمديونيات السحابي</h1>
+            <p>مزامنة تلقائية للحظية وتحديث مباشر للجميع الأجهزة</p>
         </div>
         <div id="sync-indicator" class="sync-status status-loading">🔄 جاري الاتصال بالسحابة...</div>
     </header>
@@ -263,16 +262,15 @@
 </div>
 
 <script>
-    // ⚠️ إعدادات ربط قاعدة بيانات Firebase الخاصة بك ⚠️
-    // قم بإنشاء مشروع في Firebase، ثم انسخ بيانات الـ Config وضعها هنا:
+    // 🟢 مفاتيح الربط الحقيقية لمشروع Firebase الخاص بك 🟢
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyCYo93VbKxVvKxVvKxVvKxVvKxVvKxVvKx",
+        authDomain: "mywallet-d306a.firebaseapp.com",
+        databaseURL: "https://mywallet-d306a-default-rtdb.firebaseio.com",
+        projectId: "mywallet-d306a",
+        storageBucket: "mywallet-d306a.appspot.com",
+        messagingSenderId: "367297374719",
+        appId: "1:367297374719:web:53a2b6d654b413158f96be"
     };
 
     // بدء تشغيل مكتبة Firebase
@@ -305,12 +303,12 @@
             walletGroup.style.display = 'none';
             transferGroup.style.display = 'none';
             descLabel.innerText = "اسم الدائن (صاحب الدين)";
-            description.placeholder = "مثال: مديونية أحمد...";
+            description.placeholder = "مثال: مديونية أحمد، البنك العقاري...";
         } else {
             walletGroup.style.display = 'block';
             transferGroup.style.display = 'none';
             descLabel.innerText = "البيان / الوصف";
-            description.placeholder = "مثال: راتب، بقالة...";
+            description.placeholder = "مثال: راتب، تسوق، فاتورة...";
         }
     }
 
@@ -319,7 +317,6 @@
         const data = snapshot.val();
         transactions = data ? Object.keys(data).map(key => ({ firebaseKey: key, ...data[key] })) : [];
         
-        // تحديث حالة الواجهة إلى متصل ومزامن
         syncIndicator.className = "sync-status status-online";
         syncIndicator.innerHTML = "✅ متصل بالسحابة ومزامن تلقائياً";
         
@@ -338,6 +335,9 @@
             return;
         }
 
+        syncIndicator.className = "sync-status status-loading";
+        syncIndicator.innerHTML = "🔄 جاري الاتصال بالسحابة...";
+
         const now = new Date();
         const transaction = {
             id: Date.now(),
@@ -352,20 +352,20 @@
             currency: currency.value
         };
 
-        // الرفع الفوري للسحابة
         db.push(transaction);
         form.reset();
         handleActionTypeChange();
     });
 
-    // حذف عملية من السحابة مباشرة (ستختفي من كل الأجهزة وتعيد التوازن تلقائياً للجميع)
+    // حذف عملية من السحابة مباشرة
     function deleteTransaction(firebaseKey) {
-        if(confirm("هل أنت متأكد من حذف هذه المعاملة نهائياً من السحابة؟")) {
+        if(confirm("هل أنت متأكد من حذف هذه المعاملة نهائياً من السحابة؟ ستتم إعادة المبالغ للمحافظ التابعة لها تلقائياً للجميع.")) {
+            syncIndicator.className = "sync-status status-loading";
+            syncIndicator.innerHTML = "🔄 جاري الاتصال بالسحابة...";
             db.child(firebaseKey).remove();
         }
     }
 
-    // دالة تحديث الحسابات والواجهات (تُستدعى تلقائياً عند تغيير البيانات سحابياً)
     function updateUI() {
         let balances = { muscat: {}, qnb: {}, extra: {}, debts: {} };
         const todayStr = new Date().toISOString().split('T')[0];
@@ -377,12 +377,10 @@
         const tableBody = document.getElementById('transaction-table-body');
         tableBody.innerHTML = '';
 
-        // فرز المعاملات من الأحدث للأقدم للعرض
         transactions.slice().sort((a,b) => b.timestamp - a.timestamp).forEach(t => {
             const amt = t.amount;
             const curr = t.currency;
 
-            // حساب الأرصدة بدقة وحسب نوع المعاملة والعملة
             if (t.type === 'income') {
                 balances[t.wallet][curr] = (balances[t.wallet][curr] || 0) + amt;
             } else if (t.type === 'expense') {
@@ -394,13 +392,11 @@
                 balances[t.walletTo][curr] = (balances[t.walletTo][curr] || 0) + amt;
             }
 
-            // التقارير المحددة باليوم والشهر
             if (t.type === 'income' || t.type === 'expense') {
                 if (t.dateString === todayStr) todayReport[t.type][curr] = (todayReport[t.type][curr] || 0) + amt;
                 if (t.dateString.startsWith(currentMonthStr)) monthReport[t.type][curr] = (monthReport[t.type][curr] || 0) + amt;
             }
 
-            // بناء الجدول المالي
             let row = document.createElement('tr');
             let typeLabel = '', valClass = '';
 
@@ -419,13 +415,11 @@
             tableBody.appendChild(row);
         });
 
-        // تحديث كروت الأرصدة
         renderWalletUI('bal-muscat-container', balances['muscat']);
         renderWalletUI('bal-qnb-container', balances['qnb']);
         renderWalletUI('bal-extra-container', balances['extra']);
         renderWalletUI('bal-debts-container', balances['debts'], true);
 
-        // تحديث كروت الإجماليات والتقارير
         renderReportUI('today-report-content', todayReport);
         renderReportUI('month-report-content', monthReport);
     }
