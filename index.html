@@ -3,221 +3,897 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز التقارير الفخم</title>
-    <!-- تضمين مكتبة التصدير المفضلة والمستقرة -->
+    <title>حساباتي الفاخرة المتقدمة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        :root {
-            --primary-glow: #00f0ff;
-            --accent-bold: #ff0055;
-            --bg-lux: #f4f6fa;
-            --panel-bg: #ffffff;
-            --3d-shadow: 4px 4px 0px #b0b8c9, -2px -2px 0px #ffffff;
-            --btn-shadow: 3px 3px 0px #c2003f, inset 1px 1px 2px rgba(255,255,255,0.4);
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #f0f4f8; 
+            background-image: radial-gradient(circle at top right, rgba(219, 234, 254, 0.8), transparent);
+        }
+        
+        /* الواجهات الفخمة الغنية بالمجسمات والأزرار البارزة (Retro-3D / Tactile UI) */
+        .luxury-card { 
+            background: #ffffff;
+            border: 3px solid #1e293b;
+            box-shadow: 6px 6px 0px #1e293b;
+            border-radius: 20px;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-lux);
-            margin: 0;
-            padding: 20px;
+        .inner-desk {
+            background: #e2e8f0;
+            border: 2px inset #94a3b8;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
         }
 
-        /* لوحة التحكم الرئيسية - غنية بالمجسمات والشعارات */
-        .dashboard-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: var(--panel-bg);
-            border: 3px solid #333;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 8px 8px 0px #222;
-            position: relative;
+        /* أزرار مجسمة بارزة وجريئة (3D Plastic Buttons) */
+        .btn-3d-amber {
+            background: #f59e0b;
+            color: #1e293b;
+            border: 2px solid #1e293b;
+            box-shadow: 3px 3px 0px #1e293b;
+            font-weight: 900;
+            transition: all 0.05s ease;
         }
-
-        /* شارات وشعارات فخمة وجريئة */
-        .header-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px double #333;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-
-        .brand-logo {
-            background: var(--accent-bold);
-            color: white;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            box-shadow: var(--btn-shadow);
-            border: 2px solid #333;
-            letter-spacing: 1px;
-        }
-
-        /* كثرة الأزرار والمفاتيح (Control Desk) */
-        .control-desk {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-            background: #eef2f7;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px inset #999;
-        }
-
-        /* أزرار مجسمة بارزة بألوان جريئة */
-        .lux-button {
-            background: var(--accent-bold);
-            color: white;
-            border: 2px solid #333;
-            padding: 12px 15px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.1s ease;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .lux-button:active {
+        .btn-3d-amber:active {
             transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #c2003f;
+            box-shadow: 1px 1px 0px #1e293b;
         }
 
-        .lux-button.secondary {
-            background: #00b0ff;
-            box-shadow: 3px 3px 0px #007bb3;
+        .btn-3d-indigo {
+            background: #4f46e5;
+            color: #ffffff;
+            border: 2px solid #1e293b;
+            box-shadow: 3px 3px 0px #1e293b;
+            font-weight: 900;
+            transition: all 0.05s ease;
+        }
+        .btn-3d-indigo:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #1e293b;
         }
 
-        .lux-button.success {
-            background: #00e676;
-            color: #111;
-            box-shadow: 3px 3px 0px #00a352;
+        .btn-3d-slate {
+            background: #64748b;
+            color: #ffffff;
+            border: 2px solid #1e293b;
+            box-shadow: 3px 3px 0px #1e293b;
+            font-weight: 900;
+            transition: all 0.05s ease;
+        }
+        .btn-3d-slate:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #1e293b;
         }
 
-        /* منطقة التقرير المستهدفة بالتصدير */
-        #report-content {
-            background: white;
-            padding: 25px;
-            border: 2px solid #444;
-            border-radius: 8px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        .btn-3d-emerald {
+            background: #10b981;
+            color: #ffffff;
+            border: 2px solid #1e293b;
+            box-shadow: 3px 3px 0px #1e293b;
+            font-weight: 900;
+            transition: all 0.05s ease;
+        }
+        .btn-3d-emerald:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #1e293b;
         }
 
-        .report-header {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+        .btn-3d-rose {
+            background: #ef4444;
+            color: #ffffff;
+            border: 2px solid #1e293b;
+            box-shadow: 2px 2px 0px #1e293b;
+            font-weight: 900;
         }
 
-        .data-table {
+        /* مجسمات الوعاء المالي الداخلي */
+        .wallet-pill {
+            background: #ffffff;
+            border: 2px solid #334155;
+            box-shadow: 3px 3px 0px #334155;
+        }
+
+        /* تنسيق مخصص لمركز استخراج تقارير PDF الفاخر لمنع الصفحات البيضاء */
+        #pdf-render-zone {
+            font-family: 'Cairo', sans-serif;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            box-sizing: border-box;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
         }
-
-        .data-table th, .data-table td {
-            border: 2px solid #333;
-            padding: 12px;
-            text-align: right;
+        
+        .pdf-table th {
+            background-color: #f1f5f9 !important;
+            border: 2px solid #0f172a !important;
+            color: #0f172a !important;
         }
-
-        .data-table th {
-            background-color: #f0f4f8;
-            color: #111;
+        .pdf-table td {
+            border: 2px solid #cbd5e1 !important;
+            color: #334155 !important;
         }
     </style>
 </head>
-<body>
+<body class="text-slate-800 antialiased min-h-screen pb-16">
 
-<div class="dashboard-container">
-    
-    <!-- الهيدر والشعارات -->
-    <div class="header-panel">
-        <div class="brand-logo">✦ نظام المراقبة المتقدم ✦</div>
-        <h2>مركز استخراج التقارير الذكي</h2>
-    </div>
-
-    <!-- كثرة الأزرار والمجسمات للتحكم -->
-    <div class="control-desk">
-        <button class="lux-button" onclick="alert('تصفية البيانات...')">🎛️ تصفية المتقدمة</button>
-        <button class="lux-button secondary" onclick="alert('تحديث الاتصال...')">🔄 تحديث المؤشرات</button>
-        <button class="lux-button secondary" onclick="alert('خيارات العرض...')">🛠️ تخصيص الأعمدة</button>
-        <!-- زر التصدير بلون جريء ومميز -->
-        <button class="lux-button success" id="export-btn" onclick="exportToPDF()">📥 تصدير PDF الفوري</button>
-    </div>
-
-    <!-- محتوى التقرير (الذي كان يظهر فارغاً) -->
-    <div id="report-content">
-        <div class="report-header">
-            <h3>تقرير الأداء العام والإنتاجية</h3>
-            <p>تاريخ الاستخراج: 17 يونيو 2026</p>
+    <header class="bg-amber-400 border-b-4 border-slate-900 sticky top-0 z-50 shadow-[0_4px_0_#1e293b]">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-white border-2 border-slate-900 p-2.5 rounded-2xl shadow-[3px_3px_0px_#1e293b]">
+                    <span class="text-2xl block">🏛️</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900 tracking-wide flex items-center gap-2">
+                        <span>حساباتي المتقدمة</span>
+                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded-md">PRO v2.5</span>
+                    </h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-xs text-slate-900 font-black border-b-2 border-slate-900">المستخدم السيادي: Mo. Yasin</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-900 block"></span>
+                        <span class="text-[10px] text-slate-800 font-bold">الذاكرة المحلية الآمنة 📱</span>
+                    </div>
+                </div>
+            </div>
+            <div id="live-clock" class="text-xs bg-white text-slate-900 font-mono font-black border-2 border-slate-900 px-5 py-2 rounded-xl shadow-[3px_3px_0px_#1e293b]"></div>
         </div>
-        
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>المؤشر</th>
-                    <th>القيمة المستهدفة</th>
-                    <th>الحالة الحالية</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>كفاءة التصميم الرقمي</td>
-                    <td>95%</td>
-                    <td style="color: green; font-weight: bold;">98% (ممتاز)</td>
-                </tr>
-                <tr>
-                    <td>استجابة الأزرار والمجسمات</td>
-                    <td>100%</td>
-                    <td style="color: green; font-weight: bold;">100% (مستقر)</td>
-                </tr>
-            </tbody>
-        </table>
+    </header>
+
+    <main class="container mx-auto px-4 mt-10 space-y-10 max-w-7xl">
+
+        <section class="luxury-card p-6 sm:p-8 relative">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
+                <span class="text-3xl bg-amber-100 p-2 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">👑</span>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900">الموقف المالي الموحد الفاخر</h2>
+                    <p class="text-xs text-slate-500 font-bold">الأرصدة الحالية المستقرة في الخزائن والمحافظ الشخصية</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="inner-desk p-5 rounded-2xl border-2 border-slate-400">
+                    <h3 class="text-xs font-black text-white bg-slate-900 px-3 py-2 rounded-xl border-2 border-slate-900 w-max shadow-[2px_2px_0px_#f59e0b] font-mono mb-4">🏦 BANKING WALLETS</h3>
+                    <div class="space-y-4" id="wallets-bank"></div>
+                </div>
+                <div class="inner-desk p-5 rounded-2xl border-2 border-slate-400">
+                    <h3 class="text-xs font-black text-white bg-emerald-600 px-3 py-2 rounded-xl border-2 border-slate-900 w-max shadow-[2px_2px_0px_#1e293b] font-mono mb-4">💵 LIQUID CASH</h3>
+                    <div class="space-y-4" id="wallets-cash"></div>
+                </div>
+                <div class="inner-desk p-5 rounded-2xl border-2 border-slate-400">
+                    <h3 class="text-xs font-black text-white bg-indigo-600 px-3 py-2 rounded-xl border-2 border-slate-900 w-max shadow-[2px_2px_0px_#1e293b] font-mono mb-4">🤝 COMMITMENTS & FUNDS</h3>
+                    <div class="space-y-4" id="wallets-others"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="luxury-card p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
+                    <span class="text-2xl bg-amber-400 p-1.5 border-2 border-slate-900 rounded-lg shadow-[2px_2px_0px_#1e293b]">📝</span>
+                    <div>
+                        <h2 class="text-lg font-black text-slate-900">الحركات التشغيلية الفورية</h2>
+                        <p class="text-xs text-slate-500 font-bold">تسجيل عمليات الإيداع والسحب المباشرة للخزينة</p>
+                    </div>
+                </div>
+                <form id="transaction-form" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">نوع القيد القيادي</label>
+                            <select id="tx-type" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-bold focus:bg-amber-50 outline-none transition-all shadow-[2px_2px_0px_#1e293b]">
+                                <option value="deposit" class="text-emerald-600 font-bold">إيداع نقدي ومستجد (+)</option>
+                                <option value="withdraw" class="text-rose-600 font-bold">سحب ومصروفات (-)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">الحساب أو الخزينة</label>
+                            <select id="tx-wallet" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-bold focus:bg-amber-50 outline-none transition-all shadow-[2px_2px_0px_#1e293b]"></select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">المبلغ المالي</label>
+                            <input type="number" id="tx-amount" step="0.01" required class="w-full p-3 bg-white border-2 border-slate-900 text-amber-600 font-black text-xl rounded-xl focus:bg-amber-50 outline-none transition-all shadow-[2px_2px_0px_#1e293b]" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">العملة السيادية</label>
+                            <select id="tx-currency" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-xl focus:bg-amber-50 outline-none transition-all shadow-[2px_2px_0px_#1e293b]">
+                                <option value="EGP">EGP - جنيه مصري</option>
+                                <option value="USD">USD - دولار أمريكي</option>
+                                <option value="OMR">OMR - ريال عماني</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">التوقيت المالي المالي</label>
+                            <input type="datetime-local" id="tx-date" required class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 font-bold rounded-xl outline-none shadow-[2px_2px_0px_#1e293b]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">البيان الاستدلالي</label>
+                            <input type="text" id="tx-desc" required class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl outline-none shadow-[2px_2px_0px_#1e293b] placeholder-slate-400" placeholder="الوصف أو الغرض بدقة">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full btn-3d-amber py-3.5 px-4 rounded-xl mt-2 cursor-pointer text-sm">
+                        🔱 إدراج الحركة وتحديث الخزائن
+                    </button>
+                </form>
+            </div>
+
+            <div class="luxury-card p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
+                        <span class="text-2xl bg-indigo-400 p-1.5 border-2 border-slate-900 rounded-lg shadow-[2px_2px_0px_#1e293b]">🔄</span>
+                        <div>
+                            <h2 class="text-lg font-black text-slate-900">التسويات والمناقلات البينية</h2>
+                            <p class="text-xs text-slate-500 font-bold">تحويل رؤوس الأموال بين المحافظ بنفس وحدة العملة</p>
+                        </div>
+                    </div>
+                    <form id="transfer-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-2">من وعاء (المصدر)</label>
+                                <select id="tf-from" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-bold outline-none shadow-[2px_2px_0px_#1e293b]"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-2">إلى وعاء (الوجهة)</label>
+                                <select id="tf-to" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-bold outline-none shadow-[2px_2px_0px_#1e293b]"></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-2">حجم النقد المحول</label>
+                                <input type="number" id="tf-amount" step="0.01" required class="w-full p-3 bg-white border-2 border-slate-900 text-indigo-600 font-black text-xl rounded-xl outline-none shadow-[2px_2px_0px_#1e293b]" placeholder="0.00">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-2">العملة المطابقة</label>
+                                <select id="tf-currency" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-xl outline-none shadow-[2px_2px_0px_#1e293b]">
+                                    <option value="EGP">EGP - جنيه مصري</option>
+                                    <option value="USD">USD - دولار أمريكي</option>
+                                    <option value="OMR">OMR - ريال عماني</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-700 mb-2">تاريخ القيد التبادلي</label>
+                            <input type="datetime-local" id="tf-date" required class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 font-bold rounded-xl outline-none shadow-[2px_2px_0px_#1e293b]">
+                        </div>
+                        <button type="submit" class="w-full btn-3d-indigo py-3.5 px-4 rounded-xl mt-2 cursor-pointer text-sm">
+                            🚀 تفعيل المناقلة الفورية للأرصدة
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="luxury-card p-6 sm:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b-2 border-slate-900 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl bg-sky-400 p-1.5 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">📊</span>
+                    <div>
+                        <h2 class="text-lg font-black text-slate-900">مركز استخراج التقارير وتوليد الـ PDF</h2>
+                        <p class="text-xs text-slate-500 font-bold">توليد مستندات محاسبية فاخرة لنطاقات زمنية محددة بدقة تامة</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="inner-desk p-4 rounded-2xl border-2 border-slate-400 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-2">نوع الفلترة المتقدمة</label>
+                    <select id="report-filter-type" onchange="handleFilterTypeChange()" class="w-full p-2.5 bg-white border-2 border-slate-900 text-slate-900 font-bold rounded-xl text-xs outline-none shadow-[2px_2px_0px_#1e293b]">
+                        <option value="single-day">يوم محدد بعينه</option>
+                        <option value="full-month">شهر كامل</option>
+                        <option value="custom-range">نطاق مخصص (من / إلى)</option>
+                    </select>
+                </div>
+                <div id="wrapper-start-date">
+                    <label id="label-start-date" class="block text-xs font-black text-slate-700 mb-2">تاريخ اليوم</label>
+                    <input type="date" id="report-start-date" class="w-full p-2.5 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-xl text-xs outline-none shadow-[2px_2px_0px_#1e293b]">
+                </div>
+                <div id="wrapper-end-date" class="hidden">
+                    <label class="block text-xs font-black text-slate-700 mb-2">إلى تاريخ</label>
+                    <input type="date" id="report-end-date" class="w-full p-2.5 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-xl text-xs outline-none shadow-[2px_2px_0px_#1e293b]">
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="generateCustomReport()" class="flex-1 btn-3d-slate text-xs px-4 py-2.5 rounded-xl cursor-pointer">
+                        🔍 تحديث العرض
+                    </button>
+                    <button id="pdf-trigger-btn" onclick="exportReportToPDF()" class="flex-1 btn-3d-emerald text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1">
+                        📄 تصدير PDF
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1 p-5 bg-slate-100 rounded-2xl border-2 border-slate-900 shadow-[3px_3px_0px_#1e293b] space-y-4">
+                    <h3 class="text-xs font-black text-slate-900 border-b-2 border-slate-900 pb-2 flex justify-between items-center">
+                        <span>📊 الملخص للفترة</span>
+                        <span id="report-period-title" class="text-[10px] bg-slate-900 text-white px-2 py-0.5 rounded-md font-bold"></span>
+                    </h3>
+                    <div class="space-y-3" id="report-summary-cards"></div>
+                </div>
+                <div class="lg:col-span-2 p-5 bg-slate-100 rounded-2xl border-2 border-slate-900 shadow-[3px_3px_0px_#1e293b]">
+                    <h3 class="text-xs font-black text-slate-900 border-b-2 border-slate-900 pb-2 mb-3">📜 حركات النطاق المستهدف</h3>
+                    <div class="overflow-y-auto max-h-[220px] space-y-2 pr-1" id="report-transactions-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="luxury-card overflow-hidden">
+            <div class="p-6 sm:p-8 border-b-2 border-slate-900 flex items-center gap-3 bg-amber-50">
+                <span class="text-2xl bg-white p-1 border-2 border-slate-900 rounded-lg">📜</span>
+                <div>
+                    <h2 class="text-lg font-black text-slate-900">سجل المعاملات المالية التاريخي</h2>
+                </div>
+            </div>
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-right border-collapse min-w-[950px]">
+                    <thead>
+                        <tr class="bg-slate-900 text-white border-b-2 border-slate-900 text-xs font-black uppercase tracking-wider">
+                            <th class="p-4 border-l border-slate-800">طابع التوقيت لعملية</th>
+                            <th class="p-4 border-l border-slate-800">طبيعة القيد</th>
+                            <th class="p-4 border-l border-slate-800">المحفظة المستهدفة</th>
+                            <th class="p-4 border-l border-slate-800">الالبيان التفصيلي للعملية</th>
+                            <th class="p-4 border-l border-slate-800">القيمة التراكمية</th>
+                            <th class="p-4 border-l border-slate-800">وحدة العملة</th>
+                            <th class="p-4 text-center">الخيارات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-logs-tbody" class="text-xs divide-y divide-slate-300 font-bold text-slate-700 bg-white"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-[8px_8px_0px_#1e293b] border-4 border-slate-900 transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-2 border-b-2 border-slate-900 pb-3">
+                <span class="text-xl bg-amber-100 p-1 border-2 border-slate-900 rounded-md">✏️</span>
+                <div>
+                    <h3 class="text-md font-black text-slate-900">تعديل وتسوية القيد المالي المحدد</h3>
+                    <p class="text-[10px] text-slate-500 font-bold">سيقوم النظام بإعادة ضبط موازين الخزائن تلقائياً</p>
+                </div>
+            </div>
+            <form id="edit-form" class="space-y-4 mt-4">
+                <input type="hidden" id="edit-tx-id">
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">المحفظة أو الخزينة</label>
+                    <select id="edit-tx-wallet" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-200 rounded-xl font-bold shadow-[2px_2px_0px_#1e293b]"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 mb-1">المبلغ المالي</label>
+                        <input type="number" id="edit-tx-amount" step="0.01" required class="w-full p-3 bg-white border-2 border-slate-900 text-amber-600 font-black text-xl rounded-xl shadow-[2px_2px_0px_#1e293b]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 mb-1">العملة</label>
+                        <select id="edit-tx-currency" class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-xl shadow-[2px_2px_0px_#1e293b]">
+                            <option value="EGP">EGP</option>
+                            <option value="USD">USD</option>
+                            <option value="OMR">OMR</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">التوقيت والتاريخ المعدل</label>
+                    <input type="datetime-local" id="edit-tx-date" required class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-bold shadow-[2px_2px_0px_#1e293b]">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">البيان المحدث</label>
+                    <input type="text" id="edit-tx-desc" required class="w-full p-3 bg-white border-2 border-slate-900 text-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">
+                </div>
+                <div class="flex gap-3 pt-3 justify-end">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-xs font-bold bg-slate-200 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b] cursor-pointer">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-black btn-3d-amber rounded-xl cursor-pointer">اعتماد التحديث</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<script>
-function exportToPDF() {
-    const element = document.getElementById('report-content');
-    const btn = document.getElementById('export-btn');
-    
-    // تغيير النص مؤقتاً لطمأنة المستخدم
-    btn.innerText = "جاري المعالجة...";
-    btn.disabled = true;
+    <div style="position: absolute; left: -9999px; top: -9999px;">
+        <div id="pdf-render-zone" class="pdf-container"></div>
+    </div>
 
-    // إعدادات تمنع تماماً ظهور الصفحة البيضاء الفارغة
-    const opt = {
-        margin:       10,
-        filename:     'التقرير_الفخم_2026.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
-            scale: 2,             // يرفع الجودة ويمنع الفراغات
-            useCORS: true,        // لحل مشاكل الصور الخارجية إن وجدت
-            logging: false,
-            letterRendering: true
-        },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    <script>
+        const WALLET_CONFIG = {
+            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔵 QNB' },
+            'msct': { name: 'بنك مسقط Muscat', group: 'bank', icon: '🔴 Muscat' },
+            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank', icon: '📱 Wallet' },
+            'cash-normal': { name: 'نقدي (أساسي)', group: 'cash', icon: '💵 كاش أساسي' },
+            'cash-extra': { name: 'إضافي', group: 'cash', icon: '💰 كاش إضافي' },
+            'debts': { name: 'المديونيات', group: 'others', icon: '📉 المديونيات' },
+            'receivables': { name: 'المستحقات', group: 'others', icon: '📈 المستحقات' },
+            'associations': { name: 'الجمعيات', group: 'others', icon: '👥 الجمعيات' }
+        };
 
-    // التنفيذ الفعلي مع معالجة الوعود (Promises) لضمان عدم التصدير قبل اكتمال الرندرة
-    html2pdf().set(opt).from(element).save().then(() => {
-        btn.innerText = "📥 تصدير PDF الفوري";
-        btn.disabled = false;
-    }).catch(err => {
-        console.error("خطأ أثناء التصدير:", err);
-        btn.innerText = "فشل التصدير!";
-        btn.disabled = false;
-    });
-}
-</script>
+        const CURRENCIES = ['EGP', 'USD', 'OMR'];
+        let appState = { balances: {}, transactions: [] };
+        let activeReportData = { summary: {}, transactions: [], periodText: '' };
 
+        function initializeDefaultBalances() {
+            for (let walletKey in WALLET_CONFIG) {
+                appState.balances[walletKey] = {};
+                CURRENCIES.forEach(curr => { appState.balances[walletKey][curr] = 0; });
+            }
+        }
+
+        function loadDataFromStorage() {
+            const stored = localStorage.getItem('accounting_app_data');
+            if (stored) {
+                try {
+                    appState = JSON.parse(stored);
+                    for (let walletKey in WALLET_CONFIG) {
+                        if (!appState.balances[walletKey]) appState.balances[walletKey] = {};
+                        CURRENCIES.forEach(curr => {
+                            if (appState.balances[walletKey][curr] === undefined) appState.balances[walletKey][curr] = 0;
+                        });
+                    }
+                } catch (e) { initializeDefaultBalances(); }
+            } else { initializeDefaultBalances(); }
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('accounting_app_data', JSON.stringify(appState));
+        }
+
+        function recalculateAllBalances() {
+            initializeDefaultBalances();
+            appState.transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            appState.transactions.forEach(tx => {
+                const amt = parseFloat(tx.amount);
+                if (tx.type === 'deposit') {
+                    if (appState.balances[tx.wallet]?.[tx.currency] !== undefined) appState.balances[tx.wallet][tx.currency] += amt;
+                } else if (tx.type === 'withdraw') {
+                    if (appState.balances[tx.wallet]?.[tx.currency] !== undefined) appState.balances[tx.wallet][tx.currency] -= amt;
+                } else if (tx.type === 'transfer') {
+                    if (appState.balances[tx.fromWallet]?.[tx.currency] !== undefined) appState.balances[tx.fromWallet][tx.currency] -= amt;
+                    if (appState.balances[tx.toWallet]?.[tx.currency] !== undefined) appState.balances[tx.toWallet][tx.currency] += amt;
+                }
+            });
+
+            saveDataToStorage();
+            updateUI();
+            generateCustomReport();
+        }
+
+        function populateDropdowns() {
+            const txWalletSelect = document.getElementById('tx-wallet');
+            const tfFromSelect = document.getElementById('tf-from');
+            const tfToSelect = document.getElementById('tf-to');
+            const editWalletSelect = document.getElementById('edit-tx-wallet');
+
+            let optionsHtml = '';
+            for (let key in WALLET_CONFIG) {
+                optionsHtml += `<option value="${key}" class="font-bold text-slate-900">${WALLET_CONFIG[key].icon}</option>`;
+            }
+
+            txWalletSelect.innerHTML = optionsHtml;
+            tfFromSelect.innerHTML = optionsHtml;
+            tfToSelect.innerHTML = optionsHtml;
+            editWalletSelect.innerHTML = optionsHtml;
+        }
+
+        function updateUI() {
+            document.getElementById('wallets-bank').innerHTML = '';
+            document.getElementById('wallets-cash').innerHTML = '';
+            document.getElementById('wallets-others').innerHTML = '';
+
+            for (let key in WALLET_CONFIG) {
+                const config = WALLET_CONFIG[key];
+                const balances = appState.balances[key];
+                
+                let balanceStrings = CURRENCIES.map(curr => {
+                    const bal = balances[curr] || 0;
+                    let colorClass = bal >= 0 ? 'text-slate-900' : 'text-rose-600 font-black';
+                    let textAccent = curr === 'OMR' ? 'bg-sky-100 text-sky-700 border-sky-300' : (curr === 'USD' ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'bg-amber-100 text-amber-700 border-amber-300');
+                    return `
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-300 shadow-sm">
+                            <span class="text-[10px] font-black border px-1.5 py-0.5 rounded ${textAccent}">${curr}</span>
+                            <span class="font-mono font-black text-sm ${colorClass}">${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                const targetContainerId = config.group === 'bank' ? 'wallets-bank' : (config.group === 'cash' ? 'wallets-cash' : 'wallets-others');
+                
+                const elementHtml = `
+                    <div class="wallet-pill p-4 rounded-2xl flex flex-col gap-2.5">
+                        <span class="text-xs font-black text-slate-900 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-300 w-max flex items-center gap-1.5">${config.icon}</span>
+                        <div class="grid grid-cols-1 gap-1.5">${balanceStrings}</div>
+                    </div>
+                `;
+                document.getElementById(targetContainerId).insertAdjacentHTML('beforeend', elementHtml);
+            }
+
+            renderLogsTable();
+        }
+
+        function renderLogsTable() {
+            const tbody = document.getElementById('transactions-logs-tbody');
+            tbody.innerHTML = '';
+
+            const displayList = [...appState.transactions].reverse();
+
+            if (displayList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-xs font-bold text-slate-400">لا توجد سجلات حركات معالجة محلياً حتى الآن.</td></tr>`;
+                return;
+            }
+
+            displayList.forEach(tx => {
+                let typeBadge = '', detailsText = tx.desc, directionSign = '', amountColor = '';
+
+                if (tx.type === 'deposit') {
+                    typeBadge = `<span class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-2.5 py-1 rounded-lg text-[10px] font-black">إيداع نقد (+)</span>`;
+                    directionSign = '+';
+                    amountColor = 'text-emerald-600 font-black';
+                } else if (tx.type === 'withdraw') {
+                    typeBadge = `<span class="bg-rose-100 border border-rose-400 text-rose-700 px-2.5 py-1 rounded-lg text-[10px] font-black">سحب ومصروف (-)</span>`;
+                    directionSign = '-';
+                    amountColor = 'text-rose-600 font-black';
+                } else if (tx.type === 'transfer') {
+                    typeBadge = `<span class="bg-indigo-100 border border-indigo-400 text-indigo-700 px-2.5 py-1 rounded-lg text-[10px] font-black">مناقلة داخلية 🔄</span>`;
+                    detailsText = `من [${WALLET_CONFIG[tx.fromWallet]?.name}] ⬅️ إلى [${WALLET_CONFIG[tx.toWallet]?.name}]`;
+                    directionSign = '🔄';
+                    amountColor = 'text-indigo-600 font-black';
+                }
+
+                const formattedDate = new Date(tx.date).toLocaleString('ar-EG', { hour12: true, year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+                const trHtml = `
+                    <tr class="hover:bg-slate-50 transition-colors border-b border-slate-200">
+                        <td class="p-4 text-xs font-mono text-slate-500">${formattedDate}</td>
+                        <td class="p-4">${typeBadge}</td>
+                        <td class="p-4 text-xs font-black text-slate-900">${tx.type === 'transfer' ? 'تسوية بين المحافظ' : (WALLET_CONFIG[tx.wallet]?.icon || 'غير معروف')}</td>
+                        <td class="p-4 text-xs text-slate-600 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
+                        <td class="p-4 font-mono text-base ${amountColor}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 border border-slate-300 text-slate-700">${tx.currency}</span></td>
+                        <td class="p-4 text-center flex items-center justify-center gap-2">
+                            ${tx.type !== 'transfer' ? `<button onclick="openEditModal('${tx.id}')" class="text-slate-800 hover:bg-slate-900 hover:text-white border-2 border-slate-900 bg-white px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer">تعديل</button>` : '<span class="text-slate-400 font-bold">-</span>'}
+                            <button onclick="deleteTransaction('${tx.id}')" class="btn-3d-rose text-white border-2 border-slate-900 px-2.5 py-1 rounded-lg text-xs cursor-pointer">حذف</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', trHtml);
+            });
+        }
+
+        // معالجة تغييرات واجهة الفلترة بمركز التقارير
+        function handleFilterTypeChange() {
+            const type = document.getElementById('report-filter-type').value;
+            const lblStart = document.getElementById('label-start-date');
+            const wrapEnd = document.getElementById('wrapper-end-date');
+            const inpStart = document.getElementById('report-start-date');
+
+            if (type === 'single-day') {
+                lblStart.innerText = "تاريخ اليوم";
+                wrapEnd.classList.add('hidden');
+                inpStart.type = "date";
+            } else if (type === 'full-month') {
+                lblStart.innerText = "اختر الشهر";
+                wrapEnd.classList.add('hidden');
+                inpStart.type = "month";
+            } else if (type === 'custom-range') {
+                lblStart.innerText = "من تاريخ";
+                wrapEnd.classList.remove('hidden');
+                inpStart.type = "date";
+            }
+        }
+
+        // توليد وفلترة تقرير المراقبة وحفظ البيانات في مصفوفة نشطة
+        function generateCustomReport() {
+            const type = document.getElementById('report-filter-type').value;
+            const startVal = document.getElementById('report-start-date').value;
+            const endVal = document.getElementById('report-end-date').value;
+
+            let filtered = [];
+            let pText = 'كل الفترات';
+
+            if (startVal) {
+                if (type === 'single-day') {
+                    filtered = appState.transactions.filter(t => t.date.startsWith(startVal));
+                    pText = startVal;
+                } else if (type === 'full-month') {
+                    filtered = appState.transactions.filter(t => t.date.startsWith(startVal));
+                    pText = startVal;
+                } else if (type === 'custom-range' && endVal) {
+                    const sDate = new Date(startVal + 'T00:00:00');
+                    const eDate = new Date(endVal + 'T23:59:59');
+                    filtered = appState.transactions.filter(t => {
+                        const d = new Date(t.date);
+                        return d >= sDate && d <= eDate;
+                    });
+                    pText = `من ${startVal} إلى ${endVal}`;
+                }
+            } else {
+                filtered = [...appState.transactions];
+            }
+
+            // احتساب الملخصات النقدية للفترة المفلترة بالعملات الثلاث
+            let summary = {};
+            CURRENCIES.forEach(c => { summary[c] = { income: 0, expense: 0 }; });
+
+            filtered.forEach(t => {
+                const amt = parseFloat(t.amount);
+                if (t.type === 'deposit') {
+                    summary[t.currency].income += amt;
+                } else if (t.type === 'withdraw') {
+                    summary[t.currency].expense += amt;
+                }
+            });
+
+            activeReportData = { summary: summary, transactions: filtered, periodText: pText };
+
+            // حقن البيانات في عناصر واجهة الشاشة العادية
+            document.getElementById('report-period-title').innerText = pText;
+            
+            let sumHtml = '';
+            CURRENCIES.forEach(c => {
+                sumHtml += `
+                    <div class="p-3 bg-white border border-slate-300 rounded-xl space-y-1 shadow-sm">
+                        <div class="text-xs font-black text-slate-900 border-b pb-1 mb-1">${c}</div>
+                        <div class="flex justify-between text-[11px] font-bold"><span class="text-emerald-600">إيداعات:</span><span class="font-mono">+${summary[c].income.toLocaleString()}</span></div>
+                        <div class="flex justify-between text-[11px] font-bold"><span class="text-rose-600">مصروفات:</span><span class="font-mono">-${summary[c].expense.toLocaleString()}</span></div>
+                    </div>
+                `;
+            });
+            document.getElementById('report-summary-cards').innerHTML = sumHtml;
+
+            let txsHtml = '';
+            if (filtered.length === 0) {
+                txsHtml = `<div class="text-center text-xs font-bold text-slate-400 p-6">لا توجد حركات قيود في النطاق الزمني المحدد.</div>`;
+            } else {
+                [...filtered].reverse().forEach(t => {
+                    let cBadge = t.type === 'deposit' ? 'text-emerald-600' : (t.type === 'withdraw' ? 'text-rose-600' : 'text-indigo-600');
+                    let sign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '🔄');
+                    txsHtml += `
+                        <div class="p-2.5 bg-white border border-slate-200 rounded-xl flex justify-between items-center text-xs shadow-sm">
+                            <div class="space-y-0.5">
+                                <div class="font-black text-slate-900">${t.desc}</div>
+                                <div class="text-[10px] text-slate-400 font-mono">${new Date(t.date).toLocaleDateString('ar-EG')}</div>
+                            </div>
+                            <div class="font-mono font-black ${cBadge}">${sign} ${parseFloat(t.amount).toLocaleString()} ${t.currency}</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('report-transactions-list').innerHTML = txsHtml;
+        }
+
+        // إصلاح معالجة الـ PDF الفخم المطبوع وبنائه ديناميكياً لضمان عدم خروج صفحة بيضاء نهائياً
+        function exportReportToPDF() {
+            const btn = document.getElementById('pdf-trigger-btn');
+            btn.innerText = "جاري المعالجة...";
+            btn.disabled = true;
+
+            const printZone = document.getElementById('pdf-render-zone');
+            
+            // بناء الـ HTML الداخلي للطباعة بشكل منظم، كلاسيك وأنيق متوافق مع ورق الـ A4 ومستقل تماماً عن الـ Overflow الخاص بالشاشة
+            let summaryRows = '';
+            CURRENCIES.forEach(c => {
+                summaryRows += `
+                    <tr>
+                        <td style="padding:10px; font-weight:bold; border:1px solid #1e293b;">${c}</td>
+                        <td style="padding:10px; font-weight:bold; color:#059669; border:1px solid #1e293b; font-family:monospace;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="padding:10px; font-weight:bold; color:#dc2626; border:1px solid #1e293b; font-family:monospace;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    </tr>
+                `;
+            });
+
+            let txRows = '';
+            if (activeReportData.transactions.length === 0) {
+                txRows = `<tr><td colspan="4" style="padding:20px; text-align:center; font-weight:bold; color:#94a3b8;">لا توجد قيود مالية مسجلة لهذه الفترة</td></tr>`;
+            } else {
+                activeReportData.transactions.forEach(t => {
+                    let typeText = t.type === 'deposit' ? 'إيداع (+)' : (t.type === 'withdraw' ? 'مصروف (-)' : 'مناقلة 🔄');
+                    let amt = parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2});
+                    let dStr = new Date(t.date).toLocaleString('ar-EG', {dateStyle:'short', timeStyle:'short'});
+                    txRows += `
+                        <tr style="border-bottom:1px solid #cbd5e1;">
+                            <td style="padding:10px; font-family:monospace; font-size:11px; border:1px solid #cbd5e1;">${dStr}</td>
+                            <td style="padding:10px; border:1px solid #cbd5e1;">${typeText}</td>
+                            <td style="padding:10px; font-size:12px; border:1px solid #cbd5e1;">${t.desc}</td>
+                            <td style="padding:10px; font-weight:bold; font-family:monospace; border:1px solid #cbd5e1; text-align:left;">${amt} ${t.currency}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            printZone.innerHTML = `
+                <div style="border:4px double #1e293b; padding:25px; border-radius:12px;">
+                    <div style="display:flex; justify-content:between; align-items:center; border-bottom:3px solid #1e293b; padding-bottom:15px; margin-bottom:25px;">
+                        <div>
+                            <h1 style="font-size:24px; font-weight:900; color:#1e293b; margin:0;">حساباتي الفاخرة المحاسبية</h1>
+                            <p style="font-size:12px; color:#475569; margin:4px 0 0 0; font-weight:bold;">مستند رسمي صادر عن النظام المحلي الآمن لـ Mo. Yasin</p>
+                        </div>
+                        <div style="text-align:left; font-size:11px; font-weight:bold; color:#1e293b;">
+                            <div>نطاق التقرير: ${activeReportData.periodText}</div>
+                            <div>تاريخ التوليد: ${new Date().toLocaleDateString('ar-EG')}</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size:14px; font-weight:900; background:#1e293b; color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:15px;">📊 أولاً: خلاصة صافي التدفقات المالية</h3>
+                    <table style="width:100%; border-collapse:collapse; text-align:right; margin-bottom:30px;" class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th style="padding:10px;">وحدة العملة</th>
+                                <th style="padding:10px;">إجمالي المدخرات والإيداعات</th>
+                                <th style="padding:10px;">إجمالي المصروفات والمدفوعات</th>
+                            </tr>
+                        </thead>
+                        <tbody>${summaryRows}</tbody>
+                    </table>
+
+                    <h3 style="font-size:14px; font-weight:900; background:#1e293b; color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:15px;">📜 ثانياً: كشف الحركات التفصيلي</h3>
+                    <table style="width:100%; border-collapse:collapse; text-align:right;" class="pdf-table">
+                        <thead>
+                            <tr style="background:#f8fafc;">
+                                <th style="padding:10px; border:1px solid #1e293b;">التوقيت</th>
+                                <th style="padding:10px; border:1px solid #1e293b;">طبيعة الحركة</th>
+                                <th style="padding:10px; border:1px solid #1e293b;">البيان المالي</th>
+                                <th style="padding:10px; border:1px solid #1e293b; text-align:left;">القيمة المحددة</th>
+                            </tr>
+                        </thead>
+                        <tbody>${txRows}</tbody>
+                    </table>
+                </div>
+            `;
+
+            // إعدادات تصدير صارمة تضمن رندرة الـ HTML كـ Vector نقي وتمنع تماماً الفراغات البيضاء المزعجة
+            const opt = {
+                margin:       [12, 12, 12, 12],
+                filename:     `تقرير_محاسبي_${activeReportData.periodText}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    letterRendering: true,
+                    logging: false
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // الـ Promise الفعلي لإنشاء الملف وحفظه بأمان ثم تصفير أزرار التحكم
+            html2pdf().set(opt).from(printZone).save().then(() => {
+                btn.innerText = "📄 تصدير PDF";
+                btn.disabled = false;
+                printZone.innerHTML = ''; // تفريغ الذاكرة بعد الاستخراج
+            }).catch(err => {
+                console.error(err);
+                btn.innerText = "فشل التصدير!";
+                btn.disabled = false;
+            });
+        }
+
+        // التعامل مع تفعيل واستقبال الحركات التشغيلية الفورية لـ Form
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const txId = 'tx_' + Date.now() + Math.random().toString(36).substr(2, 4);
+            const newTx = {
+                id: txId,
+                type: document.getElementById('tx-type').value,
+                wallet: document.getElementById('tx-wallet').value,
+                amount: parseFloat(document.getElementById('tx-amount').value),
+                currency: document.getElementById('tx-currency').value,
+                date: document.getElementById('tx-date').value,
+                desc: document.getElementById('tx-desc').value
+            };
+
+            appState.transactions.push(newTx);
+            document.getElementById('tx-amount').value = '';
+            document.getElementById('tx-desc').value = '';
+            recalculateAllBalances();
+        });
+
+        // تفعيل عمليات المناقلة الفورية للأرصدة البينية بين الأوعية المالية
+        document.getElementById('transfer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fromW = document.getElementById('tf-from').value;
+            const toW = document.getElementById('tf-to').value;
+            const amt = parseFloat(document.getElementById('tf-amount').value);
+            const curr = document.getElementById('tf-currency').value;
+            const dateVal = document.getElementById('tf-date').value;
+
+            if (fromW === toW) {
+                alert('عذراً، لا يمكن إجراء قيد مناقلة مالي بين نفس الوعاء المستهدف.');
+                return;
+            }
+
+            const txId = 'tx_' + Date.now();
+            const newTransfer = {
+                id: txId,
+                type: 'transfer',
+                fromWallet: fromW,
+                toWallet: toW,
+                amount: amt,
+                currency: curr,
+                date: dateVal,
+                desc: `مناقلة من [${WALLET_CONFIG[fromW].name}] إلى [${WALLET_CONFIG[toW].name}]`
+            };
+
+            appState.transactions.push(newTransfer);
+            document.getElementById('tf-amount').value = '';
+            recalculateAllBalances();
+        });
+
+        // إزالة القيود وإلغاء تنشيطها وإعادة توازن الدفاتر المالية
+        function deleteTransaction(id) {
+            if (confirm('هل أنت متأكد تماماً من رغبتك في حذف هذا القيد المالي نهائياً؟')) {
+                appState.transactions = appState.transactions.filter(t => t.id !== id);
+                recalculateAllBalances();
+            }
+        }
+
+        // معالجة فتح مودال التعديل للقيود العادية
+        function openEditModal(id) {
+            const tx = appState.transactions.find(t => t.id === id);
+            if (!tx) return;
+
+            document.getElementById('edit-tx-id').value = tx.id;
+            document.getElementById('edit-tx-wallet').value = tx.wallet;
+            document.getElementById('edit-tx-amount').value = tx.amount;
+            document.getElementById('edit-tx-currency').value = tx.currency;
+            document.getElementById('edit-tx-date').value = tx.date;
+            document.getElementById('edit-tx-desc').value = tx.desc;
+
+            const modal = document.getElementById('edit-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-tx-id').value;
+            const tx = appState.transactions.find(t => t.id === id);
+            
+            if (tx) {
+                tx.wallet = document.getElementById('edit-tx-wallet').value;
+                tx.amount = parseFloat(document.getElementById('edit-tx-amount').value);
+                tx.currency = document.getElementById('edit-tx-currency').value;
+                tx.date = document.getElementById('edit-tx-date').value;
+                tx.desc = document.getElementById('edit-tx-desc').value;
+                
+                closeEditModal();
+                recalculateAllBalances();
+            }
+        });
+
+        // ضبط توقيت الساعة الحية بالهيدر الرئيسي للواجهة
+        function initClockAndDates() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('live-clock').innerText = now.toLocaleString('ar-EG', { hour12: true, weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            }, 1000);
+
+            // تعيين قيم التواريخ الافتراضية للنموذج لسهولة الإدراج
+            const nowIso = new Date().toISOString().substring(0, 16);
+            document.getElementById('tx-date').value = nowIso;
+            document.getElementById('tf-date').value = nowIso;
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('report-start-date').value = todayStr;
+        }
+
+        // بدء التشغيل الفوري والربط عند الإقلاع الأول للمتصفح
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDataFromStorage();
+            populateDropdowns();
+            initClockAndDates();
+            recalculateAllBalances();
+        });
+    </script>
 </body>
 </html>
