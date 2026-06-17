@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة المحاسبية الاستراتيجية المزامنة</title>
+    <title>حساباتي</title>
+    <!-- Tailwind CSS للواجهات الاحترافية -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Cairo) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;600;700;900&display=swap" rel="stylesheet">
@@ -21,6 +23,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-12">
 
+    <!-- شريط القيادة الفاخر (Executive Header) -->
     <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -28,9 +31,9 @@
                     <span class="text-xl">🏛️</span>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">المنصة المحاسبية الاستراتيجية</h1>
+                    <h1 class="text-2xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">حساباتي</h1>
                     <div class="flex items-center gap-2 mt-0.5">
-                        <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">الجيل القادم • التزامن السحابي الآمن</span>
+                        <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">مصمم لحساب : Mo .Yasin</span>
                         <div id="sync-status-indicator" class="flex items-center gap-1.5 bg-slate-800 px-2 py-0.5 rounded-md text-[9px] font-black border border-slate-700">
                             <span class="w-2 h-2 rounded-full bg-rose-500 block"></span>
                             <span id="sync-status-text" class="text-rose-400">سحابي محلي غير مرتبط</span>
@@ -50,6 +53,7 @@
 
     <main class="container mx-auto px-4 mt-10 space-y-12 max-w-7xl">
 
+        <!-- لوحة ضبط التزامن السحابي -->
         <section id="sync-settings-panel" class="premium-card premium-shadow rounded-3xl p-6 border-amber-200 bg-amber-50/20 hidden">
             <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-200">
                 <span class="text-xl">☁️</span>
@@ -75,6 +79,7 @@
             </div>
         </section>
 
+        <!-- لوحة الأرصدة المستقلة المطورة بصرياً -->
         <section class="premium-card premium-shadow rounded-3xl p-6 sm:p-8 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 pointer-events-none opacity-50"></div>
             <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 relative z-10">
@@ -101,6 +106,7 @@
             </div>
         </section>
 
+        <!-- لوحة التحكم بالمدخلات -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="premium-card premium-shadow rounded-3xl p-6 sm:p-8">
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
@@ -200,6 +206,7 @@
             </div>
         </section>
 
+        <!-- لوحة التقارير والتحليلات الدورية -->
         <section class="premium-card premium-shadow rounded-3xl p-6 sm:p-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
@@ -234,12 +241,12 @@
             </div>
         </section>
 
+        <!-- لوحة أرشيف سجل المعاملات المالية المحدثة -->
         <section class="premium-card premium-shadow rounded-3xl overflow-hidden">
             <div class="p-6 sm:p-8 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
                 <span class="text-2xl">📜</span>
                 <div>
-                    <h2 class="text-xl font-black text-slate-800">دفتر الأستاذ العام / سجل التدقيق المالي الكامل</h2>
-                    <p class="text-xs text-slate-400 font-bold">مراجعة تاريخية شاملة لجميع الحركات القييدية مع صلاحيات التعديل والحذف الجذري</p>
+                    <h2 class="text-xl font-black text-slate-800">سجل المعاملات المالية</h2>
                 </div>
             </div>
             <div class="overflow-x-auto w-full">
@@ -261,6 +268,7 @@
         </section>
     </main>
 
+    <!-- النافذة المنبثقة للتعديل الفاخر (Modal) -->
     <div id="edit-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-2xl m-4 space-y-5 border border-slate-100 transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-2 border-b pb-3">
@@ -306,21 +314,21 @@
         </div>
     </div>
 
+    <!-- المحرك المالي البرمجي الذكي الكلي مع المزامنة السحابية المطورة -->
     <script>
         const WALLET_CONFIG = {
-            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank' },
-            'msct': { name: 'بنك مسقط Muscat', group: 'bank' },
-            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank' },
-            'cash-normal': { name: 'نقدي (أساسي)', group: 'cash' },
-            'cash-extra': { name: 'إضافي', group: 'cash' },
-            'debts': { name: 'المديونيات', group: 'others' },
-            'receivables': { name: 'المستحقات', group: 'others' },
-            'associations': { name: 'الجمعيات', group: 'others' }
+            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔵 QNB' },
+            'msct': { name: 'بنك مسقط Muscat', group: 'bank', icon: '🔴 Muscat' },
+            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank', icon: '📱 Wallet' },
+            'cash-normal': { name: 'نقدي (أساسي)', group: 'cash', icon: '💵 كاش أساسي' },
+            'cash-extra': { name: 'إضافي', group: 'cash', icon: '💰 كاش إضافي' },
+            'debts': { name: 'المديونيات', group: 'others', icon: '📉 المديونيات' },
+            'receivables': { name: 'المستحقات', group: 'others', icon: '📈 المستحقات' },
+            'associations': { name: 'الجمعيات', group: 'others', icon: '👥 الجمعيات' }
         };
 
         const CURRENCIES = ['EGP', 'USD', 'OMR'];
         let appState = { balances: {}, transactions: [] };
-        
         let syncConfig = { token: '', gistId: '' };
 
         function initializeDefaultBalances() {
@@ -344,7 +352,6 @@
                 } catch (e) { initializeDefaultBalances(); }
             } else { initializeDefaultBalances(); }
 
-            // تحميل بيانات الربط السحابي
             const storedSync = localStorage.getItem('accounting_sync_config');
             if (storedSync) {
                 syncConfig = JSON.parse(storedSync);
@@ -352,7 +359,7 @@
                 document.getElementById('sync-gist-id').value = syncConfig.gistId || '';
                 if(syncConfig.token && syncConfig.gistId) {
                     updateSyncStatusIndicator('connected', 'متصل بالسحابة الشخصية');
-                    fetchDataFromCloud(); // سحب البيانات فور تشغيل التطبيق
+                    fetchDataFromCloud();
                 }
             }
         }
@@ -394,7 +401,6 @@
             updateSyncStatusIndicator('syncing', 'جاري إنشاء/ربط مخزن البيانات...');
 
             if (!gistId) {
-                // إنشاء Gist سري جديد تلقائياً إذا كان الحقل فارغاً
                 try {
                     const response = await fetch('https://api.github.com/gists', {
                         method: 'POST',
@@ -463,27 +469,29 @@
             }
         }
 
+        // دالة الجلب والدمج الآمنة والمطورة لحل مشاكل تعارض الماكبوك وبقية الأجهزة
         async function fetchDataFromCloud() {
             if (!syncConfig.token || !syncConfig.gistId) return;
             updateSyncStatusIndicator('syncing', 'جاري جلب آخر البيانات...');
 
             try {
                 const response = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
-                    headers: { 'Authorization': `token ${syncConfig.token}` }
+                    headers: { 'Authorization': `token ${syncConfig.token}`, 'Cache-Control': 'no-cache' }
                 });
                 if (response.ok) {
                     const data = await response.json();
                     const cloudContent = data.files["accounting_backup.json"]?.content;
                     if (cloudContent) {
                         const parsedCloud = JSON.parse(cloudContent);
-                        // مقارنة السجلات وجلب الأحدث إذا وجد فارق
-                        if (parsedCloud.transactions && parsedCloud.transactions.length >= appState.transactions.length) {
+                        if (parsedCloud.transactions) {
                             appState = parsedCloud;
                             saveDataToStorage();
                             recalculateAllBalances();
                         }
                     }
                     updateSyncStatusIndicator('connected', 'تزامن سحابي فوري محمي');
+                } else {
+                    updateSyncStatusIndicator('error', 'معرف المستودع غير صحيح');
                 }
             } catch (e) {
                 updateSyncStatusIndicator('connected', 'تعذر الجلب الفوري (أوفلاين)');
@@ -517,7 +525,7 @@
 
             let optionsHtml = '';
             for (let key in WALLET_CONFIG) {
-                optionsHtml += `<option value="${key}" class="font-bold">${WALLET_CONFIG[key].name}</option>`;
+                optionsHtml += `<option value="${key}" class="font-bold">${WALLET_CONFIG[key].icon}</option>`;
             }
 
             txWalletSelect.innerHTML = optionsHtml;
@@ -551,7 +559,7 @@
                 
                 const elementHtml = `
                     <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col gap-3">
-                        <span class="text-[11px] font-black text-slate-600 bg-slate-100 px-3 py-1 rounded-lg w-max border border-slate-200">${config.name}</span>
+                        <span class="text-xs font-black text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg w-max border border-slate-200 flex items-center gap-1.5">${config.icon}</span>
                         <div class="grid grid-cols-1 gap-2">${balanceStrings}</div>
                     </div>
                 `;
@@ -601,7 +609,7 @@
                     <tr class="${rowBg} transition-colors border-b border-slate-100">
                         <td class="p-4 text-xs font-bold text-slate-400 font-mono">${formattedDate}</td>
                         <td class="p-4">${typeBadge}</td>
-                        <td class="p-4 text-xs font-black text-slate-800">${tx.type === 'transfer' ? 'تسوية بين المحافظ' : (WALLET_CONFIG[tx.wallet]?.name || 'غير معروف')}</td>
+                        <td class="p-4 text-xs font-black text-slate-800">${tx.type === 'transfer' ? 'تسوية بين المحافظ' : (WALLET_CONFIG[tx.wallet]?.icon || 'غير معروف')}</td>
                         <td class="p-4 text-xs font-bold text-slate-500 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
                         <td class="p-4 font-mono text-base ${amountColor}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                         <td class="p-4"><span class="px-2 py-0.5 rounded text-[11px] font-black ${currBadgeClass}">${tx.currency}</span></td>
@@ -683,7 +691,7 @@
 
             appState.transactions.push({ id, type, wallet, amount, currency, date, desc });
             recalculateAllBalances();
-            pushDataToCloud(); // مزامنة فورية عند الإضافة
+            pushDataToCloud();
             document.getElementById('tx-amount').value = '';
             document.getElementById('tx-desc').value = '';
             setNowDateTimeInputs();
@@ -704,7 +712,7 @@
 
             appState.transactions.push({ id: 'transfer-' + Date.now(), type: 'transfer', fromWallet, toWallet, amount, currency, date, desc: `مناقلة مالية مباشرة` });
             recalculateAllBalances();
-            pushDataToCloud(); // مزامنة فورية عند التحويل
+            pushDataToCloud();
             document.getElementById('tf-amount').value = '';
             setNowDateTimeInputs();
         });
@@ -713,7 +721,7 @@
             if (confirm('🚨 إجراء جذري: هل ترغب بحذف هذا القيد المالي؟ ستقوم المنصة بإلغاء مفعوله الحسابي بالكامل وإعادة جدولة الأرصدة التراكمية فوراً.')) {
                 appState.transactions = appState.transactions.filter(tx => tx.id !== id);
                 recalculateAllBalances();
-                pushDataToCloud(); // مزامنة فورية عند الحذف
+                pushDataToCloud();
             }
         }
 
@@ -757,7 +765,7 @@
 
                 recalculateAllBalances();
                 closeEditModal();
-                pushDataToCloud(); // مزامنة فورية عند تعديل أي عملية
+                pushDataToCloud();
             }
         });
 
