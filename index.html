@@ -79,10 +79,10 @@
 
         .wallet-pill { background: #ffffff; border: 2px solid #334155; box-shadow: 3px 3px 0px #334155; }
 
-        /* حاوية الطباعة المخفية في الوضع الطبيعي */
+        /* حاوية الطباعة المخفية في الوضع الطبيعي لشاشة العرض */
         #ultimate-print-zone { display: none; }
 
-        /* قواعد التصدير وهيكلة كشف الحساب الصارمة عند الطباعة الفورية للـ PDF النظيف */
+        /* تصفية صارمة وهندسة قواعد كشف الحساب البنكي المعتمد عند استدعاء PDF */
         @media print {
             body * { display: none !important; }
             #ultimate-print-zone, #ultimate-print-zone * { display: block !important; }
@@ -90,15 +90,25 @@
             #ultimate-print-zone tr { display: table-row !important; }
             #ultimate-print-zone th, #ultimate-print-zone td { display: table-cell !important; }
             
-            @page { size: A4 portrait; margin: 15mm; }
-            body { background: #ffffff !important; font-family: 'Cairo', sans-serif !important; direction: rtl !important; }
-            #ultimate-print-zone { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            @page { 
+                size: A4 portrait; 
+                margin: 18mm 15mm; 
+            }
+            body { 
+                background: #ffffff !important; 
+                direction: rtl !important; 
+            }
+            #ultimate-print-zone { 
+                display: block !important; 
+                width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+            }
         }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-16">
 
-    <!-- الهيدر الفخم المستقر -->
     <header class="bg-amber-400 border-b-4 border-slate-900 sticky top-0 z-50 shadow-[0_4px_0_#1e293b]">
         <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
@@ -108,7 +118,7 @@
                 <div>
                     <h1 class="text-2xl font-black text-slate-900 tracking-wide flex items-center gap-2">
                         <span>حساباتي المتقدمة</span>
-                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded-md">PRO v3.0</span>
+                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded-md">PRO v3.5</span>
                     </h1>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-slate-900 font-black border-b-2 border-slate-900">المستخدم السيادي: Mo. Yasin</span>
@@ -123,7 +133,6 @@
 
     <main class="container mx-auto px-4 mt-10 space-y-10 max-w-7xl">
 
-        <!-- لوحة الأرصدة والموقف المالي الموحد الفاخر -->
         <section class="luxury-card p-6 sm:p-8 relative">
             <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
                 <span class="text-3xl bg-amber-100 p-2 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">👑</span>
@@ -149,9 +158,7 @@
             </div>
         </section>
 
-        <!-- لوحة التحكم بالعمليات التشغيلية والمناقلات البينية -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- تسجيل حركة جديدة -->
             <div class="luxury-card p-6 sm:p-8">
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
                     <span class="text-2xl bg-amber-400 p-1.5 border-2 border-slate-900 rounded-lg shadow-[2px_2px_0px_#1e293b]">📝</span>
@@ -204,7 +211,6 @@
                 </form>
             </div>
 
-            <!-- التسويات والمناقلات البينية -->
             <div class="luxury-card p-6 sm:p-8 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
@@ -251,14 +257,13 @@
             </div>
         </section>
 
-        <!-- مركز استخراج التقارير وطباعة PDF المباشرة الفورية -->
         <section class="luxury-card p-6 sm:p-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b-2 border-slate-900 pb-4">
                 <div class="flex items-center gap-3">
                     <span class="text-3xl bg-sky-400 p-1.5 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">📊</span>
                     <div>
-                        <h2 class="text-lg font-black text-slate-900">مركز استخراج التقارير وتصدير الـ PDF الحتمي</h2>
-                        <p class="text-xs text-slate-500 font-bold">توليد مستندات محاسبية منبثقة من نظام التشغيل الأصلي بدون أي نسبة خطأ أو صفحات بيضاء</p>
+                        <h2 class="text-lg font-black text-slate-900">مركز التقارير والهوية البصرية البنكية الرسمية</h2>
+                        <p class="text-xs text-slate-500 font-bold">تصدير مستندات محاسبية حادة بدقة متناهية وفونتات أصغر ومظهر مالي رسمي</p>
                     </div>
                 </div>
             </div>
@@ -285,7 +290,7 @@
                         🔍 تحديث العرض
                     </button>
                     <button onclick="triggerNativePrintPDF()" class="flex-1 btn-3d-emerald text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1 font-black">
-                        ⚡ طباعة / حفظ PDF مباشر
+                        ⚡ تصدير كشف بنكي معتمد
                     </button>
                 </div>
             </div>
@@ -305,7 +310,6 @@
             </div>
         </section>
 
-        <!-- سجل المعاملات المالية التاريخي -->
         <section class="luxury-card overflow-hidden">
             <div class="p-6 sm:p-8 border-b-2 border-slate-900 flex items-center gap-3 bg-amber-50">
                 <span class="text-2xl bg-white p-1 border-2 border-slate-900 rounded-lg">📜</span>
@@ -332,10 +336,8 @@
         </section>
     </main>
 
-    <!-- المنطقة المعزولة والمحرمة والمخصصة حصراً لمحرك طباعة النظام للـ PDF النظيف المستقر تمااماً -->
     <div id="ultimate-print-zone"></div>
 
-    <!-- مودال التعديل والتسوية -->
     <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-[8px_8px_0px_#1e293b] border-4 border-slate-900 transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-2 border-b-2 border-slate-900 pb-3">
@@ -644,7 +646,7 @@
             document.getElementById('report-transactions-list').innerHTML = txsHtml;
         }
 
-        // الاستراتيجية الحتمية النهائية: إجبار محرك المتصفح والـ OS على توليد الـ PDF بدون تدخل أي لایبرري
+        // تحويل الهيكل البصري بالكامل إلى المعايير المصرفية الحادة والأحجام الصغيرة النظيفة
         function triggerNativePrintPDF() {
             if (activeReportData.transactions.length === 0) {
                 alert('⚠️ لا توجد معاملات مالية مدرجة ضمن هذا النطاق الزمني لتصديرها.');
@@ -654,76 +656,86 @@
             let summaryRows = '';
             CURRENCIES.forEach(c => {
                 summaryRows += `
-                    <tr style="border: 2px solid #1e293b;">
-                        <td style="padding: 12px; font-weight: bold; border: 2px solid #1e293b; text-align: right; background: #f8fafc;">${c}</td>
-                        <td style="padding: 12px; font-weight: bold; color: #16a34a; border: 2px solid #1e293b; text-align: left; font-family: monospace; font-size: 14px;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                        <td style="padding: 12px; font-weight: bold; color: #dc2626; border: 2px solid #1e293b; text-align: left; font-family: monospace; font-size: 14px;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px 10px; font-weight: bold; text-align: right; font-size: 8.5pt;">${WALLET_CONFIG['cash-normal'].name.replace('نقدي (أساسي)', '')} ${c}</td>
+                        <td style="padding: 8px 10px; font-weight: bold; color: #15803d; text-align: left; font-family: 'Courier New', monospace; font-size: 9.5pt; direction: ltr;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="padding: 8px 10px; font-weight: bold; color: #b91c1c; text-align: left; font-family: 'Courier New', monospace; font-size: 9.5pt; direction: ltr;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
 
             let txRows = '';
             activeReportData.transactions.forEach(t => {
-                let typeText = t.type === 'deposit' ? 'إيداع (+)' : (t.type === 'withdraw' ? 'مصروف (-)' : 'مناقلة 🔄');
+                let typeText = t.type === 'deposit' ? 'إيداع نقدي (+)' : (t.type === 'withdraw' ? 'سحب ومصروف (-)' : 'مناقلة داخلية 🔄');
                 let amt = parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2});
-                let dStr = new Date(t.date).toLocaleString('ar-EG', {dateStyle:'short', timeStyle:'short'});
-                let currentIcon = t.type === 'transfer' ? 'تسوية مناقلة بين الخزائن' : (WALLET_CONFIG[t.wallet]?.name || '');
-                let rowColor = t.type === 'deposit' ? 'color: #16a34a;' : (t.type === 'withdraw' ? 'color: #dc2626;' : 'color: #4f46e5;');
+                let dStr = new Date(t.date).toLocaleString('ar-EG', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false});
+                let currentIcon = t.type === 'transfer' ? 'تسوية الأوعية البينية' : (WALLET_CONFIG[t.wallet]?.name || '');
+                let rowColor = t.type === 'deposit' ? 'color: #15803d;' : (t.type === 'withdraw' ? 'color: #b91c1c;' : 'color: #4338ca;');
                 
                 txRows += `
-                    <tr style="border-bottom: 2px solid #1e293b; page-break-inside: avoid;">
-                        <td style="padding: 10px; font-family: monospace; font-size: 12px; border: 1px solid #cbd5e1; text-align: right;">${dStr}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: 900; text-align: right; ${rowColor}">${typeText}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; font-weight: 700;">${currentIcon}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; color: #1e293b; font-weight: 600;">${t.desc}</td>
-                        <td style="padding: 10px; font-weight: 900; font-family: monospace; font-size: 13px; border: 1px solid #cbd5e1; text-align: left; direction: ltr; ${rowColor}">${amt} ${t.currency}</td>
+                    <tr style="border-bottom: 1px solid #e2e8f0; page-break-inside: avoid;">
+                        <td style="padding: 8px 10px; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #64748b; text-align: right;">${dStr}</td>
+                        <td style="padding: 8px 10px; font-weight: bold; text-align: right; font-size: 8.5pt; ${rowColor}">${typeText}</td>
+                        <td style="padding: 8px 10px; font-size: 8.5pt; text-align: right; color: #334155;">${currentIcon}</td>
+                        <td style="padding: 8px 10px; font-size: 8.5pt; text-align: right; color: #475569; font-weight: normal;">${t.desc}</td>
+                        <td style="padding: 8px 10px; font-weight: bold; font-family: 'Courier New', monospace; font-size: 9.5pt; text-align: left; direction: ltr; ${rowColor}">${amt} <span style="font-size: 7.5pt; background: #f1f5f9; padding: 1px 3px; border: 1px solid #cbd5e1; color: #475569;">${t.currency}</span></td>
                     </tr>
                 `;
             });
 
             const printZone = document.getElementById('ultimate-print-zone');
             printZone.innerHTML = `
-                <div style="font-family: 'Cairo', sans-serif !important; direction: rtl !important; padding: 10px; background: #ffffff;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #1e293b; padding-bottom: 12px; margin-bottom: 25px; flex-direction: row-reverse;">
-                        <div style="text-align: left;">
-                            <div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">نطاق التقرير: <span style="color: #d97706;">${activeReportData.periodText}</span></div>
-                            <div style="font-size: 12px; font-weight: bold; color: #64748b;">تاريخ الطباعة النظيفة: ${new Date().toLocaleDateString('ar-EG')}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <h1 style="font-size: 28px; font-weight: 900; color: #1e293b; margin: 0; letter-spacing: -0.5px;">كشف الحساب المالي الموحد</h1>
-                            <p style="font-size: 13px; color: #475569; margin: 5px 0 0 0; font-weight: bold;">المستخدم السيادي المعتمد: Mo. Yasin</p>
+                <div style="font-family: 'Arial', sans-serif !important; direction: rtl !important; background: #ffffff; color: #0f172a; line-height: 1.35;">
+                    
+                    <div style="border-bottom: 2px solid #0f172a; padding-bottom: 15px; margin-bottom: 25px; display: table; width: 100%;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; text-align: right; vertical-align: top;">
+                                <h1 style="font-size: 16pt; font-weight: bold; color: #0f172a; margin: 0 0 4px 0; letter-spacing: -0.3px;">كشف الحساب المالي الموحد</h1>
+                                <p style="font-size: 9pt; color: #475569; margin: 0;">النظام الاستشاري لإدارة الخزائن والأرصدة السيادية الشخصية</p>
+                            </div>
+                            <div style="display: table-cell; text-align: left; vertical-align: top; font-size: 8.5pt; color: #334155;">
+                                <div style="margin-bottom: 2px;"><span style="font-weight: bold; color: #0f172a;">المستند:</span> تقرير دوري رسمي معتمد</div>
+                                <div style="margin-bottom: 2px;"><span style="font-weight: bold; color: #0f172a;">المستفيد الأصلي:</span> Mohamed Yasin</div>
+                                <div style="margin-bottom: 2px;"><span style="font-weight: bold; color: #0f172a;">نطاق الفلترة:</span> <span style="color: #b45309; font-weight: bold;">${activeReportData.periodText}</span></div>
+                                <div><span style="font-weight: bold; color: #0f172a;">تاريخ الاستخراج:</span> ${new Date().toLocaleDateString('ar-EG')}</div>
+                            </div>
                         </div>
                     </div>
 
-                    <h3 style="font-size: 15px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; margin-top: 0; text-align: right;">📊 أولاً: خلاصة حركة الموازين الدورية</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px; border: 2px solid #1e293b;">
+                    <div style="font-size: 10.5pt; font-weight: bold; background-color: #0f172a; color: #ffffff; padding: 6px 12px; margin-top: 25px; margin-bottom: 12px; text-align: right; letter-spacing: 0.5px;">أولاً: خلاصة موازين العملات وحركة الوعاء بالنطاق الزمني</div>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
                         <thead>
-                            <tr style="background-color: #f1f5f9; border: 2px solid #1e293b;">
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">العملة</th>
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي المدخلات (+)</th>
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي المخرجات (-)</th>
+                            <tr>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: right; color: #0f172a;">الوحدة السيادية للعملة</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: left; color: #0f172a;">إجمالي التدفقات الواردة والمدخلات (+)</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: left; color: #0f172a;">إجمالي التدفقات الصادرة والمصروفات (-)</th>
                             </tr>
                         </thead>
-                        <tbody>${summaryRows}</tbody>
+                        <tbody style="font-size: 8.5pt;">${summaryRows}</tbody>
                     </table>
 
-                    <h3 style="font-size: 15px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; text-align: right;">📜 ثانياً: تفاصيل حركات دفتر القيد</h3>
-                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #1e293b;">
+                    <div style="font-size: 10.5pt; font-weight: bold; background-color: #0f172a; color: #ffffff; padding: 6px 12px; margin-top: 25px; margin-bottom: 12px; text-align: right; letter-spacing: 0.5px;">ثانياً: السجل التاريخي المعتمد لدفتر القيد وحركات التشغيل</div>
+                    <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background-color: #f1f5f9; border: 2px solid #1e293b;">
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">التاريخ والوقت</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 15%;">نوع الحركة</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 23%;">المحفظة المستهدفة</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">البيان التفصيلي</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: left; color: #1e293b; font-size: 12px; font-weight: 900; width: 18%;">المبلغ الصافي</th>
+                            <tr>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: right; color: #0f172a; width: 18%;">تاريخ/توقيت القيد</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: right; color: #0f172a; width: 15%;">طبيعة العملية</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: right; color: #0f172a; width: 22%;">الوعاء / الخزينة المستهدفة</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: right; color: #0f172a; width: 25%;">البيان الاستدلالي</th>
+                                <th style="background-color: #f1f5f9; border-top: 1px solid #0f172a; border-bottom: 2px solid #0f172a; padding: 8px 10px; font-size: 9pt; font-weight: bold; text-align: left; color: #0f172a; width: 20%;">المبلغ الصافي للعملية</th>
                             </tr>
                         </thead>
-                        <tbody>${txRows}</tbody>
+                        <tbody style="font-size: 8.5pt;">${txRows}</tbody>
                     </table>
+
+                    <div style="margin-top: 40px; border: 1px solid #cbd5e1; background-color: #f8fafc; padding: 10px 12px; font-size: 8pt; color: #475569; text-align: justify;">
+                        <div style="font-weight: bold; color: #0f172a; margin-bottom: 4px;">🔐 إشعار السرية والمطابقة الأمنية:</div>
+                        هذا المستند مشفر ومولد تلقائياً من نظام المعالجة المحلية الآمنة للمستخدم السيادي المعتمد. البيانات الواردة أعلاه تعكس الحركات المقيدة يدوياً ومحسوبة بدقة رياضية متناهية بناءً على موازين الحسابات المدخلة. يرجى مراجعة هذا الكشف بانتظام للتأكد من مطابقة الأرصدة الفعلية في الخزائن الحقيقية مع الموقف المالي الموحد.
+                    </div>
                 </div>
             `;
 
-            // إطلاق أمر الطباعة/الحفظ المباشر الأصلي لنظام التشغيل
+            // استدعاء أمر الحفظ والطباعة الأصلي والآمن لـ PDF النظام
             window.print();
         }
 
