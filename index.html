@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=300;400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         body { 
@@ -17,7 +16,6 @@
             background-image: radial-gradient(circle at top right, rgba(219, 234, 254, 0.8), transparent);
         }
         
-        /* الواجهات الفخمة الغنية بالمجسمات والأزرار البارزة (Retro-3D / Tactile UI) */
         .luxury-card { 
             background: #ffffff;
             border: 3px solid #1e293b;
@@ -31,7 +29,6 @@
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
         }
 
-        /* أزرار مجسمة بارزة وجريئة (3D Plastic Buttons) */
         .btn-3d-amber {
             background: #f59e0b;
             color: #1e293b;
@@ -40,10 +37,7 @@
             font-weight: 900;
             transition: all 0.05s ease;
         }
-        .btn-3d-amber:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #1e293b;
-        }
+        .btn-3d-amber:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #1e293b; }
 
         .btn-3d-indigo {
             background: #4f46e5;
@@ -53,10 +47,7 @@
             font-weight: 900;
             transition: all 0.05s ease;
         }
-        .btn-3d-indigo:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #1e293b;
-        }
+        .btn-3d-indigo:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #1e293b; }
 
         .btn-3d-slate {
             background: #64748b;
@@ -66,10 +57,7 @@
             font-weight: 900;
             transition: all 0.05s ease;
         }
-        .btn-3d-slate:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #1e293b;
-        }
+        .btn-3d-slate:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #1e293b; }
 
         .btn-3d-emerald {
             background: #10b981;
@@ -79,10 +67,7 @@
             font-weight: 900;
             transition: all 0.05s ease;
         }
-        .btn-3d-emerald:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #1e293b;
-        }
+        .btn-3d-emerald:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #1e293b; }
 
         .btn-3d-rose {
             background: #ef4444;
@@ -92,16 +77,28 @@
             font-weight: 900;
         }
 
-        /* مجسمات الوعاء المالي الداخلي */
-        .wallet-pill {
-            background: #ffffff;
-            border: 2px solid #334155;
-            box-shadow: 3px 3px 0px #334155;
+        .wallet-pill { background: #ffffff; border: 2px solid #334155; box-shadow: 3px 3px 0px #334155; }
+
+        /* حاوية الطباعة المخفية في الوضع الطبيعي */
+        #ultimate-print-zone { display: none; }
+
+        /* قواعد التصدير وهيكلة كشف الحساب الصارمة عند الطباعة الفورية للـ PDF النظيف */
+        @media print {
+            body * { display: none !important; }
+            #ultimate-print-zone, #ultimate-print-zone * { display: block !important; }
+            #ultimate-print-zone table { display: table !important; }
+            #ultimate-print-zone tr { display: table-row !important; }
+            #ultimate-print-zone th, #ultimate-print-zone td { display: table-cell !important; }
+            
+            @page { size: A4 portrait; margin: 15mm; }
+            body { background: #ffffff !important; font-family: 'Cairo', sans-serif !important; direction: rtl !important; }
+            #ultimate-print-zone { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
         }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-16">
 
+    <!-- الهيدر الفخم المستقر -->
     <header class="bg-amber-400 border-b-4 border-slate-900 sticky top-0 z-50 shadow-[0_4px_0_#1e293b]">
         <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
@@ -111,7 +108,7 @@
                 <div>
                     <h1 class="text-2xl font-black text-slate-900 tracking-wide flex items-center gap-2">
                         <span>حساباتي المتقدمة</span>
-                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded-md">PRO v2.5</span>
+                        <span class="text-xs bg-slate-900 text-white px-2 py-0.5 rounded-md">PRO v3.0</span>
                     </h1>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-slate-900 font-black border-b-2 border-slate-900">المستخدم السيادي: Mo. Yasin</span>
@@ -126,6 +123,7 @@
 
     <main class="container mx-auto px-4 mt-10 space-y-10 max-w-7xl">
 
+        <!-- لوحة الأرصدة والموقف المالي الموحد الفاخر -->
         <section class="luxury-card p-6 sm:p-8 relative">
             <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
                 <span class="text-3xl bg-amber-100 p-2 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">👑</span>
@@ -151,7 +149,9 @@
             </div>
         </section>
 
+        <!-- لوحة التحكم بالعمليات التشغيلية والمناقلات البينية -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- تسجيل حركة جديدة -->
             <div class="luxury-card p-6 sm:p-8">
                 <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
                     <span class="text-2xl bg-amber-400 p-1.5 border-2 border-slate-900 rounded-lg shadow-[2px_2px_0px_#1e293b]">📝</span>
@@ -204,6 +204,7 @@
                 </form>
             </div>
 
+            <!-- التسويات والمناقلات البينية -->
             <div class="luxury-card p-6 sm:p-8 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-slate-900">
@@ -250,13 +251,14 @@
             </div>
         </section>
 
+        <!-- مركز استخراج التقارير وطباعة PDF المباشرة الفورية -->
         <section class="luxury-card p-6 sm:p-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b-2 border-slate-900 pb-4">
                 <div class="flex items-center gap-3">
                     <span class="text-3xl bg-sky-400 p-1.5 border-2 border-slate-900 rounded-xl shadow-[2px_2px_0px_#1e293b]">📊</span>
                     <div>
-                        <h2 class="text-lg font-black text-slate-900">مركز استخراج التقارير وتوليد الـ PDF</h2>
-                        <p class="text-xs text-slate-500 font-bold">توليد مستندات محاسبية فاخرة لنطاقات زمنية محددة بدقة تامة</p>
+                        <h2 class="text-lg font-black text-slate-900">مركز استخراج التقارير وتصدير الـ PDF الحتمي</h2>
+                        <p class="text-xs text-slate-500 font-bold">توليد مستندات محاسبية منبثقة من نظام التشغيل الأصلي بدون أي نسبة خطأ أو صفحات بيضاء</p>
                     </div>
                 </div>
             </div>
@@ -282,8 +284,8 @@
                     <button onclick="generateCustomReport()" class="flex-1 btn-3d-slate text-xs px-4 py-2.5 rounded-xl cursor-pointer">
                         🔍 تحديث العرض
                     </button>
-                    <button id="pdf-trigger-btn" onclick="exportReportToPDF()" class="flex-1 btn-3d-emerald text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1">
-                        📄 تصدير PDF
+                    <button onclick="triggerNativePrintPDF()" class="flex-1 btn-3d-emerald text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1 font-black">
+                        ⚡ طباعة / حفظ PDF مباشر
                     </button>
                 </div>
             </div>
@@ -303,6 +305,7 @@
             </div>
         </section>
 
+        <!-- سجل المعاملات المالية التاريخي -->
         <section class="luxury-card overflow-hidden">
             <div class="p-6 sm:p-8 border-b-2 border-slate-900 flex items-center gap-3 bg-amber-50">
                 <span class="text-2xl bg-white p-1 border-2 border-slate-900 rounded-lg">📜</span>
@@ -329,6 +332,10 @@
         </section>
     </main>
 
+    <!-- المنطقة المعزولة والمحرمة والمخصصة حصراً لمحرك طباعة النظام للـ PDF النظيف المستقر تمااماً -->
+    <div id="ultimate-print-zone"></div>
+
+    <!-- مودال التعديل والتسوية -->
     <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-[8px_8px_0px_#1e293b] border-4 border-slate-900 transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-2 border-b-2 border-slate-900 pb-3">
@@ -637,24 +644,20 @@
             document.getElementById('report-transactions-list').innerHTML = txsHtml;
         }
 
-        // الآلية الهندسية المطلقة لحل مشكلة بياض الصفحة عبر محرك الطباعة المعزول والمستقر للمتصفح
-        function exportReportToPDF() {
+        // الاستراتيجية الحتمية النهائية: إجبار محرك المتصفح والـ OS على توليد الـ PDF بدون تدخل أي لایبرري
+        function triggerNativePrintPDF() {
             if (activeReportData.transactions.length === 0) {
-                alert('⚠️ لا توجد بيانات مسجلة في النطاق المحدد حالياً لتصديرها.');
+                alert('⚠️ لا توجد معاملات مالية مدرجة ضمن هذا النطاق الزمني لتصديرها.');
                 return;
             }
-
-            const btn = document.getElementById('pdf-trigger-btn');
-            btn.innerText = "جاري الحفظ...";
-            btn.disabled = true;
 
             let summaryRows = '';
             CURRENCIES.forEach(c => {
                 summaryRows += `
-                    <tr>
-                        <td style="padding: 12px; font-weight: bold; border: 2px solid #1e293b; text-align: right;">${c}</td>
-                        <td style="padding: 12px; font-weight: bold; color: #059669; border: 2px solid #1e293b; font-family: monospace; text-align: left; direction: ltr;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                        <td style="padding: 12px; font-weight: bold; color: #dc2626; border: 2px solid #1e293b; font-family: monospace; text-align: left; direction: ltr;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <tr style="border: 2px solid #1e293b;">
+                        <td style="padding: 12px; font-weight: bold; border: 2px solid #1e293b; text-align: right; background: #f8fafc;">${c}</td>
+                        <td style="padding: 12px; font-weight: bold; color: #16a34a; border: 2px solid #1e293b; text-align: left; font-family: monospace; font-size: 14px;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="padding: 12px; font-weight: bold; color: #dc2626; border: 2px solid #1e293b; text-align: left; font-family: monospace; font-size: 14px;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
@@ -665,57 +668,54 @@
                 let amt = parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2});
                 let dStr = new Date(t.date).toLocaleString('ar-EG', {dateStyle:'short', timeStyle:'short'});
                 let currentIcon = t.type === 'transfer' ? 'تسوية مناقلة بين الخزائن' : (WALLET_CONFIG[t.wallet]?.name || '');
-                let rowColor = t.type === 'deposit' ? 'color: #059669;' : (t.type === 'withdraw' ? 'color: #dc2626;' : 'color: #4f46e5;');
+                let rowColor = t.type === 'deposit' ? 'color: #16a34a;' : (t.type === 'withdraw' ? 'color: #dc2626;' : 'color: #4f46e5;');
                 
                 txRows += `
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 10px; font-family: monospace; font-size: 11px; border: 1px solid #cbd5e1; text-align: right;">${dStr}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: bold; text-align: right; ${rowColor}">${typeText}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; font-weight: 600;">${currentIcon}</td>
-                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; color: #1e293b;">${t.desc}</td>
-                        <td style="padding: 10px; font-weight: 900; font-family: monospace; border: 1px solid #cbd5e1; text-align: left; direction: ltr; ${rowColor}">${amt} ${t.currency}</td>
+                    <tr style="border-bottom: 2px solid #1e293b; page-break-inside: avoid;">
+                        <td style="padding: 10px; font-family: monospace; font-size: 12px; border: 1px solid #cbd5e1; text-align: right;">${dStr}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: 900; text-align: right; ${rowColor}">${typeText}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; font-weight: 700;">${currentIcon}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; color: #1e293b; font-weight: 600;">${t.desc}</td>
+                        <td style="padding: 10px; font-weight: 900; font-family: monospace; font-size: 13px; border: 1px solid #cbd5e1; text-align: left; direction: ltr; ${rowColor}">${amt} ${t.currency}</td>
                     </tr>
                 `;
             });
 
-            // إنشاء وعاء تقرير معزول ومبني بالكامل بتنسيقات طباعة أصلية حادة التفاصيل لمنع الفراغ تماماً
-            const printElement = document.createElement('div');
-            printElement.style.padding = '20px';
-            printElement.style.background = '#ffffff';
-            printElement.innerHTML = `
-                <div style="font-family: 'Cairo', sans-serif; direction: rtl; padding: 25px; background: #ffffff; border: 4px solid #1e293b; border-radius: 15px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; flex-direction: row-reverse;">
+            const printZone = document.getElementById('ultimate-print-zone');
+            printZone.innerHTML = `
+                <div style="font-family: 'Cairo', sans-serif !important; direction: rtl !important; padding: 10px; background: #ffffff;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #1e293b; padding-bottom: 12px; margin-bottom: 25px; flex-direction: row-reverse;">
                         <div style="text-align: left;">
-                            <div style="font-size: 12px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">نطاق القيد: <span style="color: #f59e0b;">${activeReportData.periodText}</span></div>
-                            <div style="font-size: 11px; font-weight: bold; color: #64748b;">تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}</div>
+                            <div style="font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">نطاق التقرير: <span style="color: #d97706;">${activeReportData.periodText}</span></div>
+                            <div style="font-size: 12px; font-weight: bold; color: #64748b;">تاريخ الطباعة النظيفة: ${new Date().toLocaleDateString('ar-EG')}</div>
                         </div>
                         <div style="text-align: right;">
-                            <h1 style="font-size: 26px; font-weight: 900; color: #1e293b; margin: 0; letter-spacing: -0.5px;">كشف الحساب المالي الموحد</h1>
-                            <p style="font-size: 12px; color: #475569; margin: 5px 0 0 0; font-weight: bold;">مستند رسمي معتمد ومستخرج محلياً للمهندس: Mo. Yasin</p>
+                            <h1 style="font-size: 28px; font-weight: 900; color: #1e293b; margin: 0; letter-spacing: -0.5px;">كشف الحساب المالي الموحد</h1>
+                            <p style="font-size: 13px; color: #475569; margin: 5px 0 0 0; font-weight: bold;">المستخدم السيادي المعتمد: Mo. Yasin</p>
                         </div>
                     </div>
 
-                    <h3 style="font-size: 14px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; margin-top: 0; text-align: right;">📊 أولاً: خلاصة حركة الحسابات الدورية</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; border: 2px solid #1e293b;">
+                    <h3 style="font-size: 15px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; margin-top: 0; text-align: right;">📊 أولاً: خلاصة حركة الموازين الدورية</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px; border: 2px solid #1e293b;">
                         <thead>
-                            <tr style="background-color: #f1f5f9;">
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">وحدة العملة السيادية</th>
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي القيود المضافة (+)</th>
-                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي القيود الخارجة (-)</th>
+                            <tr style="background-color: #f1f5f9; border: 2px solid #1e293b;">
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">العملة</th>
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي المدخلات (+)</th>
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي المخرجات (-)</th>
                             </tr>
                         </thead>
                         <tbody>${summaryRows}</tbody>
                     </table>
 
-                    <h3 style="font-size: 14px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; text-align: right;">📜 ثانياً: كشف المعاملات المالية المفصل</h3>
+                    <h3 style="font-size: 15px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; text-align: right;">📜 ثانياً: تفاصيل حركات دفتر القيد</h3>
                     <table style="width: 100%; border-collapse: collapse; border: 2px solid #1e293b;">
                         <thead>
-                            <tr style="background-color: #f1f5f9;">
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">التوقيت الزمني</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 15%;">طبيعة القيد</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 23%;">الوعاء المالي</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">البيان الاستدلالي</th>
-                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: left; color: #1e293b; font-size: 12px; font-weight: 900; width: 18%;">القيمة الصافية</th>
+                            <tr style="background-color: #f1f5f9; border: 2px solid #1e293b;">
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">التاريخ والوقت</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 15%;">نوع الحركة</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 23%;">المحفظة المستهدفة</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">البيان التفصيلي</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: left; color: #1e293b; font-size: 12px; font-weight: 900; width: 18%;">المبلغ الصافي</th>
                             </tr>
                         </thead>
                         <tbody>${txRows}</tbody>
@@ -723,31 +723,8 @@
                 </div>
             `;
 
-            // خيارات البناء الصارمة الموجهة مباشرة لمعالجة أبعاد شاشات الهواتف والآيفون بنسبة تباين كاملة 2x
-            const opt = {
-                margin:       [12, 12, 12, 12],
-                filename:     `تقرير_محاسبي_${activeReportData.periodText}.pdf`,
-                image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    letterRendering: true, 
-                    logging: false,
-                    scrollY: 0,
-                    scrollX: 0
-                },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            // تشغيل الـ Render المباشر والمضمون من كائن الـ Node المنفصل
-            html2pdf().set(opt).from(printElement).save().then(() => {
-                btn.innerText = "📄 تصدير PDF";
-                btn.disabled = false;
-            }).catch(err => {
-                console.error(err);
-                btn.innerText = "فشل!";
-                btn.disabled = false;
-            });
+            // إطلاق أمر الطباعة/الحفظ المباشر الأصلي لنظام التشغيل
+            window.print();
         }
 
         document.getElementById('transaction-form').addEventListener('submit', function(e) {
