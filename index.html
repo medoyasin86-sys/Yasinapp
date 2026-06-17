@@ -98,26 +98,6 @@
             border: 2px solid #334155;
             box-shadow: 3px 3px 0px #334155;
         }
-
-        /* منطقة رندرة التقارير وتصديرها لمنع الفراغ تماماً */
-        .pdf-export-zone {
-            font-family: 'Cairo', sans-serif;
-            background: #ffffff !important;
-            color: #0f172a !important;
-            padding: 30px;
-            direction: rtl;
-        }
-        .pdf-table th {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border: 2px solid #1e293b !important;
-            padding: 10px;
-        }
-        .pdf-table td {
-            border: 1px solid #cbd5e1 !important;
-            padding: 10px;
-            color: #334155 !important;
-        }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-16">
@@ -394,8 +374,6 @@
         </div>
     </div>
 
-    <div id="pdf-render-container" class="hidden"></div>
-
     <script>
         const WALLET_CONFIG = {
             'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔵 QNB' },
@@ -659,7 +637,7 @@
             document.getElementById('report-transactions-list').innerHTML = txsHtml;
         }
 
-        // الحل البرمجي الجذري الذي تم فصيله هندسياً لإلغاء مشكلة الصفحات البيضاء
+        // الآلية الهندسية المطلقة لحل مشكلة بياض الصفحة عبر محرك الطباعة المعزول والمستقر للمتصفح
         function exportReportToPDF() {
             if (activeReportData.transactions.length === 0) {
                 alert('⚠️ لا توجد بيانات مسجلة في النطاق المحدد حالياً لتصديرها.');
@@ -670,16 +648,13 @@
             btn.innerText = "جاري الحفظ...";
             btn.disabled = true;
 
-            const renderContainer = document.getElementById('pdf-render-container');
-            renderContainer.classList.remove('hidden'); // تحويله لمرئي مؤقتاً للمحرك فقط
-
             let summaryRows = '';
             CURRENCIES.forEach(c => {
                 summaryRows += `
                     <tr>
-                        <td style="padding:10px; font-weight:bold; border:1px solid #1e293b;">${c}</td>
-                        <td style="padding:10px; font-weight:bold; color:#059669; border:1px solid #1e293b; font-family:monospace;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                        <td style="padding:10px; font-weight:bold; color:#dc2626; border:1px solid #1e293b; font-family:monospace;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="padding: 12px; font-weight: bold; border: 2px solid #1e293b; text-align: right;">${c}</td>
+                        <td style="padding: 12px; font-weight: bold; color: #059669; border: 2px solid #1e293b; font-family: monospace; text-align: left; direction: ltr;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="padding: 12px; font-weight: bold; color: #dc2626; border: 2px solid #1e293b; font-family: monospace; text-align: left; direction: ltr;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
@@ -689,52 +664,58 @@
                 let typeText = t.type === 'deposit' ? 'إيداع (+)' : (t.type === 'withdraw' ? 'مصروف (-)' : 'مناقلة 🔄');
                 let amt = parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2});
                 let dStr = new Date(t.date).toLocaleString('ar-EG', {dateStyle:'short', timeStyle:'short'});
-                let currentIcon = t.type === 'transfer' ? 'تسوية مناقلة' : (WALLET_CONFIG[t.wallet]?.icon || '');
+                let currentIcon = t.type === 'transfer' ? 'تسوية مناقلة بين الخزائن' : (WALLET_CONFIG[t.wallet]?.name || '');
+                let rowColor = t.type === 'deposit' ? 'color: #059669;' : (t.type === 'withdraw' ? 'color: #dc2626;' : 'color: #4f46e5;');
+                
                 txRows += `
-                    <tr>
-                        <td style="padding:10px; font-family:monospace; font-size:11px; border:1px solid #cbd5e1;">${dStr}</td>
-                        <td style="padding:10px; border:1px solid #cbd5e1; font-weight:bold;">${typeText}</td>
-                        <td style="padding:10px; border:1px solid #cbd5e1; font-size:11px;">${currentIcon}</td>
-                        <td style="padding:10px; border:1px solid #cbd5e1; font-size:12px;">${t.desc}</td>
-                        <td style="padding:10px; font-weight:bold; font-family:monospace; border:1px solid #cbd5e1; text-align:left; direction:ltr;">${amt} ${t.currency}</td>
+                    <tr style="border-bottom: 1px solid #cbd5e1;">
+                        <td style="padding: 10px; font-family: monospace; font-size: 11px; border: 1px solid #cbd5e1; text-align: right;">${dStr}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: bold; text-align: right; ${rowColor}">${typeText}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; font-weight: 600;">${currentIcon}</td>
+                        <td style="padding: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-align: right; color: #1e293b;">${t.desc}</td>
+                        <td style="padding: 10px; font-weight: 900; font-family: monospace; border: 1px solid #cbd5e1; text-align: left; direction: ltr; ${rowColor}">${amt} ${t.currency}</td>
                     </tr>
                 `;
             });
 
-            renderContainer.innerHTML = `
-                <div class="pdf-export-zone" style="border:5px double #1e293b; padding:25px; border-radius:12px; background:#ffffff;">
-                    <div style="display:flex; justify-content:between; align-items:center; border-bottom:4px solid #1e293b; padding-bottom:15px; margin-bottom:25px;">
-                        <div style="text-align:right;">
-                            <h1 style="font-size:24px; font-weight:900; color:#1e293b; margin:0;">كشف الحساب المالي الموحد</h1>
-                            <p style="font-size:11px; color:#475569; margin:4px 0 0 0; font-weight:bold;">مستند رسمي معتمد ومستخرج محلياً للمستخدم: Mo. Yasin</p>
+            // إنشاء وعاء تقرير معزول ومبني بالكامل بتنسيقات طباعة أصلية حادة التفاصيل لمنع الفراغ تماماً
+            const printElement = document.createElement('div');
+            printElement.style.padding = '20px';
+            printElement.style.background = '#ffffff';
+            printElement.innerHTML = `
+                <div style="font-family: 'Cairo', sans-serif; direction: rtl; padding: 25px; background: #ffffff; border: 4px solid #1e293b; border-radius: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; flex-direction: row-reverse;">
+                        <div style="text-align: left;">
+                            <div style="font-size: 12px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">نطاق القيد: <span style="color: #f59e0b;">${activeReportData.periodText}</span></div>
+                            <div style="font-size: 11px; font-weight: bold; color: #64748b;">تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}</div>
                         </div>
-                        <div style="text-align:left; font-size:11px; font-weight:black; color:#1e293b;">
-                            <div>نطاق القيد: ${activeReportData.periodText}</div>
-                            <div>تاريخ التصدير: ${new Date().toLocaleDateString('ar-EG')}</div>
+                        <div style="text-align: right;">
+                            <h1 style="font-size: 26px; font-weight: 900; color: #1e293b; margin: 0; letter-spacing: -0.5px;">كشف الحساب المالي الموحد</h1>
+                            <p style="font-size: 12px; color: #475569; margin: 5px 0 0 0; font-weight: bold;">مستند رسمي معتمد ومستخرج محلياً للمهندس: Mo. Yasin</p>
                         </div>
                     </div>
 
-                    <h3 style="font-size:13px; font-weight:900; background:#1e293b; color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:12px;">📊 أولاً: خلاصة حركة الحسابات الدورية</h3>
-                    <table style="width:100%; border-collapse:collapse; text-align:right; margin-bottom:30px;" class="pdf-table">
+                    <h3 style="font-size: 14px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; margin-top: 0; text-align: right;">📊 أولاً: خلاصة حركة الحسابات الدورية</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; border: 2px solid #1e293b;">
                         <thead>
-                            <tr>
-                                <th>وحدة العملة السيادية</th>
-                                <th>إجمالي القيود المضافة</th>
-                                <th>إجمالي القيود الخارجة</th>
+                            <tr style="background-color: #f1f5f9;">
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">وحدة العملة السيادية</th>
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي القيود المضافة (+)</th>
+                                <th style="padding: 12px; font-weight: 900; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 13px;">إجمالي القيود الخارجة (-)</th>
                             </tr>
                         </thead>
                         <tbody>${summaryRows}</tbody>
                     </table>
 
-                    <h3 style="font-size:13px; font-weight:900; background:#1e293b; color:#ffffff; padding:8px 12px; border-radius:6px; margin-bottom:12px;">📜 ثانياً: كشف المعاملات المالية المفصل</h3>
-                    <table style="width:100%; border-collapse:collapse; text-align:right;" class="pdf-table">
+                    <h3 style="font-size: 14px; font-weight: 900; background: #1e293b; color: #ffffff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; text-align: right;">📜 ثانياً: كشف المعاملات المالية المفصل</h3>
+                    <table style="width: 100%; border-collapse: collapse; border: 2px solid #1e293b;">
                         <thead>
-                            <tr>
-                                <th style="border:1px solid #1e293b;">التوقيت الزمني</th>
-                                <th style="border:1px solid #1e293b;">طبيعة القيد</th>
-                                <th style="border:1px solid #1e293b;">الوعاء المالي</th>
-                                <th style="border:1px solid #1e293b;">البيان الاستدلالي</th>
-                                <th style="border:1px solid #1e293b; text-align:left;">القيمة الصافية</th>
+                            <tr style="background-color: #f1f5f9;">
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">التوقيت الزمني</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 15%;">طبيعة القيد</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 23%;">الوعاء المالي</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: right; color: #1e293b; font-size: 12px; font-weight: 900; width: 22%;">البيان الاستدلالي</th>
+                                <th style="padding: 10px; border: 2px solid #1e293b; text-align: left; color: #1e293b; font-size: 12px; font-weight: 900; width: 18%;">القيمة الصافية</th>
                             </tr>
                         </thead>
                         <tbody>${txRows}</tbody>
@@ -742,24 +723,30 @@
                 </div>
             `;
 
+            // خيارات البناء الصارمة الموجهة مباشرة لمعالجة أبعاد شاشات الهواتف والآيفون بنسبة تباين كاملة 2x
             const opt = {
-                margin:       [10, 10, 10, 10],
+                margin:       [12, 12, 12, 12],
                 filename:     `تقرير_محاسبي_${activeReportData.periodText}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false },
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    letterRendering: true, 
+                    logging: false,
+                    scrollY: 0,
+                    scrollX: 0
+                },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(renderContainer).save().then(() => {
+            // تشغيل الـ Render المباشر والمضمون من كائن الـ Node المنفصل
+            html2pdf().set(opt).from(printElement).save().then(() => {
                 btn.innerText = "📄 تصدير PDF";
                 btn.disabled = false;
-                renderContainer.innerHTML = ''; 
-                renderContainer.classList.add('hidden'); // إخفاء الحاوية مجدداً لحماية الواجهة
             }).catch(err => {
                 console.error(err);
                 btn.innerText = "فشل!";
                 btn.disabled = false;
-                renderContainer.classList.add('hidden');
             });
         }
 
