@@ -72,8 +72,8 @@
         }
 
         .profile-avatar {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 2px solid #ffffff;
             object-fit: cover;
@@ -117,8 +117,8 @@
     <header class="bg-bank-primary text-white border-b-2 border-[#7A1A3A] sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-2 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-3">
-                <!-- تم تضمين الصورة ذاتياً بنظام تتبع التواجد لضمان الظهور بدون تعقيدات -->
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='35' r='20' fill='%2300205B'/><path d='M10 85C10 65 25 55 50 55S90 65 90 85Z' fill='%2300205B'/><circle cx='50' cy='50' r='48' fill='none' stroke='%237A1A3A' stroke-width='4'/></svg>" id="main-avatar-img" alt="Profile" class="profile-avatar">
+                <!-- ربط مباشر بالاسم الصحيح والمطابق تماماً للملف المرفق -->
+                <img src="WhatsApp Image 2026-06-18 at 15.45.44_2.jpeg" id="main-avatar-img" alt="Profile" class="profile-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'35\' r=\'20\' fill=\'%2300205B\'/><path d=\'M10 85C10 65 25 55 50 55S90 65 90 85Z\' fill=\'%2300205B\'/><circle cx=\'50\' cy=\'50\' r=\'48\' fill=\'none\' stroke=\'%237A1A3A\' stroke-width=\'4\'/></svg>'">
                 
                 <div class="myh-logo-container">
                     <div class="myh-shield">
@@ -377,20 +377,8 @@
     </div>
 
     <script>
-        // آلية فحص الصورة الحقيقية واستبدالها ذاتياً بدون تعقيدات
-        const LOCAL_IMAGE_NAME = "WhatsApp Image 2026-06-18 at 15.45.44.jpeg";
-        
-        function verifyAndInjectAvatar() {
-            const imgEl = document.getElementById('main-avatar-img');
-            const tester = new Image();
-            tester.src = LOCAL_IMAGE_NAME;
-            tester.onload = function() {
-                imgEl.src = LOCAL_IMAGE_NAME;
-            };
-            tester.onerror = function() {
-                console.log("تم تفعيل الشعار المدمج البديل لعدم العثور على الملف بالمجلد.");
-            };
-        }
+        // دمج الاسم الصحيح والدقيق للملف المرفق
+        const LOCAL_IMAGE_NAME = "WhatsApp Image 2026-06-18 at 15.45.44_2.jpeg";
 
         const WALLET_CONFIG = {
             'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔵 QNB' },
@@ -702,14 +690,13 @@
                 `;
             });
 
-            const currentAvatarSrc = document.getElementById('main-avatar-img').src;
             const printZone = document.getElementById('ultimate-print-zone');
             printZone.innerHTML = `
                 <div style="font-family: 'Arial', sans-serif !important; direction: rtl !important; background: #ffffff; color: #000000; padding: 0; margin: 0; width: 100%;">
                     <table style="width: 100%; border-bottom: 2px solid #000000; margin-bottom: 10px; padding-bottom: 5px;">
                         <tr>
                             <td style="border: none !important; text-align: right; padding: 0 !important; display: flex; align-items: center; gap: 10px;">
-                                <img src="${currentAvatarSrc}" class="print-profile-avatar" alt="Profile">
+                                <img src="${LOCAL_IMAGE_NAME}" class="print-profile-avatar" alt="Profile">
                                 <div>
                                     <h1 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000000;">كشف الحساب المالي الموحد المعتمد (MYH)</h1>
                                     <p style="font-size: 8pt; margin: 2px 0 0 0; color: #333;">بيان دوري رسمي مكثف - عالي الكثافة الرقمية للأرصدة والموازين</p>
@@ -869,7 +856,6 @@
             initClockAndDates();
             recalculateAllBalances();
             handleFilterTypeChange();
-            verifyAndInjectAvatar();
         });
     </script>
 </body>
