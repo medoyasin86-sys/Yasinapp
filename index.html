@@ -48,6 +48,10 @@
         .row-withdraw { background-color: #fff1f2 !important; }
         .row-transfer { background-color: #f5f3ff !important; }
 
+        /* Color Coding for Numbers (Positive vs Negative) */
+        .num-positive { color: #16a34a !important; font-weight: 600; }
+        .num-negative { color: #dc2626 !important; font-weight: 800; }
+
         /* MYH Innovative Vector Shield Logo */
         .myh-logo-container {
             display: flex;
@@ -72,6 +76,16 @@
             letter-spacing: 0.5px;
         }
 
+        /* Profile Image Styling */
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #7A1A3A;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
         /* Hidden Print Container */
         #ultimate-print-zone { display: none; }
 
@@ -83,6 +97,18 @@
             #ultimate-print-zone tr { display: table-row !important; page-break-inside: avoid !important; }
             #ultimate-print-zone th, #ultimate-print-zone td { display: table-cell !important; border: 0.5px solid #000000 !important; padding: 3px 5px !important; font-size: 8pt !important; color: #000000 !important; background: none !important; }
             
+            /* Keep color coding visible in print if supported, fallback to bold */
+            .num-positive { color: #16a34a !important; font-weight: bold !important; }
+            .num-negative { color: #dc2626 !important; font-weight: bold !important; }
+            
+            .print-profile-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 1px solid #000000;
+                object-fit: cover;
+            }
+
             @page { 
                 size: A4 portrait; 
                 margin: 8mm 8mm; 
@@ -94,10 +120,12 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen pb-8">
 
-    <!-- الترويسة المصرفية الموحدة للفريق الملكي -->
+    <!-- الترويسة المصرفية الموحدة -->
     <header class="bg-bank-primary text-white border-b-2 border-[#7A1A3A] sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-2 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-3">
+                <!-- دمج الصورة بجانب شعار MYH العريق -->
+                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" alt="Mo. Yasin Profile" class="profile-avatar">
                 <div class="myh-logo-container">
                     <div class="myh-shield">
                         <span class="myh-text">MYH</span>
@@ -107,7 +135,7 @@
                 <div>
                     <h1 class="text-base font-bold tracking-tight flex items-center gap-1.5">
                         <span>النظام المصرفي الموحد للأرصدة</span>
-                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.2</span>
+                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.4</span>
                     </h1>
                     <p class="text-[10px] text-slate-300">نظام المراقبة والتحليل المالي المعتمد لـ Mo. Yasin</p>
                 </div>
@@ -174,9 +202,9 @@
                         <div>
                             <label class="block text-[10px] font-bold text-slate-600 mb-1">العملة السيادية</label>
                             <select id="tx-currency" class="w-full p-1.5 text-xs bg-white border border-slate-300 text-slate-900 font-bold rounded outline-none">
-                                <option value="EGP">EGP - جنيه مصري</option>
-                                <option value="USD">USD - دولار أمريكي</option>
-                                <option value="OMR">OMR - ريال عماني</option>
+                                <option value="EGP">EGP - جنيه مصري 🇪🇬</option>
+                                <option value="USD">USD - دولار أمريكي 🇺🇸</option>
+                                <option value="OMR">OMR - ريال عماني 🇴🇲</option>
                             </select>
                         </div>
                     </div>
@@ -190,7 +218,7 @@
                             <input type="text" id="tx-desc" required class="w-full p-1.5 text-xs bg-white border border-slate-300 text-slate-900 rounded outline-none" placeholder="الغرض بدقة">
                         </div>
                     </div>
-                    <button type="submit" class="w-full btn-bank-submit py-2 px-3 rounded text-xs cursor-pointer">
+                    <button type="submit" class="w-full bg-bank-primary text-white font-bold py-2 px-3 rounded text-xs cursor-pointer hover:bg-[#001640]">
                         ➕ قيد المعاملة وتحديث الموقف المالي
                     </button>
                 </form>
@@ -222,9 +250,9 @@
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-600 mb-1">العملة المطابقة</label>
                                 <select id="tf-currency" class="w-full p-1.5 text-xs bg-white border border-slate-300 text-slate-900 font-bold rounded outline-none">
-                                    <option value="EGP">EGP</option>
-                                    <option value="USD">USD</option>
-                                    <option value="OMR">OMR</option>
+                                    <option value="EGP">EGP 🇪🇬</option>
+                                    <option value="USD">USD 🇺🇸</option>
+                                    <option value="OMR">OMR 🇴🇲</option>
                                 </select>
                             </div>
                         </div>
@@ -232,7 +260,7 @@
                             <label class="block text-[10px] font-bold text-slate-600 mb-1">تاريخ القيد التبادلي</label>
                             <input type="datetime-local" id="tf-date" required class="w-full p-1.5 text-xs bg-white border border-slate-300 text-slate-900 rounded outline-none">
                         </div>
-                        <button type="submit" class="w-full bg-[#7A1A3A] text-white py-2 px-3 rounded text-xs font-bold hover:bg-[#5c132b] cursor-pointer">
+                        <button type="submit" class="w-full bg-bank-accent text-white py-2 px-3 rounded text-xs font-bold hover:bg-[#5c132b] cursor-pointer">
                             🔄 تفعيل التحويل البيني الفوري
                         </button>
                     </form>
@@ -270,7 +298,7 @@
                     <button onclick="generateCustomReport()" class="flex-1 bg-slate-700 text-white text-[11px] py-1.5 px-3 rounded font-bold cursor-pointer hover:bg-slate-800">
                         تحديث النطاق
                     </button>
-                    <button onclick="triggerNativePrintPDF()" class="flex-1 btn-bank-print text-[11px] py-1.5 px-3 rounded flex items-center justify-center gap-1 cursor-pointer">
+                    <button onclick="triggerNativePrintPDF()" class="flex-1 bg-bank-primary text-white font-bold text-[11px] py-1.5 px-3 rounded flex items-center justify-center gap-1 cursor-pointer hover:bg-[#001640]">
                         🖨️ كشف حساب MYH الصارم
                     </button>
                 </div>
@@ -294,7 +322,7 @@
         <!-- سجل العمليات التاريخي الأساسي الشامل -->
         <section class="bank-card overflow-hidden">
             <div class="p-3 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-                <h2 class="text-xs font-bold text-bank-primary">دفتر القيد المركزي (تباين ذكي للعملات والحركات داخل التطبيق)</h2>
+                <h2 class="text-xs font-bold text-bank-primary">دفتر القيد المركزي (أرقام ملونة وإشارات وشعارات العملات الذكية)</h2>
             </div>
             <div class="overflow-x-auto w-full">
                 <table class="w-full text-right border-collapse min-w-[900px]">
@@ -305,7 +333,6 @@
                             <th class="bank-table-th">الوعاء / الخزينة المستهدفة</th>
                             <th class="bank-table-th">البيان الاستدلالي</th>
                             <th class="bank-table-th">المبلغ المالي الصافي</th>
-                            <th class="bank-table-th">العملة</th>
                             <th class="bank-table-th text-center">الخيارات السيادية</th>
                         </tr>
                     </thead>
@@ -315,7 +342,7 @@
         </section>
     </main>
 
-    <!-- منطقة الرندرة التلقائية لـ PDF كشف الحساب البنكي الأبيض والأسود فائق الضغط -->
+    <!-- منطقة الرندرة التلقائية لـ PDF كشف الحساب البنكي الأبيض والأسود fائق الضغط -->
     <div id="ultimate-print-zone"></div>
 
     <!-- مودال التعديل والتسوية -->
@@ -336,9 +363,9 @@
                     <div>
                         <label class="block text-[10px] font-bold text-slate-600 mb-1">العملة</label>
                         <select id="edit-tx-currency" class="w-full p-1.5 text-xs border border-slate-300 text-slate-900 font-bold rounded outline-none">
-                            <option value="EGP">EGP</option>
-                            <option value="USD">USD</option>
-                            <option value="OMR">OMR</option>
+                            <option value="EGP">EGP 🇪🇬</option>
+                            <option value="USD">USD 🇺🇸</option>
+                            <option value="OMR">OMR 🇴🇲</option>
                         </select>
                     </div>
                 </div>
@@ -368,6 +395,12 @@
             'debts': { name: 'المديونيات', group: 'others', icon: '📉 المديونيات' },
             'receivables': { name: 'المستحقات', group: 'others', icon: '📈 المستحقات' },
             'associations': { name: 'الجمعيات', group: 'others', icon: '👥 الجمعيات' }
+        };
+
+        const CURRENCY_FLAGS = {
+            'EGP': '🇪🇬 EGP',
+            'USD': '🇺🇸 USD',
+            'OMR': '🇴🇲 OMR'
         };
 
         const CURRENCIES = ['EGP', 'USD', 'OMR'];
@@ -441,11 +474,11 @@
                 
                 let balanceStrings = CURRENCIES.map(curr => {
                     const bal = balances[curr] || 0;
-                    let colorClass = bal >= 0 ? 'text-slate-900' : 'text-rose-700 font-bold';
+                    let numClass = bal >= 0 ? 'num-positive' : 'num-negative';
                     return `
                         <div class="flex items-center justify-between px-2 py-0.5 bg-white border border-slate-200 rounded text-[11px]">
-                            <span class="text-[9px] font-bold text-slate-500 font-mono">${curr}</span>
-                            <span class="font-mono font-bold ${colorClass}">${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            <span class="text-[9px] font-bold text-slate-500 font-mono">${CURRENCY_FLAGS[curr]}</span>
+                            <span class="font-mono font-bold ${numClass}">${bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                     `;
                 }).join('');
@@ -471,34 +504,34 @@
             const displayList = [...appState.transactions].reverse();
 
             if (displayList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">لا توجد سجلات مالية حالياً.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">لا توجد سجلات مالية حالياً.</td></tr>`;
                 return;
             }
 
             displayList.forEach(tx => {
-                let typeBadge = '', detailsText = tx.desc, directionSign = '', amountColor = '', rowStyleClass = '', currencyBadgeClass = '';
+                let typeBadge = '', detailsText = tx.desc, directionSign = '', rowStyleClass = '', currencyBadgeClass = '';
 
-                // تباين العملات
                 if (tx.currency === 'EGP') currencyBadgeClass = 'badge-egp';
                 else if (tx.currency === 'USD') currencyBadgeClass = 'badge-usd';
                 else if (tx.currency === 'OMR') currencyBadgeClass = 'badge-omr';
 
-                // تباين الحركات (السحب والإيداع) بالخلفية والنص بالكامل للتطبيق
+                let numColorClass = 'num-positive';
+
                 if (tx.type === 'deposit') {
                     typeBadge = `<span class="text-emerald-800 font-bold">إيداع (+)</span>`;
                     directionSign = '+';
-                    amountColor = 'text-emerald-700 bg-emerald-100/70 border border-emerald-300 px-2 rounded';
+                    numColorClass = 'num-positive';
                     rowStyleClass = 'row-deposit';
                 } else if (tx.type === 'withdraw') {
                     typeBadge = `<span class="text-rose-800 font-bold">سحب (-)</span>`;
                     directionSign = '-';
-                    amountColor = 'text-rose-700 bg-rose-100/70 border border-rose-300 px-2 rounded';
+                    numColorClass = 'num-negative';
                     rowStyleClass = 'row-withdraw';
                 } else if (tx.type === 'transfer') {
                     typeBadge = `<span class="text-indigo-800 font-bold">مناقلة 🔄</span>`;
                     detailsText = `تحويل: [${WALLET_CONFIG[tx.fromWallet]?.name}] ⬅️ [${WALLET_CONFIG[tx.toWallet]?.name}]`;
                     directionSign = '🔄';
-                    amountColor = 'text-indigo-700 bg-indigo-100/70 border border-indigo-300 px-2 rounded';
+                    numColorClass = 'text-indigo-700';
                     rowStyleClass = 'row-transfer';
                 }
 
@@ -509,10 +542,12 @@
                     <tr class="${rowStyleClass} hover:bg-slate-100/80 transition-colors border-b border-slate-200">
                         <td class="p-2 font-mono text-slate-500">${dStr}</td>
                         <td class="p-2 text-[10px]">${typeBadge}</td>
-                        <td class="p-2 font-bold text-slate-900">${tx.type === 'transfer' ? 'تسوية بين الأوعية' : (WALLET_CONFIG[tx.wallet]?.name || '')}</td>
+                        <td class="p-2 font-bold text-slate-900">${tx.type === 'transfer' ? 'تسوية بين الحسابات' : (WALLET_CONFIG[tx.wallet]?.name || '')}</td>
                         <td class="p-2 text-slate-600 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
-                        <td class="p-2 font-mono font-bold text-right"><span class="${amountColor}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span></td>
-                        <td class="p-2 text-center"><span class="px-2 py-0.5 text-[9px] rounded font-mono ${currencyBadgeClass}">${tx.currency}</span></td>
+                        <td class="p-2 font-mono font-bold text-right flex items-center justify-end gap-2">
+                            <span class="px-1.5 py-0.5 text-[9px] rounded font-mono ${currencyBadgeClass}">${CURRENCY_FLAGS[tx.currency]}</span>
+                            <span class="${numColorClass}">${directionSign} ${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                        </td>
                         <td class="p-2 text-center flex items-center justify-center gap-1.5">
                             ${tx.type !== 'transfer' ? `<button onclick="openEditModal('${tx.id}')" class="text-slate-700 hover:text-white border border-slate-400 bg-white px-2 py-0.5 rounded hover:bg-slate-800 text-[10px] cursor-pointer">تعديل</button>` : '<span class="text-slate-400">-</span>'}
                             <button onclick="deleteTransaction('${tx.id}')" class="text-white bg-rose-700 px-2 py-0.5 rounded text-[10px] font-bold hover:bg-rose-800 cursor-pointer">حذف</button>
@@ -585,9 +620,9 @@
             CURRENCIES.forEach(c => {
                 sumHtml += `
                     <div class="p-1.5 bg-white border border-slate-200 rounded space-y-0.5 text-[11px]">
-                        <div class="font-bold text-bank-primary border-b font-mono text-[10px] pb-0.5">${c}</div>
-                        <div class="flex justify-between"><span class="text-emerald-700 font-bold">الوارد:</span><span class="font-mono">+${summary[c].income.toLocaleString()}</span></div>
-                        <div class="flex justify-between"><span class="text-rose-700 font-bold">المصروف:</span><span class="font-mono">-${summary[c].expense.toLocaleString()}</span></div>
+                        <div class="font-bold text-bank-primary border-b font-mono text-[10px] pb-0.5">${CURRENCY_FLAGS[c]}</div>
+                        <div class="flex justify-between"><span class="text-emerald-700 font-bold">الوارد:</span><span class="font-mono num-positive">+${summary[c].income.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span class="text-rose-700 font-bold">المصروف:</span><span class="font-mono num-negative">-${summary[c].expense.toLocaleString()}</span></div>
                     </div>
                 `;
             });
@@ -598,7 +633,7 @@
                 txsHtml = `<div class="text-center text-xs text-slate-400 py-4">لا توجد حركات ضمن النطاق.</div>`;
             } else {
                 [...filtered].reverse().forEach(t => {
-                    let cBadge = t.type === 'deposit' ? 'text-emerald-700' : (t.type === 'withdraw' ? 'text-rose-700' : 'text-indigo-700');
+                    let cBadge = t.type === 'deposit' ? 'num-positive' : (t.type === 'withdraw' ? 'num-negative' : 'text-indigo-700');
                     let sign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '🔄');
                     txsHtml += `
                         <div class="p-1.5 bg-white border border-slate-200 rounded flex justify-between items-center text-[11px]">
@@ -606,7 +641,7 @@
                                 <div class="font-bold text-slate-800">${t.desc}</div>
                                 <div class="text-[9px] text-slate-400 font-mono">${new Date(t.date).toLocaleDateString('ar-EG')}</div>
                             </div>
-                            <div class="font-mono font-bold ${cBadge}">${sign} ${parseFloat(t.amount).toLocaleString()} <span class="text-[9px] text-slate-400">${t.currency}</span></div>
+                            <div class="font-mono font-bold ${cBadge}">${sign} ${parseFloat(t.amount).toLocaleString()} <span class="text-[9px] text-slate-500 font-bold">${CURRENCY_FLAGS[t.currency]}</span></div>
                         </div>
                     `;
                 });
@@ -614,7 +649,6 @@
             document.getElementById('report-transactions-list').innerHTML = txsHtml;
         }
 
-        // إنشاء كشف حساب رسمي جداً، بسيط جداً، أسود وأبيض وخالي من هدر المساحات للطباعة
         function triggerNativePrintPDF() {
             if (activeReportData.transactions.length === 0) {
                 alert('⚠️ لا توجد قيود مالية لتصدير كشف الحساب لها.');
@@ -625,9 +659,9 @@
             CURRENCIES.forEach(c => {
                 summaryRows += `
                     <tr>
-                        <td style="font-weight: bold;">إجمالي حركات العملة (${c})</td>
-                        <td style="text-align: left; font-family: monospace;">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                        <td style="text-align: left; font-family: monospace;">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="font-weight: bold;">إجمالي حركات العملة (${CURRENCY_FLAGS[c]})</td>
+                        <td style="text-align: left; font-family: monospace;" class="num-positive">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="text-align: left; font-family: monospace;" class="num-negative">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
@@ -638,13 +672,16 @@
                 let d = new Date(t.date);
                 let dStr = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
                 
+                let printColorClass = t.type === 'deposit' ? 'num-positive' : (t.type === 'withdraw' ? 'num-negative' : '');
+                let prefixSign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '');
+
                 txRows += `
                     <tr>
                         <td style="font-family: monospace; color: #444;">${dStr}</td>
                         <td style="font-weight: bold;">${typeText}</td>
-                        <td>${t.type === 'transfer' ? 'تسوية بين المحسابات' : (WALLET_CONFIG[t.wallet]?.name || '')}</td>
+                        <td>${t.type === 'transfer' ? 'تسوية بين الحسابات' : (WALLET_CONFIG[t.wallet]?.name || '')}</td>
                         <td>${t.desc}</td>
-                        <td style="text-align: left; font-family: monospace; font-weight: bold;">${parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2})} ${t.currency}</td>
+                        <td style="text-align: left; font-family: monospace; font-weight: bold;" class="${printColorClass}">${CURRENCY_FLAGS[t.currency]} ${prefixSign}${parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
@@ -653,14 +690,17 @@
             printZone.innerHTML = `
                 <div style="font-family: 'Arial', sans-serif !important; direction: rtl !important; background: #ffffff; color: #000000; padding: 0; margin: 0; width: 100%;">
                     
-                    <!-- الهيدر الرسمي البسيط جداً خالي من الألوان والمساحات -->
+                    <!-- الهيدر الرسمي متضمناً الصورة المرفقة والشعار -->
                     <table style="width: 100%; border-bottom: 2px solid #000000; margin-bottom: 10px; padding-bottom: 5px;">
                         <tr>
-                            <td style="border: none !important; text-align: right; padding: 0 !important;">
-                                <h1 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000000;">كشف الحساب المالي الموحد المعمد (MYH)</h1>
-                                <p style="font-size: 8pt; margin: 2px 0 0 0; color: #333;">بيان دوري رسمي مكثف - عالي الكثافة الرقمية</p>
+                            <td style="border: none !important; text-align: right; padding: 0 !important; display: flex; align-items: center; gap: 10px;">
+                                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" class="print-profile-avatar" alt="Profile">
+                                <div>
+                                    <h1 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000000;">كشف الحساب المالي الموحد المعتمد (MYH)</h1>
+                                    <p style="font-size: 8pt; margin: 2px 0 0 0; color: #333;">بيان دوري رسمي مكثف - عالي الكثافة الرقمية للأرصدة والموازين</p>
+                                </div>
                             </td>
-                            <td style="border: none !important; text-align: left; font-size: 8pt; padding: 0 !important; color: #000000; line-height: 1.2;">
+                            <td style="border: none !important; text-align: left; font-size: 8pt; padding: 0 !important; color: #000000; line-height: 1.2; vertical-align: middle;">
                                 <div><b>المستفيد:</b> Mo. Yasin</div>
                                 <div><b>نطاق الفترة:</b> ${activeReportData.periodText}</div>
                                 <div><b>تاريخ الاستخراج:</b> ${new Date().toLocaleDateString('ar-EG')}</div>
@@ -690,7 +730,7 @@
                                 <th style="text-align: right; font-size: 8pt; font-weight: bold; width: 10%;">النوع</th>
                                 <th style="text-align: right; font-size: 8pt; font-weight: bold; width: 22%;">الوعاء المستهدف</th>
                                 <th style="text-align: right; font-size: 8pt; font-weight: bold; width: 32%;">البيان التفصيلي للعملية</th>
-                                <th style="text-align: left; font-size: 8pt; font-weight: bold; width: 18%;">المبلغ</th>
+                                <th style="text-align: left; font-size: 8pt; font-weight: bold; width: 18%;">المبلغ والعملة</th>
                             </tr>
                         </thead>
                         <tbody>${txRows}</tbody>
