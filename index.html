@@ -40,12 +40,15 @@
         .badge-usd { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-weight: bold; }
         .badge-omr { background-color: #fce7f3; color: #9d174d; border: 1px solid #fbcfe8; font-weight: bold; }
 
+        /* الألوان الصريحة للحركات المطلوبة */
         .row-deposit { background-color: #f0fdf4 !important; }
         .row-withdraw { background-color: #fff1f2 !important; }
-        .row-transfer { background-color: #f5f3ff !important; }
+        .row-transfer { background-color: #f0f9ff !important; } /* أزرق خفيف للمناقلة */
 
-        .num-positive { color: #16a34a !important; font-weight: 600; }
-        .num-negative { color: #dc2626 !important; font-weight: 800; }
+        /* تلوين نصوص المبالغ بدقة */
+        .num-positive { color: #16a34a !important; font-weight: 700; } /* أخضر للإيداع */
+        .num-negative { color: #dc2626 !important; font-weight: 800; } /* أحمر للسحب */
+        .num-transfer { color: #0284c7 !important; font-weight: 700; }  /* أزرق للتسوية والمناقلة */
         .num-zero { color: #000000 !important; font-weight: 700; } 
 
         .myh-logo-container {
@@ -92,16 +95,9 @@
             
             .num-positive { color: #16a34a !important; font-weight: bold !important; }
             .num-negative { color: #dc2626 !important; font-weight: bold !important; }
+            .num-transfer { color: #0284c7 !important; font-weight: bold !important; }
             .num-zero { color: #000000 !important; font-weight: bold !important; }
             
-            .print-profile-avatar {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                border: 1px solid #000000;
-                object-fit: cover;
-            }
-
             @page { 
                 size: A4 portrait; 
                 margin: 8mm 8mm; 
@@ -117,8 +113,8 @@
     <header class="bg-bank-primary text-white border-b-2 border-[#7A1A3A] sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-2 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-3">
-                <!-- ربط مباشر بالاسم الصحيح والمطابق تماماً للملف المرفق -->
-                <img src="WhatsApp Image 2026-06-18 at 15.45.44_2.jpeg" id="main-avatar-img" alt="Profile" class="profile-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'35\' r=\'20\' fill=\'%2300205B\'/><path d=\'M10 85C10 65 25 55 50 55S90 65 90 85Z\' fill=\'%2300205B\'/><circle cx=\'50\' cy=\'50\' r=\'48\' fill=\'none\' stroke=\'%237A1A3A\' stroke-width=\'4\'/></svg>'">
+                <!-- الإبقاء على الكود المرجعي للصورة تحسباً لظهورها في أي وقت -->
+                <img src="WhatsApp Image 2026-06-18 at 15.45.44_2.jpeg" id="main-avatar-img" alt="Profile" class="profile-avatar" onerror="this.style.display='none';">
                 
                 <div class="myh-logo-container">
                     <div class="myh-shield">
@@ -129,7 +125,7 @@
                 <div>
                     <h1 class="text-base font-bold tracking-tight flex items-center gap-1.5">
                         <span>النظام المصرفي الموحد للأرصدة</span>
-                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.6</span>
+                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.7</span>
                     </h1>
                     <p class="text-[10px] text-slate-300">نظام المراقبة والتحليل المالي المعتمد لـ Mo. Yasin</p>
                 </div>
@@ -314,7 +310,7 @@
         <!-- دفتر القيد المركزي الشامل -->
         <section class="bank-card overflow-hidden">
             <div class="p-3 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-                <h2 class="text-xs font-bold text-bank-primary">دفتر القيد المركزي (أرقام صريحة وأسود تام للأصفار)</h2>
+                <h2 class="text-xs font-bold text-bank-primary">دفتر القيد المركزي (تنصيب الألوان الصريحة والرموز المطابقة)</h2>
             </div>
             <div class="overflow-x-auto w-full">
                 <table class="w-full text-right border-collapse min-w-[900px]">
@@ -377,13 +373,11 @@
     </div>
 
     <script>
-        // دمج الاسم الصحيح والدقيق للملف المرفق
-        const LOCAL_IMAGE_NAME = "WhatsApp Image 2026-06-18 at 15.45.44_2.jpeg";
-
+        // تكوين الحسابات والمحافظ بشعارات وألوان مطابقة تماماً للهوية البنكية الرسمية
         const WALLET_CONFIG = {
-            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔵 QNB' },
-            'msct': { name: 'بنك مسقط Muscat', group: 'bank', icon: '🔴 Muscat' },
-            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank', icon: '📱 Wallet' },
+            'qnb': { name: 'بنك قطر الوطني QNB', group: 'bank', icon: '🔷 QNB [قـطـر الـوطـنـي]' },
+            'msct': { name: 'بنك مسقط Muscat', group: 'bank', icon: '🛑 Muscat [بـنـك مـسـقـط]' },
+            'walletti': { name: 'محفظة إلكترونية Wallet', group: 'bank', icon: '📱 Wallet [مـحـفـظـة ذكـيـة]' },
             'cash-normal': { name: 'نقدي (أساسي)', group: 'cash', icon: '💵 كاش أساسي' },
             'cash-extra': { name: 'إضافي', group: 'cash', icon: '💰 كاش إضافي' },
             'debts': { name: 'المديونيات', group: 'others', icon: '📉 المديونيات' },
@@ -396,10 +390,11 @@
         let appState = { balances: {}, transactions: [] };
         let activeReportData = { summary: {}, transactions: [], periodText: '' };
 
-        function getNumberClass(value) {
+        function getNumberClass(value, type) {
+            if (type === 'transfer') return 'num-transfer'; // اللون الأزرق للمناقلات والتسويات
             const val = parseFloat(value);
             if (isNaN(val) || val === 0) return 'num-zero';
-            return val > 0 ? 'num-positive' : 'num-negative';
+            return type === 'deposit' ? 'num-positive' : 'num-negative';
         }
 
         function initializeDefaultBalances() {
@@ -469,7 +464,7 @@
                 
                 let balanceStrings = CURRENCIES.map(curr => {
                     const bal = balances[curr] || 0;
-                    let numClass = getNumberClass(bal);
+                    let numClass = bal === 0 ? 'num-zero' : (bal > 0 ? 'num-positive' : 'num-negative');
                     return `
                         <div class="flex items-center justify-between px-2 py-0.5 bg-white border border-slate-200 rounded text-[11px]">
                             <span class="text-[9px] font-bold text-slate-500 font-mono">${CURRENCY_FLAGS[curr]}</span>
@@ -509,21 +504,20 @@
                 else if (tx.currency === 'USD') currencyBadgeClass = 'badge-usd';
                 else if (tx.currency === 'OMR') currencyBadgeClass = 'badge-omr';
 
-                let numColorClass = getNumberClass(tx.amount);
+                let numColorClass = getNumberClass(tx.amount, tx.type);
 
                 if (tx.type === 'deposit') {
-                    typeBadge = `<span class="text-emerald-800 font-bold">إيداع (+)</span>`;
+                    typeBadge = `<span class="text-emerald-700 font-extrabold bg-emerald-50 px-2 py-0.5 border border-emerald-300 rounded text-[10px]">إيداع (+)</span>`;
                     directionSign = '+';
                     rowStyleClass = 'row-deposit';
                 } else if (tx.type === 'withdraw') {
-                    typeBadge = `<span class="text-rose-800 font-bold">سحب (-)</span>`;
+                    typeBadge = `<span class="text-rose-700 font-extrabold bg-rose-50 px-2 py-0.5 border border-rose-300 rounded text-[10px]">سحب (-)</span>`;
                     directionSign = '-';
                     rowStyleClass = 'row-withdraw';
                 } else if (tx.type === 'transfer') {
-                    typeBadge = `<span class="text-indigo-800 font-bold">مناقلة 🔄</span>`;
-                    detailsText = `تحويل: [${WALLET_CONFIG[tx.fromWallet]?.name}] ⬅️ [${WALLET_CONFIG[tx.toWallet]?.name}]`;
+                    typeBadge = `<span class="text-sky-700 font-extrabold bg-sky-50 px-2 py-0.5 border border-sky-300 rounded text-[10px]">تسوية 🔄</span>`;
+                    detailsText = `من: [${WALLET_CONFIG[tx.fromWallet]?.name}] ⬅️ إلى: [${WALLET_CONFIG[tx.toWallet]?.name}]`;
                     directionSign = '🔄';
-                    numColorClass = 'text-indigo-700';
                     rowStyleClass = 'row-transfer';
                 }
 
@@ -537,8 +531,8 @@
                 const trHtml = `
                     <tr class="${rowStyleClass} hover:bg-slate-100/80 transition-colors border-b border-slate-200">
                         <td class="p-2 font-mono text-slate-500">${dStr}</td>
-                        <td class="p-2 text-[10px]">${typeBadge}</td>
-                        <td class="p-2 font-bold text-slate-900">${tx.type === 'transfer' ? 'تسوية بين الحسابات' : (WALLET_CONFIG[tx.wallet]?.name || '')}</td>
+                        <td class="p-2">${typeBadge}</td>
+                        <td class="p-2 font-bold text-slate-900">${tx.type === 'transfer' ? '💡 تسوية بين المحافظ البنكية' : (WALLET_CONFIG[tx.wallet]?.icon || '')}</td>
                         <td class="p-2 text-slate-600 max-w-xs truncate" title="${detailsText}">${detailsText}</td>
                         <td class="p-2 font-mono font-bold text-right flex items-center justify-end gap-2">
                             <span class="px-1.5 py-0.5 text-[9px] rounded font-mono ${currencyBadgeClass}">${CURRENCY_FLAGS[tx.currency]}</span>
@@ -632,8 +626,7 @@
                 txsHtml = `<div class="text-center text-xs text-slate-400 py-4">لا توجد حركات ضمن النطاق.</div>`;
             } else {
                 [...filtered].reverse().forEach(t => {
-                    let cBadge = getNumberClass(t.amount);
-                    if (t.type === 'transfer') cBadge = 'text-indigo-700';
+                    let cBadge = getNumberClass(t.amount, t.type);
                     let sign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '🔄');
                     txsHtml += `
                         <div class="p-1.5 bg-white border border-slate-200 rounded flex justify-between items-center text-[11px]">
@@ -675,9 +668,8 @@
                 let d = new Date(t.date);
                 let dStr = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
                 
-                let printColorClass = getNumberClass(t.amount);
-                if (t.type === 'transfer') printColorClass = '';
-                let prefixSign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '');
+                let printColorClass = getNumberClass(t.amount, t.type);
+                let prefixSign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '🔄');
 
                 txRows += `
                     <tr>
@@ -696,7 +688,6 @@
                     <table style="width: 100%; border-bottom: 2px solid #000000; margin-bottom: 10px; padding-bottom: 5px;">
                         <tr>
                             <td style="border: none !important; text-align: right; padding: 0 !important; display: flex; align-items: center; gap: 10px;">
-                                <img src="${LOCAL_IMAGE_NAME}" class="print-profile-avatar" alt="Profile">
                                 <div>
                                     <h1 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000000;">كشف الحساب المالي الموحد المعتمد (MYH)</h1>
                                     <p style="font-size: 8pt; margin: 2px 0 0 0; color: #333;">بيان دوري رسمي مكثف - عالي الكثافة الرقمية للأرصدة والموازين</p>
@@ -735,10 +726,6 @@
                         </thead>
                         <tbody>${txRows}</tbody>
                     </table>
-
-                    <div style="margin-top: 15px; border-top: 1px dashed #000000; padding-top: 5px; font-size: 7pt; color: #333; text-align: justify;">
-                        🔐 <b>ملاحظة السرية المالية:</b> هذا الكشف رسمي ومولد محلياً بالكامل ومحمي بخصوصية تامة عبر ذاكرة المتصفح للجهاز الحالي.
-                    </div>
                 </div>
             `;
 
@@ -785,7 +772,7 @@
                 amount: amt,
                 currency: curr,
                 date: dateVal,
-                desc: `تحويل داخلي من [${WALLET_CONFIG[fromW].name}] إلى [${WALLET_CONFIG[toW].name}]`
+                desc: `تحويل داخلي بين الحسابات`
             };
             appState.transactions.push(newTransfer);
             document.getElementById('tf-amount').value = '';
