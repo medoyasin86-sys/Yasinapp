@@ -48,9 +48,10 @@
         .row-withdraw { background-color: #fff1f2 !important; }
         .row-transfer { background-color: #f5f3ff !important; }
 
-        /* Color Coding for Numbers (Positive vs Negative) */
+        /* Color Coding for Numbers */
         .num-positive { color: #16a34a !important; font-weight: 600; }
         .num-negative { color: #dc2626 !important; font-weight: 800; }
+        .num-zero { color: #0f172a !important; font-weight: 600; } /* أسود صريح للصقر */
 
         /* MYH Innovative Vector Shield Logo */
         .myh-logo-container {
@@ -78,12 +79,13 @@
 
         /* Profile Image Styling */
         .profile-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 2px solid #7A1A3A;
+            border: 2px solid #ffffff;
             object-fit: cover;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: #e2e8f0;
         }
 
         /* Hidden Print Container */
@@ -100,6 +102,7 @@
             /* Keep color coding visible in print if supported, fallback to bold */
             .num-positive { color: #16a34a !important; font-weight: bold !important; }
             .num-negative { color: #dc2626 !important; font-weight: bold !important; }
+            .num-zero { color: #000000 !important; font-weight: bold !important; }
             
             .print-profile-avatar {
                 width: 50px;
@@ -124,8 +127,9 @@
     <header class="bg-bank-primary text-white border-b-2 border-[#7A1A3A] sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-2 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-3">
-                <!-- دمج الصورة بجانب شعار MYH العريق -->
-                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" alt="Mo. Yasin Profile" class="profile-avatar">
+                <!-- تأكد من وجود ملف الصورة في نفس المجلد مع هذا الملف بالاسم المطابق تماماً -->
+                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" alt="Mo. Yasin Profile" class="profile-avatar" onerror="this.style.display='none'; console.warn('تنبيه: لم يتم العثور على ملف الصورة الشخصية في نفس المجلد.');">
+                
                 <div class="myh-logo-container">
                     <div class="myh-shield">
                         <span class="myh-text">MYH</span>
@@ -135,7 +139,7 @@
                 <div>
                     <h1 class="text-base font-bold tracking-tight flex items-center gap-1.5">
                         <span>النظام المصرفي الموحد للأرصدة</span>
-                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.4</span>
+                        <span class="text-[9px] bg-[#7A1A3A] text-white px-1.5 py-0.2 rounded font-mono">STRICT V4.5</span>
                     </h1>
                     <p class="text-[10px] text-slate-300">نظام المراقبة والتحليل المالي المعتمد لـ Mo. Yasin</p>
                 </div>
@@ -407,6 +411,12 @@
         let appState = { balances: {}, transactions: [] };
         let activeReportData = { summary: {}, transactions: [], periodText: '' };
 
+        function getNumberClass(value) {
+            const val = parseFloat(value);
+            if (isNaN(val) || val === 0) return 'num-zero';
+            return val > 0 ? 'num-positive' : 'num-negative';
+        }
+
         function initializeDefaultBalances() {
             for (let walletKey in WALLET_CONFIG) {
                 appState.balances[walletKey] = {};
@@ -474,7 +484,7 @@
                 
                 let balanceStrings = CURRENCIES.map(curr => {
                     const bal = balances[curr] || 0;
-                    let numClass = bal >= 0 ? 'num-positive' : 'num-negative';
+                    let numClass = getNumberClass(bal);
                     return `
                         <div class="flex items-center justify-between px-2 py-0.5 bg-white border border-slate-200 rounded text-[11px]">
                             <span class="text-[9px] font-bold text-slate-500 font-mono">${CURRENCY_FLAGS[curr]}</span>
@@ -515,17 +525,15 @@
                 else if (tx.currency === 'USD') currencyBadgeClass = 'badge-usd';
                 else if (tx.currency === 'OMR') currencyBadgeClass = 'badge-omr';
 
-                let numColorClass = 'num-positive';
+                let numColorClass = getNumberClass(tx.amount);
 
                 if (tx.type === 'deposit') {
                     typeBadge = `<span class="text-emerald-800 font-bold">إيداع (+)</span>`;
                     directionSign = '+';
-                    numColorClass = 'num-positive';
                     rowStyleClass = 'row-deposit';
                 } else if (tx.type === 'withdraw') {
                     typeBadge = `<span class="text-rose-800 font-bold">سحب (-)</span>`;
                     directionSign = '-';
-                    numColorClass = 'num-negative';
                     rowStyleClass = 'row-withdraw';
                 } else if (tx.type === 'transfer') {
                     typeBadge = `<span class="text-indigo-800 font-bold">مناقلة 🔄</span>`;
@@ -533,6 +541,11 @@
                     directionSign = '🔄';
                     numColorClass = 'text-indigo-700';
                     rowStyleClass = 'row-transfer';
+                }
+
+                // الحسابات الصفرية الصريحة تأخذ لون الصفر دائماً
+                if (parseFloat(tx.amount) === 0) {
+                    numColorClass = 'num-zero';
                 }
 
                 const d = new Date(tx.date);
@@ -618,11 +631,14 @@
             
             let sumHtml = '';
             CURRENCIES.forEach(c => {
+                let incClass = summary[c].income === 0 ? 'num-zero' : 'num-positive';
+                let expClass = summary[c].expense === 0 ? 'num-zero' : 'num-negative';
+                
                 sumHtml += `
                     <div class="p-1.5 bg-white border border-slate-200 rounded space-y-0.5 text-[11px]">
                         <div class="font-bold text-bank-primary border-b font-mono text-[10px] pb-0.5">${CURRENCY_FLAGS[c]}</div>
-                        <div class="flex justify-between"><span class="text-emerald-700 font-bold">الوارد:</span><span class="font-mono num-positive">+${summary[c].income.toLocaleString()}</span></div>
-                        <div class="flex justify-between"><span class="text-rose-700 font-bold">المصروف:</span><span class="font-mono num-negative">-${summary[c].expense.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span class="text-emerald-700 font-bold">الوارد:</span><span class="font-mono ${incClass}">+${summary[c].income.toLocaleString()}</span></div>
+                        <div class="flex justify-between"><span class="text-rose-700 font-bold">المصروف:</span><span class="font-mono ${expClass}">-${summary[c].expense.toLocaleString()}</span></div>
                     </div>
                 `;
             });
@@ -633,7 +649,8 @@
                 txsHtml = `<div class="text-center text-xs text-slate-400 py-4">لا توجد حركات ضمن النطاق.</div>`;
             } else {
                 [...filtered].reverse().forEach(t => {
-                    let cBadge = t.type === 'deposit' ? 'num-positive' : (t.type === 'withdraw' ? 'num-negative' : 'text-indigo-700');
+                    let cBadge = getNumberClass(t.amount);
+                    if (t.type === 'transfer') cBadge = 'text-indigo-700';
                     let sign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '🔄');
                     txsHtml += `
                         <div class="p-1.5 bg-white border border-slate-200 rounded flex justify-between items-center text-[11px]">
@@ -657,11 +674,14 @@
 
             let summaryRows = '';
             CURRENCIES.forEach(c => {
+                let pIncClass = activeReportData.summary[c].income === 0 ? 'num-zero' : 'num-positive';
+                let pExpClass = activeReportData.summary[c].expense === 0 ? 'num-zero' : 'num-negative';
+
                 summaryRows += `
                     <tr>
                         <td style="font-weight: bold;">إجمالي حركات العملة (${CURRENCY_FLAGS[c]})</td>
-                        <td style="text-align: left; font-family: monospace;" class="num-positive">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                        <td style="text-align: left; font-family: monospace;" class="num-negative">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="text-align: left; font-family: monospace;" class="${pIncClass}">+${activeReportData.summary[c].income.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                        <td style="text-align: left; font-family: monospace;" class="${pExpClass}">-${activeReportData.summary[c].expense.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
                     </tr>
                 `;
             });
@@ -672,7 +692,8 @@
                 let d = new Date(t.date);
                 let dStr = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
                 
-                let printColorClass = t.type === 'deposit' ? 'num-positive' : (t.type === 'withdraw' ? 'num-negative' : '');
+                let printColorClass = getNumberClass(t.amount);
+                if (t.type === 'transfer') printColorClass = '';
                 let prefixSign = t.type === 'deposit' ? '+' : (t.type === 'withdraw' ? '-' : '');
 
                 txRows += `
@@ -694,7 +715,7 @@
                     <table style="width: 100%; border-bottom: 2px solid #000000; margin-bottom: 10px; padding-bottom: 5px;">
                         <tr>
                             <td style="border: none !important; text-align: right; padding: 0 !important; display: flex; align-items: center; gap: 10px;">
-                                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" class="print-profile-avatar" alt="Profile">
+                                <img src="WhatsApp Image 2026-06-18 at 15.45.44.jpeg" class="print-profile-avatar" alt="Profile" onerror="this.style.display='none';">
                                 <div>
                                     <h1 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000000;">كشف الحساب المالي الموحد المعتمد (MYH)</h1>
                                     <p style="font-size: 8pt; margin: 2px 0 0 0; color: #333;">بيان دوري رسمي مكثف - عالي الكثافة الرقمية للأرصدة والموازين</p>
